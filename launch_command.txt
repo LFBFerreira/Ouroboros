@@ -1,0 +1,2 @@
+cd .\Ouroboros\out\production\Ouroboros
+java luisf.ouroboros.Main

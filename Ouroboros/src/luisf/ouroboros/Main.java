@@ -1,12 +1,12 @@
 package luisf.ouroboros;
 
-import luisf.ouroboros.codeParser.CodeParser;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.director.Director;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -43,21 +43,29 @@ public class Main {
 
     public static void main(String[] args) throws IOException, IllegalArgumentException {
 
-        if (args.length < 1) {
-            log.severe("No arguments found. Argument 1: path to project files folder");
+        if (args.length < 2) {
+            log.severe("Insufficient arguments");
+            log.info("Argument 1: path to project files folder");
+            log.info("Argument 2: path to output folder");
             System.exit(0);
         }
 
         // parse project files folder
-        String projectFilesFolder = Director.processProjectFilesPath(args[0]);
-        if (Handy.isNullOrEmpty(projectFilesFolder)) {
+        File projectFilesFolder = Director.validateFolderPath(args[0]);
+        if (projectFilesFolder == null) {
             log.severe(Handy.f("The project files folder is invalid"));
+            System.exit(0);
+        }
+
+        File outputFolder = Director.validateFolderPath(args[1]);
+        if (outputFolder == null) {
+            log.severe(Handy.f("The output folder is invalid"));
             System.exit(0);
         }
 
         log.info("Starting Ouroboros");
 
-        Director director = new Director(projectFilesFolder);
+        Director director = new Director(projectFilesFolder, outputFolder);
 
         director.startGenerator();
 
@@ -71,17 +79,17 @@ public class Main {
     // ================================================================
 
     private static void testResources() {
-        CodeParser parser = new CodeParser();
-        System.out.println(parser);
-
-        ClassLoader classLoader = new Main().getClass().getClassLoader();
-        File file = parser.getFileFromResources("configuration.xml");
-
-        if (file != null) {
-            System.out.println("Got it!");
-        } else {
-            System.out.println("Failed file");
-        }
+//        CodeParser parser = new CodeParser();
+//        System.out.println(parser);
+//
+//        ClassLoader classLoader = new Main().getClass().getClassLoader();
+//        File file = parser.getFileFromResources("configuration.xml");
+//
+//        if (file != null) {
+//            System.out.println("Got it!");
+//        } else {
+//            System.out.println("Failed file");
+//        }
 
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("configuration.xml");

@@ -2,7 +2,6 @@ package luisf.ouroboros.generator;
 
 import processing.core.PApplet;
 
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
 public class Generator extends PApplet {
@@ -17,7 +16,7 @@ public class Generator extends PApplet {
     }
 
     public void dispose() {
-        log.warning(String.format("Terminating %s", Generator.class.getSimpleName()));
+        log.info(String.format("Terminating %s", Generator.class.getSimpleName()));
     }
 
     public void draw() {

@@ -1,18 +1,17 @@
 package luisf.ouroboros;
 
-import com.sun.org.apache.bcel.internal.classfile.Code;
 import luisf.ouroboros.codeParser.CodeParser;
-import luisf.ouroboros.generator.Generator;
-import processing.core.PApplet;
+import luisf.ouroboros.common.Handy;
+import luisf.ouroboros.director.Director;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class Main {
+
     // logger configuration
     static {
         String fileName = "logging.properties";
@@ -22,16 +21,13 @@ public class Main {
 //        System.setProperty("java.util.logging.config.file", configFileUrl.getPath());
 
         // method 2
-//        String path = Main.class.getClassLoader()
-//                .getResource("logging.properties")
-//                .getFile();
+//        String path = Main.class.getClassLoader().getResource("logging.properties").getFile();
 //        System.setProperty("java.util.logging.config.file", path);
 
         //method 3
         InputStream stream = Main.class.getClassLoader().getResourceAsStream(fileName);
 
-        if (stream == null)
-        {
+        if (stream == null) {
             System.err.println("Could not find the resource'" + fileName + "'");
         }
 
@@ -46,12 +42,24 @@ public class Main {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     public static void main(String[] args) throws IOException, IllegalArgumentException {
+
+        if (args.length < 1) {
+            log.severe("No arguments found. Argument 1: path to project files folder");
+            System.exit(0);
+        }
+
+        // parse project files folder
+        String projectFilesFolder = Director.processProjectFilesPath(args[0]);
+        if (Handy.isNullOrEmpty(projectFilesFolder)) {
+            log.severe(Handy.f("The project files folder is invalid"));
+            System.exit(0);
+        }
+
         log.info("Starting Ouroboros");
 
-        //testResources();
+        Director director = new Director(projectFilesFolder);
 
-        configureLogger();
-        PApplet.main(Generator.class.getCanonicalName());
+        director.startGenerator();
 
         try {
             System.in.read();
@@ -60,9 +68,7 @@ public class Main {
         }
     }
 
-    private static void configureLogger() {
-
-    }
+    // ================================================================
 
     private static void testResources() {
         CodeParser parser = new CodeParser();
@@ -71,24 +77,18 @@ public class Main {
         ClassLoader classLoader = new Main().getClass().getClassLoader();
         File file = parser.getFileFromResources("configuration.xml");
 
-        if (file != null)
-        {
+        if (file != null) {
             System.out.println("Got it!");
-        }
-        else
-        {
+        } else {
             System.out.println("Failed file");
         }
 
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("configuration.xml");
 
-        if (is != null)
-        {
+        if (is != null) {
             System.out.println("Got the stream!");
-        }
-        else
-        {
+        } else {
             System.out.println("Failed stream");
         }
     }

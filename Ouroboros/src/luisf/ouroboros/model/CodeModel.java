@@ -1,15 +1,11 @@
 package luisf.ouroboros.model;
 
-import luisf.ouroboros.parser.CodeParser;
-
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 
-
-public class CodeModel implements CodeModelInterface{
+public class CodeModel implements CodeModelInterface {
 
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
@@ -19,8 +15,7 @@ public class CodeModel implements CodeModelInterface{
 
     // ================================================================
 
-    public CodeModel()
-    {
+    public CodeModel() {
 
     }
 
@@ -30,8 +25,7 @@ public class CodeModel implements CodeModelInterface{
 
     @Override
     public void addMethod(MethodModel method) {
-        if(method != null)
-        {
+        if (method != null) {
             methods.add(method);
         }
     }
@@ -42,8 +36,18 @@ public class CodeModel implements CodeModelInterface{
     }
 
     @Override
+    public String getPackageName() {
+        return packageName;
+    }
+
+    @Override
     public void setClassName(String name) {
-        className="";
+        className = name;
+    }
+
+    @Override
+    public String getClassName() {
+        return className;
     }
 
     // ================================================================

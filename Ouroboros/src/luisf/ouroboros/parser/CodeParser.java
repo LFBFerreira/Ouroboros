@@ -1,19 +1,18 @@
 package luisf.ouroboros.parser;
 
 import luisf.ouroboros.common.Handy;
+import luisf.ouroboros.model.CodeModel;
 import luisf.ouroboros.model.CodeModelInterface;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 
 import static luisf.ouroboros.parser.RegexConstants.oneOrMoreSpaces;
@@ -29,15 +28,15 @@ public class CodeParser {
     private File projectFilesFolder;
     private File outputFolder;
 
-    private CodeModelInterface codeModel;
+    private List<CodeModelInterface> codeModels;
 
     // ================================================================
 
-    public CodeParser(File projectFilesFolder, File outputFolder, CodeModelInterface codeModel) {
+    public CodeParser(File projectFilesFolder, File outputFolder, List<CodeModelInterface> codeModels) {
 
         this.projectFilesFolder = projectFilesFolder;
         this.outputFolder = outputFolder;
-        this.codeModel = codeModel;
+        this.codeModels = codeModels;
     }
 
     // ================================================================
@@ -60,9 +59,23 @@ public class CodeParser {
         }
 
         // parse file
-        //fileList.stream().forEach(f -> parseFile(f, codeModel));
-        parseFile(fileList.get(0), codeModel);
+        int[] idx = {0};
 
+        fileList.stream().forEach(f ->
+        {
+            CodeModelInterface model = new CodeModel();
+            parseFile(f, model);
+            codeModels.add(model);
+        });
+
+        //parseFile(fileList.get(0), codeModels);
+
+        codeModels.stream().forEach(c ->
+        {
+            log.info("-----------");
+            log.info("package " + c.getPackageName());
+            log.info("class " + c.getClassName());
+        });
         return !fileList.isEmpty();
     }
 
@@ -77,10 +90,10 @@ public class CodeParser {
         codeModel.setPackageName(getPackageName(fileContent));
         codeModel.setClassName(getClassName(fileContent));
 
-        log.info(getPackageName(fileContent));
-        log.info(getClassName(fileContent));
+//        log.info("-----------");
+//        log.info("package " + getPackageName(fileContent));
+//        log.info("class " + getClassName(fileContent));
 
-        //log.info("\n" + fileContent + "\n");
 
 //        Pattern p = Pattern.compile("(</?[a-z]*>)");
 //
@@ -92,32 +105,24 @@ public class CodeParser {
 //        }
     }
 
-    private String getPackageName(String content)
-    {
+    private String getPackageName(String content) {
         Pattern pattern = Pattern.compile(anything + "package" + oneOrMoreSpaces + anythingGroup + oneOrMoreSpaces + "\\;");
         Matcher matcher = pattern.matcher(content);
 
-        if (matcher.find())
-        {
+        if (matcher.find()) {
             return matcher.group(1);
-        }
-        else
-        {
+        } else {
             return "";
         }
     }
 
-    private String getClassName(String content)
-    {
+    private String getClassName(String content) {
         Pattern pattern = Pattern.compile(anything + "class" + oneOrMoreSpaces + anythingGroup + oneOrMoreSpaces + "\\{");
         Matcher matcher = pattern.matcher(content);
 
-        if (matcher.find())
-        {
+        if (matcher.find()) {
             return matcher.group(1);
-        }
-        else
-        {
+        } else {
             return "";
         }
     }

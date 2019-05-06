@@ -9,13 +9,15 @@ import processing.core.PApplet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class Director {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     private CodeParser parser;
-    private CodeModelInterface codeModel;
+    private List<CodeModelInterface> codeModels;
 
     // ================================================================
 
@@ -93,9 +95,9 @@ public class Director {
     // Helpers
 
     private void startParser(File projectFilesFolder) {
-        codeModel = new CodeModel();
+        codeModels = new LinkedList<CodeModelInterface>();
 
-        parser = new CodeParser(projectFilesFolder, projectFilesFolder, codeModel);
+        parser = new CodeParser(projectFilesFolder, projectFilesFolder, codeModels);
 
         parser.parseFiles();
     }

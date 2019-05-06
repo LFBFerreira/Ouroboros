@@ -14,6 +14,8 @@ public class CodeModel implements CodeModelInterface{
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     private List<MethodModel> methods = new ArrayList<MethodModel>();
+    private String packageName = "";
+    private String className = "";
 
     // ================================================================
 
@@ -32,6 +34,16 @@ public class CodeModel implements CodeModelInterface{
         {
             methods.add(method);
         }
+    }
+
+    @Override
+    public void setPackageName(String name) {
+        packageName = name;
+    }
+
+    @Override
+    public void setClassName(String name) {
+        className="";
     }
 
     // ================================================================

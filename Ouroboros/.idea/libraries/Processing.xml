@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="processing-core">
+  <library name="Processing">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/libraries/processing-3.4/core.jar!/" />
       <root url="jar://$PROJECT_DIR$/libraries/processing-3.4/gluegen-rt.jar!/" />

@@ -8,6 +8,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="processing-core" level="project" />
+    <orderEntry type="library" name="Processing" level="project" />
+    <orderEntry type="library" name="Commons CLI" level="project" />
   </component>
 </module>

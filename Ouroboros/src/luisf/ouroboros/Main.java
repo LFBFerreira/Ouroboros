@@ -1,14 +1,18 @@
 package luisf.ouroboros;
 
+
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.director.Director;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
+import org.apache.commons.cli.*;
 
 public class Main {
 
@@ -41,23 +45,24 @@ public class Main {
 
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
+    private static final String helpArgument = "h";
+    private static final String parseCodeArgument = "p";
+    private static final String generateGraphicsArgument = "g";
+    private static final String codeFolderArgument = "c";
+    private static final String outputFolderArgument = "o";
+
     public static void main(String[] args) throws IOException, IllegalArgumentException {
 
-        if (args.length < 2) {
-            log.severe("Insufficient arguments");
-            log.info("Argument 1: path to project files folder");
-            log.info("Argument 2: path to output folder");
-            System.exit(0);
-        }
+        Map<String, String> argumentsMapping = getArguments(args);
 
         // parse project files folder
-        File projectFilesFolder = Director.validateFolderPath(args[0]);
+        File projectFilesFolder = Director.validateFolderPath(argumentsMapping.get(codeFolderArgument));
         if (projectFilesFolder == null) {
             log.severe(Handy.f("The project files folder is invalid"));
             System.exit(0);
         }
 
-        File outputFolder = Director.validateFolderPath(args[1]);
+        File outputFolder = Director.validateFolderPath(argumentsMapping.get(outputFolderArgument));
         if (outputFolder == null) {
             log.severe(Handy.f("The output folder is invalid"));
             System.exit(0);
@@ -65,18 +70,53 @@ public class Main {
 
         log.info("Starting Ouroboros");
 
-        Director director = new Director(projectFilesFolder, outputFolder);
-
-        director.startGenerator();
-
-        try {
-            System.in.read();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Director director = new Director(argumentsMapping.containsKey(parseCodeArgument), projectFilesFolder,
+                argumentsMapping.containsKey(generateGraphicsArgument), outputFolder
+        );
     }
 
     // ================================================================
+
+    private static Map<String, String> getArguments(String[] args) {
+        Map<String, String> argumentsMapping = new HashMap<String, String>();
+        Options argumentOptions = new Options();
+        CommandLineParser parser = new DefaultParser();
+
+        argumentOptions.addOption(parseCodeArgument, false, "parse code");
+        argumentOptions.addOption(generateGraphicsArgument, false, "generate graphics");
+        argumentOptions.addOption(codeFolderArgument, true, "code folder path");
+        argumentOptions.addOption(outputFolderArgument, true, "output folder path");
+
+        CommandLine commandLineArguments = null;
+
+        try {
+            commandLineArguments = parser.parse(argumentOptions, args);
+        } catch (ParseException e) {
+            System.err.println("An exception occurred while parsing the command line arguments");
+            e.printStackTrace();
+        }
+
+        if (args.length == 0 || argumentsMapping.containsKey(helpArgument)) {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp( "ant", argumentOptions);
+        }
+
+        // populate arguments and their values
+        if (commandLineArguments.hasOption(parseCodeArgument)) {
+            argumentsMapping.put(parseCodeArgument, "");
+        }
+        if (commandLineArguments.hasOption(generateGraphicsArgument)) {
+            argumentsMapping.put(generateGraphicsArgument, "");
+        }
+        if (commandLineArguments.hasOption(codeFolderArgument)) {
+            argumentsMapping.put(codeFolderArgument, commandLineArguments.getOptionValue(codeFolderArgument));
+        }
+        if (commandLineArguments.hasOption(outputFolderArgument)) {
+            argumentsMapping.put(outputFolderArgument, commandLineArguments.getOptionValue(outputFolderArgument));
+        }
+
+        return argumentsMapping;
+    }
 
     private static void testResources() {
 //        CodeParser parser = new CodeParser();

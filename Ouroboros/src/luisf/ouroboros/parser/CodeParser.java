@@ -26,9 +26,6 @@ public class CodeParser {
         this.projectFilesFolder = projectFilesFolder;
         this.outputFolder = outputFolder;
         this.codeModel = codeModel;
-
-        log.info(Handy.f("project files: %s", projectFilesFolder.getAbsolutePath()));
-        log.info(Handy.f("output: %s", outputFolder.getAbsolutePath()));
     }
 
     // ================================================================
@@ -42,7 +39,7 @@ public class CodeParser {
 
         // print file paths
         log.info(Handy.f("Found %d files", fileList.size()));
-        fileList.stream().forEach(f -> log.info(f.toString()));
+        //fileList.stream().forEach(f -> log.info(f.toString()));
 
         // parse file
         fileList.stream().forEach(f -> parseFile(f, codeModel));

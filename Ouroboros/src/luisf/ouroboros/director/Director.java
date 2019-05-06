@@ -8,7 +8,7 @@ import luisf.ouroboros.parser.CodeParser;
 import processing.core.PApplet;
 
 import java.io.File;
-import java.net.URI;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class Director {
@@ -20,25 +20,44 @@ public class Director {
     // ================================================================
 
 
-    public Director(File projectFilesFolder, File outputFolder) {
-        codeModel = new CodeModel();
+    public Director(boolean parseCode, File projectFilesFolder, boolean generateGraphics, File outputFolder) {
 
-        parser = new CodeParser(projectFilesFolder, outputFolder, codeModel);
+        if (parseCode) {
+            try {
+                log.info(Handy.f("Parsing code from '%s'", projectFilesFolder.getCanonicalPath()));
+            } catch (IOException e) {
+                log.severe("An exception occurred while getting the canonical path");
+                e.printStackTrace();
+            }
+        } else {
+            log.info(Handy.f("Not parsing code "));
+        }
 
-        parser.parseFiles();
+        if (generateGraphics) {
+            try {
+                log.info(Handy.f("Generate graphics to '%s'", outputFolder.getCanonicalPath()));
+            } catch (IOException e) {
+                log.severe("An exception occurred while getting the canonical path");
+                e.printStackTrace();
+            }
+        } else {
+            log.info(Handy.f("Not generating graphics"));
+        }
+
+        if (parseCode) {
+            startParser(projectFilesFolder);
+        }
+
+        if (generateGraphics) {
+            startGenerator(projectFilesFolder, outputFolder);
+        }
     }
+
+
 
     // ================================================================
 
     // Public
-
-    public void startParser() {
-
-    }
-
-    public void startGenerator() {
-        PApplet.main(Generator.class.getCanonicalName());
-    }
 
 
     // ================================================================
@@ -46,12 +65,21 @@ public class Director {
     // Static
 
     public static File validateFolderPath(String path) {
+        if (Handy.isNullOrEmpty(path)) {
+            return null;
+        }
+
         File folder = new File(path);
 
         if (folder.exists() && folder.isDirectory()) {
             return folder;
         } else {
-            log.severe(Handy.f("The folder '%s' doesn't exist or its not a directory", path));
+            try {
+                log.severe(Handy.f("The folder '%s' doesn't exist or its not a directory", folder.getCanonicalPath()));
+            } catch (IOException e) {
+                log.severe("An exception occurred while getting the canonical path");
+                e.printStackTrace();
+            }
             return null;
         }
     }
@@ -60,4 +88,16 @@ public class Director {
     // ================================================================
 
     // Helpers
+
+    private void startParser(File projectFilesFolder) {
+        codeModel = new CodeModel();
+
+        parser = new CodeParser(projectFilesFolder, projectFilesFolder, codeModel);
+
+        parser.parseFiles();
+    }
+
+    private void startGenerator(File projectFilesFolder, File outputFolder) {
+        PApplet.main(Generator.class.getCanonicalName());
+    }
 }

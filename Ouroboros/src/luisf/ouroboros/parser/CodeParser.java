@@ -8,16 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-import static luisf.ouroboros.parser.RegexConstants.oneOrMoreSpaces;
-import static luisf.ouroboros.parser.RegexConstants.anythingGroup;
-import static luisf.ouroboros.parser.RegexConstants.anything;
+import static luisf.ouroboros.parser.RegexConstants.*;
 
 
 public class CodeParser {
@@ -61,21 +59,26 @@ public class CodeParser {
         // parse file
         int[] idx = {0};
 
-        fileList.stream().forEach(f ->
-        {
-            CodeModelInterface model = new CodeModel();
-            parseFile(f, model);
-            codeModels.add(model);
-        });
+        // parse file individually
+//        fileList.stream().forEach(f ->
+//        {
+//            CodeModelInterface model = new CodeModel();
+//            parseFile(f, model);
+//            codeModels.add(model);
+//        });
 
-        //parseFile(fileList.get(0), codeModels);
+        CodeModelInterface model = new CodeModel();
+        parseFile(fileList.get(0), model);
+        codeModels.add(model);
 
+        // debug print
         codeModels.stream().forEach(c ->
         {
             log.info("-----------");
             log.info("package " + c.getPackageName());
             log.info("class " + c.getClassName());
         });
+
         return !fileList.isEmpty();
     }
 
@@ -90,23 +93,16 @@ public class CodeParser {
         codeModel.setPackageName(getPackageName(fileContent));
         codeModel.setClassName(getClassName(fileContent));
 
-//        log.info("-----------");
-//        log.info("package " + getPackageName(fileContent));
-//        log.info("class " + getClassName(fileContent));
+        String classCode = getClassCode(fileContent);
 
+        //log.info("\n" + getClassCode(fileContent) + "\n");
 
-//        Pattern p = Pattern.compile("(</?[a-z]*>)");
-//
-//        Matcher matcher = p.matcher(fileContent);
-//
-//        while (matcher.find()) {
-//
-//            System.out.println(matcher.group(1));
-//        }
+        List<String> methodCodes = getMethodCodes(classCode);
     }
 
+
     private String getPackageName(String content) {
-        Pattern pattern = Pattern.compile(anything + "package" + oneOrMoreSpaces + anythingGroup + oneOrMoreSpaces + "\\;");
+        Pattern pattern = Pattern.compile(anyChar + "package" + oneOrMoreSpaces + anythingCharGroup + oneOrMoreSpaces + semicolon);
         Matcher matcher = pattern.matcher(content);
 
         if (matcher.find()) {
@@ -117,7 +113,7 @@ public class CodeParser {
     }
 
     private String getClassName(String content) {
-        Pattern pattern = Pattern.compile(anything + "class" + oneOrMoreSpaces + anythingGroup + oneOrMoreSpaces + "\\{");
+        Pattern pattern = Pattern.compile(anyChar + "class" + oneOrMoreSpaces + anythingCharGroup + oneOrMoreSpaces + openBraces);
         Matcher matcher = pattern.matcher(content);
 
         if (matcher.find()) {
@@ -126,6 +122,24 @@ public class CodeParser {
             return "";
         }
     }
+
+    private String getClassCode(String content) {
+        Pattern pattern = Pattern.compile(anyChar + "class" + anyChar + openBraces + "((" + anyChar + anyWhitespaceChar + ")*)" + closeBraces);
+        Matcher matcher = pattern.matcher(content);
+
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            return "";
+        }
+    }
+
+    private List<String> getMethodCodes(String classCode) {
+        List<String> methods = new LinkedList<String>();
+
+        return methods;
+    }
+
 
     private void getFileListRecursive(String folderPath, List<File> files) {
         File[] topLevelFiles = new File(folderPath).listFiles();

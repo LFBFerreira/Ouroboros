@@ -11,4 +11,7 @@ public class RegexConstants {
     public static String closeBraces = "\\}";
     public static String semicolon = "\\;";
 
+    public static String methodVisibilityKeywords = "(public|private|static|protected|abstract|native|synchronized)";
+    public static String atLeastOneSpace =  "\\s+";
+
 }

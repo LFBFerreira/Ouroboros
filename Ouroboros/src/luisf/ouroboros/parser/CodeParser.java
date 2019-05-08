@@ -6,16 +6,9 @@ import luisf.ouroboros.model.CodeModelInterface;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static luisf.ouroboros.parser.RegexConstants.*;
 
 
 public class CodeParser {
@@ -27,6 +20,8 @@ public class CodeParser {
     private File outputFolder;
 
     private List<CodeModelInterface> codeModels;
+
+
 
     // ================================================================
 
@@ -44,7 +39,7 @@ public class CodeParser {
     public Boolean parseFiles() {
         List<File> fileList = new ArrayList<File>();
 
-        getFileListRecursive(projectFilesFolder.getPath(), fileList);
+        Parse.getFileListRecursive(projectFilesFolder.getPath(), fileList, fileExtensionFilter);
 
         // print file paths
         log.info(Handy.f("Found %d files", fileList.size()));
@@ -59,17 +54,17 @@ public class CodeParser {
         // parse file
         int[] idx = {0};
 
-        // parse file individually
-//        fileList.stream().forEach(f ->
-//        {
-//            CodeModelInterface model = new CodeModel();
-//            parseFile(f, model);
-//            codeModels.add(model);
-//        });
-
         CodeModelInterface model = new CodeModel();
-        parseFile(fileList.get(0), model);
-        codeModels.add(model);
+
+        // parse file individually
+        fileList.stream().forEach(f ->
+        {
+            parseFile(f, model);
+            codeModels.add(model);
+        });
+
+        //parseFile(fileList.get(0), model);
+        //codeModels.add(model);
 
         // debug print
         codeModels.stream().forEach(c ->
@@ -88,82 +83,17 @@ public class CodeParser {
     // Helpers
 
     private void parseFile(File file, CodeModelInterface codeModel) {
-        String fileContent = fileToString(file);
+        String fileContent = Parse.fileToString(file);
 
-        codeModel.setPackageName(getPackageName(fileContent));
-        codeModel.setClassName(getClassName(fileContent));
+        codeModel.setPackageName(Parse.getPackageName(fileContent));
+        codeModel.setClassName(Parse.getClassName(fileContent));
 
-        String classCode = getClassCode(fileContent);
+        String classCode = Parse.getClassCode(fileContent);
+        //log.info("\n" + Parse.getClassCode(fileContent) + "\n");
 
-        //log.info("\n" + getClassCode(fileContent) + "\n");
+        List<String> methodCodes = Parse.getOuterScopes(classCode);
+        codeModel.setClassMethods(methodCodes);
 
-        List<String> methodCodes = getMethodCodes(classCode);
-    }
-
-
-    private String getPackageName(String content) {
-        Pattern pattern = Pattern.compile(anyChar + "package" + oneOrMoreSpaces + anythingCharGroup + oneOrMoreSpaces + semicolon);
-        Matcher matcher = pattern.matcher(content);
-
-        if (matcher.find()) {
-            return matcher.group(1);
-        } else {
-            return "";
-        }
-    }
-
-    private String getClassName(String content) {
-        Pattern pattern = Pattern.compile(anyChar + "class" + oneOrMoreSpaces + anythingCharGroup + oneOrMoreSpaces + openBraces);
-        Matcher matcher = pattern.matcher(content);
-
-        if (matcher.find()) {
-            return matcher.group(1);
-        } else {
-            return "";
-        }
-    }
-
-    private String getClassCode(String content) {
-        Pattern pattern = Pattern.compile(anyChar + "class" + anyChar + openBraces + "((" + anyChar + anyWhitespaceChar + ")*)" + closeBraces);
-        Matcher matcher = pattern.matcher(content);
-
-        if (matcher.find()) {
-            return matcher.group(1);
-        } else {
-            return "";
-        }
-    }
-
-    private List<String> getMethodCodes(String classCode) {
-        List<String> methods = new LinkedList<String>();
-
-        return methods;
-    }
-
-
-    private void getFileListRecursive(String folderPath, List<File> files) {
-        File[] topLevelFiles = new File(folderPath).listFiles();
-
-        //log.info(Handy.f("Folder: %s (%d)", folderPath, topLevelFiles.length));
-
-        if (topLevelFiles != null)
-            for (File file : topLevelFiles) {
-                if (file.isFile() && Handy.getFileExtension(file).equals(fileExtensionFilter)) {
-                    files.add(file);
-                } else if (file.isDirectory()) {
-                    getFileListRecursive(file.getAbsolutePath(), files);
-                }
-            }
-    }
-
-    private String fileToString(File file) {
-        String content = "";
-        try {
-            content = new String(Files.readAllBytes(file.toPath()));
-        } catch (IOException e) {
-            log.severe(Handy.f("Exception occurred while reading the file '%s'", file.toPath()));
-            e.printStackTrace();
-        }
-        return content;
+        //methodCodes.stream().forEach(m -> log.info("\n" + m + "\n"));
     }
 }

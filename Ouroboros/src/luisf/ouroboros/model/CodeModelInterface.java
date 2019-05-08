@@ -1,5 +1,7 @@
 package luisf.ouroboros.model;
 
+import java.util.List;
+
 public interface CodeModelInterface {
     void addMethod(MethodModel method);
 
@@ -9,4 +11,5 @@ public interface CodeModelInterface {
     void setClassName(String name);
     String getClassName();
 
+    void setClassMethods(List<String> methods);
 }

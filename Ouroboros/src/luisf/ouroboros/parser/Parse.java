@@ -21,12 +21,12 @@ public class Parse {
 
     public static String getPackageName(String content) {
         return patternMatcher(content,
-                anyChar + "package" + oneOrMoreSpaces + anythingCharGroup + oneOrMoreSpaces + semicolon);
+                anyChar + "package" + oneOrMoreSpaces + anythingCharGroup + anyWhitespaceChar + semicolon);
     }
 
     public static String getClassName(String content) {
         return patternMatcher(content,
-                anyChar + "class" + oneOrMoreSpaces + anythingCharGroup + oneOrMoreSpaces + openBraces);
+                anyChar + "class" + oneOrMoreSpaces + "(\\w+)" + "[\\w\\s]+" + openBraces);
     }
 
     public static String getClassCode(String content) {
@@ -36,6 +36,8 @@ public class Parse {
 
     public static String getMethodName(String code) {
         String uncommentedCode = removeComments(code).trim();
+
+        // regex taken from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
 
         return patternMatcher(uncommentedCode,
                 methodVisibilityKeywords + " *([\\w<>.?, ]*)" + oneOrMoreSpaces + "(\\w+)" + anyWhitespaceChar +
@@ -142,8 +144,6 @@ public class Parse {
     public static void getFileListRecursive(String folderPath, List<File> files, String extension) {
         File[] topLevelFiles = new File(folderPath).listFiles();
 
-        //log.info(Handy.f("Folder: %s (%d)", folderPath, topLevelFiles.length));
-
         if (topLevelFiles != null)
             for (File file : topLevelFiles) {
                 if (file.isFile() && Handy.getFileExtension(file).equals(extension)) {
@@ -173,7 +173,7 @@ public class Parse {
      * @return
      */
     public static String removeComments(String content) {
-        return content.replaceAll("//.*|(\"(?:\\\\[^\"]|\\\\\"|.)*?\")|(?s)/\\*.*?\\*/", "$1 ").trim();
+        return content.replaceAll("\\/\\*[\\s\\S]*?\\*\\/|([^:]|^)\\/\\/.*$", "$1 ").trim();
     }
 
     private static String patternMatcher(String content, String patternText) {

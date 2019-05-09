@@ -6,13 +6,10 @@ import luisf.ouroboros.parser.Parse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static luisf.ouroboros.parser.RegexConstants.*;
+import java.util.stream.IntStream;
 
 
-public class CodeModel implements CodeModelInterface {
+public class ClassModel implements ClassModelInterface {
 
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
@@ -22,13 +19,13 @@ public class CodeModel implements CodeModelInterface {
 
     // ================================================================
 
-    public CodeModel() {
+    public ClassModel() {
 
     }
 
     // ================================================================
 
-    // CodeModelInterface
+    // ClassModelInterface
 
     @Override
     public void addMethod(MethodModel method) {
@@ -62,24 +59,31 @@ public class CodeModel implements CodeModelInterface {
 
         for (String code : methodsCode) {
             String name = Parse.getMethodName(code);
-            log.info("Method name: " + name);
+            //log.info("Method name: " + name);
+
             if (Handy.isNullOrEmpty(name)) {
-                log.severe("NOOOOOOOOO");
+                log.severe("Method name could not be parsed");
                 log.info("\n\n" + code + "\n\n");
+            } else {
+                methods.add(new MethodModel(className, name, code));
             }
-
-            //log.info("\n" + code + "\n");
-
-//            Pattern pattern = Pattern.compile(anythingCharGroup + anyWhitespaceChar + "\\(" + anyWhitespaceChar + anyChar + anyWhitespaceChar + "\\)" + anyWhitespaceChar + "\\{");
-//            Matcher matcher = pattern.matcher(code);
-//
-//            if (matcher.find()) {
-//                methods.add(new MethodModel(className, matcher.group(1), code));
-//            } else {
-//                log.warning("The name of this method could not be parsed!");
-//                //log.warning("\n" + code + "\n");
-//            }
         }
+    }
+
+    @Override
+    public String[] getMethodNames() {
+        if (methods.isEmpty()) {
+            return null;
+        }
+
+        String[] names = new String[methods.size()];
+
+        IntStream.range(0, methods.size()).forEach(i ->
+        {
+            names[i] = methods.get(i).name;
+        });
+
+        return names;
     }
 
     // ================================================================

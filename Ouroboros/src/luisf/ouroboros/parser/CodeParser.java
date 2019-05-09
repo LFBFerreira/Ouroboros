@@ -1,12 +1,13 @@
 package luisf.ouroboros.parser;
 
 import luisf.ouroboros.common.Handy;
-import luisf.ouroboros.model.CodeModel;
-import luisf.ouroboros.model.CodeModelInterface;
+import luisf.ouroboros.model.ClassModel;
+import luisf.ouroboros.model.ClassModelInterface;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -19,16 +20,16 @@ public class CodeParser {
     private File projectFilesFolder;
     private File outputFolder;
 
-    private List<CodeModelInterface> codeModels;
+    private List<ClassModelInterface> classModels;
 
 
     // ================================================================
 
-    public CodeParser(File projectFilesFolder, File outputFolder, List<CodeModelInterface> codeModels) {
+    public CodeParser(File projectFilesFolder, File outputFolder, List<ClassModelInterface> classModels) {
 
         this.projectFilesFolder = projectFilesFolder;
         this.outputFolder = outputFolder;
-        this.codeModels = codeModels;
+        this.classModels = classModels;
     }
 
     // ================================================================
@@ -42,7 +43,6 @@ public class CodeParser {
 
         // print file paths
         log.info(Handy.f("Found %d files", fileList.size()));
-        //fileList.stream().forEach(f -> log.info(f.toString()));
 
         try {
             log.info(Handy.f("Starting with %s", fileList.get(0).getCanonicalPath()));
@@ -50,27 +50,33 @@ public class CodeParser {
             e.printStackTrace();
         }
 
-        // parse file
-        int[] idx = {0};
-
-        CodeModelInterface model = new CodeModel();
-
-        // parse file individually
+        // parse files
         fileList.stream().forEach(f ->
         {
-            parseFile(f, model);
-            codeModels.add(model);
+            ClassModelInterface classModel = new ClassModel();
+            parseFile(f, classModel);
+            classModels.add(classModel);
         });
 
+        // parse file individually
         //parseFile(fileList.get(0), model);
-        //codeModels.add(model);
+        //classModels.add(model);
 
         // debug print
-        codeModels.stream().forEach(c ->
+
+        classModels.stream().forEach(c ->
         {
-            log.info("-----------");
+            log.info("\n-----------");
             log.info("package " + c.getPackageName());
             log.info("class " + c.getClassName());
+
+            String[] methodNames = c.getMethodNames();
+            if (methodNames != null) {
+                Arrays.asList(c.getMethodNames()).forEach(name -> log.info(Handy.f("\t\t%s", name)));
+            } else {
+                log.warning("\t\tNo methods found in this class!");
+            }
+
         });
 
         return !fileList.isEmpty();
@@ -81,17 +87,36 @@ public class CodeParser {
 
     // Helpers
 
-    private void parseFile(File file, CodeModelInterface codeModel) {
+    private void parseFile(File file, ClassModelInterface classModel) {
         String fileContent = Parse.fileToString(file);
 
-        codeModel.setPackageName(Parse.getPackageName(fileContent));
-        codeModel.setClassName(Parse.getClassName(fileContent));
+        String packageName = Parse.getPackageName(fileContent);
+        if (!Handy.isNullOrEmpty(packageName)) {
+            classModel.setPackageName(packageName);
+        }
+        else
+        {
+            log.warning("Could not parse the package name!");
+        }
+
+        String className = Parse.getClassName(fileContent);
+        if (!Handy.isNullOrEmpty(className)) {
+            classModel.setClassName(className);
+        }
+        else
+        {
+            log.warning("Could not parse the class name!");
+        }
 
         String classCode = Parse.getClassCode(fileContent);
-        //log.info("\n" + Parse.getClassCode(fileContent) + "\n");
-
-        List<String> methodCodes = Parse.getOuterScopes(classCode);
-        codeModel.setClassMethods(methodCodes);
+        if (!Handy.isNullOrEmpty(classCode)) {
+            List<String> methodCodes = Parse.getOuterScopes(classCode);
+            classModel.setClassMethods(methodCodes);
+        }
+        else
+        {
+            log.warning("Could not parse the class code!");
+        }
 
         //methodCodes.stream().forEach(m -> log.info("\n" + m + "\n"));
     }

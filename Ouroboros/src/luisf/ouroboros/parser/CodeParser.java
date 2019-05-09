@@ -22,7 +22,6 @@ public class CodeParser {
     private List<CodeModelInterface> codeModels;
 
 
-
     // ================================================================
 
     public CodeParser(File projectFilesFolder, File outputFolder, List<CodeModelInterface> codeModels) {

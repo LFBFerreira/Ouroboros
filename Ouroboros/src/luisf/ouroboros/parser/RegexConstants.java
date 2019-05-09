@@ -2,7 +2,7 @@ package luisf.ouroboros.parser;
 
 public class RegexConstants {
 
-    public static String oneOrMoreSpaces = "\\s*";
+    public static String oneOrMoreSpaces = "\\s+";
     public static String anyChar = ".*";
     public static String anyWhitespaceChar = "\\s*";
     public static String anythingCharGroup = "(" + anyChar + ")";
@@ -12,6 +12,6 @@ public class RegexConstants {
     public static String semicolon = "\\;";
 
     public static String methodVisibilityKeywords = "(public|private|static|protected|abstract|native|synchronized)";
-    public static String atLeastOneSpace =  "\\s+";
+    public static String atLeastOneSpace = "\\s+";
 
 }

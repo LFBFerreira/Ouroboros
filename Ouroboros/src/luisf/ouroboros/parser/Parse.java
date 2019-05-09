@@ -34,17 +34,18 @@ public class Parse {
                 anyChar + "class" + anyChar + openBraces + "((" + anyChar + anyWhitespaceChar + ")*)" + closeBraces);
     }
 
-    public static String getMethodName(String code)
-    {
+    public static String getMethodName(String code) {
         String uncommentedCode = removeComments(code).trim();
 
-        return patternMatcher(code,
-                methodVisibilityKeywords + atLeastOneSpace + "([a-zA-Z0-9<>._?, ]*)" + atLeastOneSpace + "(a-zA-Z0-9) *\\([a-zA-Z0-9<>\\[\\]._?, \\n]*\\) *([a-zA-Z0-9_ ,\\n]*) *\\{",
+        return patternMatcher(uncommentedCode,
+                methodVisibilityKeywords + " *([\\w<>.?, ]*)" + oneOrMoreSpaces + "(\\w+)" + anyWhitespaceChar +
+                        "\\([\\w<>\\[\\]._?, \\n]*\\)" + anyWhitespaceChar + "([\\w ,\\n]*)" + anyWhitespaceChar + "\\{",
                 3);
     }
 
     /**
      * Extracts a list of plain text methods from a given content
+     *
      * @param content
      * @return
      */
@@ -167,6 +168,7 @@ public class Parse {
     /**
      * Removes single line and multiline comments from the input text
      * from: https://stackoverflow.com/questions/1657066/java-regular-expression-finding-comments-in-code
+     *
      * @param content
      * @return
      */
@@ -174,13 +176,11 @@ public class Parse {
         return content.replaceAll("//.*|(\"(?:\\\\[^\"]|\\\\\"|.)*?\")|(?s)/\\*.*?\\*/", "$1 ").trim();
     }
 
-    private static String patternMatcher(String content, String patternText)
-    {
+    private static String patternMatcher(String content, String patternText) {
         return patternMatcher(content, patternText, 1);
     }
 
-    private static String patternMatcher(String content, String patternText, int groupIndex)
-    {
+    private static String patternMatcher(String content, String patternText, int groupIndex) {
         Pattern pattern = Pattern.compile(patternText);
         Matcher matcher = pattern.matcher(content);
 

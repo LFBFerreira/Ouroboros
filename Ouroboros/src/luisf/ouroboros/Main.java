@@ -98,7 +98,7 @@ public class Main {
 
         if (args.length == 0 || argumentsMapping.containsKey(helpArgument)) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp( "ant", argumentOptions);
+            formatter.printHelp("ant", argumentOptions);
         }
 
         // populate arguments and their values

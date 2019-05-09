@@ -63,30 +63,28 @@ public class CodeModel implements CodeModelInterface {
         for (String code : methodsCode) {
             String name = Parse.getMethodName(code);
             log.info("Method name: " + name);
-            if (Handy.isNullOrEmpty(name))
-            {
+            if (Handy.isNullOrEmpty(name)) {
                 log.severe("NOOOOOOOOO");
                 log.info("\n\n" + code + "\n\n");
             }
 
             //log.info("\n" + code + "\n");
 
-            Pattern pattern = Pattern.compile(anythingCharGroup + anyWhitespaceChar + "\\(" + anyWhitespaceChar + anyChar + anyWhitespaceChar + "\\)" + anyWhitespaceChar + "\\{");
-            Matcher matcher = pattern.matcher(code);
-
-            if (matcher.find()) {
-                methods.add(new MethodModel(className, matcher.group(1), code));
-            } else {
-                log.warning("The name of this method could not be parsed!");
-                log.warning("\n" + code + "\n");
-            }
+//            Pattern pattern = Pattern.compile(anythingCharGroup + anyWhitespaceChar + "\\(" + anyWhitespaceChar + anyChar + anyWhitespaceChar + "\\)" + anyWhitespaceChar + "\\{");
+//            Matcher matcher = pattern.matcher(code);
+//
+//            if (matcher.find()) {
+//                methods.add(new MethodModel(className, matcher.group(1), code));
+//            } else {
+//                log.warning("The name of this method could not be parsed!");
+//                //log.warning("\n" + code + "\n");
+//            }
         }
     }
 
     // ================================================================
 
     // Helpers
-
 
 
 }

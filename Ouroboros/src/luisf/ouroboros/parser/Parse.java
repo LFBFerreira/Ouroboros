@@ -40,7 +40,7 @@ public class Parse {
         // regex taken from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
 
         return patternMatcher(uncommentedCode,
-                methodVisibilityKeywords + " *([\\w<>.?, ]*)" + oneOrMoreSpaces + "(\\w+)" + anyWhitespaceChar +
+                methodVisibilityKeywords + " *([\\w<>.?, \\[\\]]*)" + oneOrMoreSpaces + "(\\w+)" + anyWhitespaceChar +
                         "\\([\\w<>\\[\\]._?, \\n]*\\)" + anyWhitespaceChar + "([\\w ,\\n]*)" + anyWhitespaceChar + "\\{",
                 3);
     }

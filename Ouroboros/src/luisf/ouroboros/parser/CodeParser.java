@@ -44,12 +44,6 @@ public class CodeParser {
         // print file paths
         log.info(Handy.f("Found %d files", fileList.size()));
 
-        try {
-            log.info(Handy.f("Starting with %s", fileList.get(0).getCanonicalPath()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         // parse files
         fileList.stream().forEach(f ->
         {

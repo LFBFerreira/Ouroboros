@@ -1,6 +1,8 @@
 package luisf.ouroboros.model;
 
-public class MethodModel {
+import java.io.Serializable;
+
+public class MethodModel implements Serializable {
 
     public String parentClassName = "";
     public String name = "";

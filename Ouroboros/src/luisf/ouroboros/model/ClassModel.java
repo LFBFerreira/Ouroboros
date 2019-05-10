@@ -3,19 +3,22 @@ package luisf.ouroboros.model;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.parser.Parse;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
 
-public class ClassModel implements ClassModelInterface {
+public class ClassModel implements ClassModelInterface, Serializable {
 
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
-    private List<MethodModel> methods = new ArrayList<MethodModel>();
+    private List<MethodModel> methodModels = new ArrayList<MethodModel>();
     private String packageName = "";
     private String className = "";
+
+    public String test = "This is a test";
 
     // ================================================================
 
@@ -30,7 +33,7 @@ public class ClassModel implements ClassModelInterface {
     @Override
     public void addMethod(MethodModel method) {
         if (method != null) {
-            methods.add(method);
+            methodModels.add(method);
         }
     }
 
@@ -55,6 +58,11 @@ public class ClassModel implements ClassModelInterface {
     }
 
     @Override
+    public String getFullClassName() {
+        return packageName + "." + className;
+    }
+
+    @Override
     public void setClassMethods(List<String> methodsCode) {
 
         for (String code : methodsCode) {
@@ -62,25 +70,25 @@ public class ClassModel implements ClassModelInterface {
             //log.info("Method name: " + name);
 
             if (Handy.isNullOrEmpty(name)) {
-                log.severe("Method name could not be parsed");
-                log.info("\n\n" + code + "\n\n");
+                log.severe(Handy.f("Method name could not be parsed for %s.%s class", getPackageName(), getClassName()));
+                //log.info("\n\n" + code + "\n\n");
             } else {
-                methods.add(new MethodModel(className, name, code));
+                methodModels.add(new MethodModel(className, name, code));
             }
         }
     }
 
     @Override
     public String[] getMethodNames() {
-        if (methods.isEmpty()) {
+        if (methodModels.isEmpty()) {
             return null;
         }
 
-        String[] names = new String[methods.size()];
+        String[] names = new String[methodModels.size()];
 
-        IntStream.range(0, methods.size()).forEach(i ->
+        IntStream.range(0, methodModels.size()).forEach(i ->
         {
-            names[i] = methods.get(i).name;
+            names[i] = methodModels.get(i).name;
         });
 
         return names;

@@ -154,17 +154,6 @@ public class Parse {
             }
     }
 
-    public static String fileToString(File file) {
-        String content = "";
-        try {
-            content = new String(Files.readAllBytes(file.toPath()));
-        } catch (IOException e) {
-            log.severe(Handy.f("Exception occurred while reading the file '%s'", file.toPath()));
-            e.printStackTrace();
-        }
-        return content;
-    }
-
     /**
      * Removes single line and multiline comments from the input text
      * from: https://stackoverflow.com/questions/1657066/java-regular-expression-finding-comments-in-code

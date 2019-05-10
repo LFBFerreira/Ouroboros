@@ -1,8 +1,13 @@
 package luisf.ouroboros.common;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.logging.Logger;
 
 public class Handy {
+    private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
+
     /**
      * Check if a string is Null and Empty
      *
@@ -24,6 +29,12 @@ public class Handy {
         return String.format(format, args);
     }
 
+    /**
+     * Extracts the file extension from a given File
+     *
+     * @param file
+     * @return extension name without a dot
+     */
     public static String getFileExtension(File file) {
 
         String name = file.getName().substring(Math.max(file.getName().lastIndexOf('/'),
@@ -34,5 +45,42 @@ public class Handy {
             return ""; // empty extension
         }
         return name.substring(lastIndexOf + 1); // doesn't return "." with extension
+    }
+
+    /**
+     * Checks if the given path points to an existing folder and converts it to a File
+     *
+     * @param path path to folder
+     * @return
+     */
+    public static File validateFolderPath(String path) {
+        if (Handy.isNullOrEmpty(path)) {
+            return null;
+        }
+
+        File folder = new File(path);
+
+        if (folder.exists() && folder.isDirectory()) {
+            return folder;
+        } else {
+            try {
+                log.severe(Handy.f("The folder '%s' doesn't exist or its not a directory", folder.getCanonicalPath()));
+            } catch (IOException e) {
+                log.severe("An exception occurred while getting the canonical path");
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    public static String fileToString(File file) {
+        String content = "";
+        try {
+            content = new String(Files.readAllBytes(file.toPath()));
+        } catch (IOException e) {
+            log.severe(Handy.f("Exception occurred while reading the file '%s'", file.toPath()));
+            e.printStackTrace();
+        }
+        return content;
     }
 }

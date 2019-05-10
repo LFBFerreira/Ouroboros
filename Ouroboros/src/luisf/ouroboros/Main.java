@@ -52,18 +52,18 @@ public class Main {
     private static final String modelsOutputFolderArgument = "m";
     private static final String visualsOutputFolderArgument = "v";
 
-    public static void main(String[] args) throws IOException, IllegalArgumentException {
+    public static void main(String[] args) {
 
         Map<String, String> argumentsMapping = getArguments(args);
 
         // parse project files folder
-        File projectFilesFolder = Director.validateFolderPath(argumentsMapping.get(codeFolderArgument));
+        File projectFilesFolder = Handy.validateFolderPath(argumentsMapping.get(codeFolderArgument));
         if (projectFilesFolder == null) {
             log.severe(Handy.f("The code folder is invalid"));
             System.exit(0);
         }
 
-        File modelsOutputFolder = Director.validateFolderPath(argumentsMapping.get(modelsOutputFolderArgument));
+        File modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsOutputFolderArgument));
         if (modelsOutputFolder == null) {
             log.severe(Handy.f("The models output folder is invalid"));
             System.exit(0);
@@ -71,7 +71,7 @@ public class Main {
 
         File visualsOutputFolder = null;
         if (argumentsMapping.containsKey(generateGraphicsArgument)) {
-            visualsOutputFolder = Director.validateFolderPath(argumentsMapping.get(visualsOutputFolderArgument));
+            visualsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(visualsOutputFolderArgument));
             if (visualsOutputFolder == null) {
                 log.severe(Handy.f("The graphics output folder is invalid"));
                 System.exit(0);

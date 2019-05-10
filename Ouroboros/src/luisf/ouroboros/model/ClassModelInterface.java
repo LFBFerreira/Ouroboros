@@ -11,6 +11,8 @@ public interface ClassModelInterface {
     void setClassName(String name);
     String getClassName();
 
+    String getFullClassName();
+
     void setClassMethods(List<String> methods);
     String[] getMethodNames();
 }

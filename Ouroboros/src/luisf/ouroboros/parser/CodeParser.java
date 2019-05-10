@@ -5,9 +5,7 @@ import luisf.ouroboros.model.ClassModel;
 import luisf.ouroboros.model.ClassModelInterface;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -20,12 +18,12 @@ public class CodeParser {
     private File projectFilesFolder;
     private File outputFolder;
 
-    private List<ClassModelInterface> classModels;
+    private List<ClassModel> classModels;
 
 
     // ================================================================
 
-    public CodeParser(File projectFilesFolder, File outputFolder, List<ClassModelInterface> classModels) {
+    public CodeParser(File projectFilesFolder, File outputFolder, List<ClassModel> classModels) {
 
         this.projectFilesFolder = projectFilesFolder;
         this.outputFolder = outputFolder;
@@ -47,7 +45,7 @@ public class CodeParser {
         // parse files
         fileList.stream().forEach(f ->
         {
-            ClassModelInterface classModel = new ClassModel();
+            ClassModel classModel = new ClassModel();
             parseFile(f, classModel);
             classModels.add(classModel);
         });
@@ -70,13 +68,18 @@ public class CodeParser {
         return !fileList.isEmpty();
     }
 
+    public List<ClassModel> getModels()
+    {
+        return classModels;
+    }
+
 
     // ================================================================
 
     // Helpers
 
     private void parseFile(File file, ClassModelInterface classModel) {
-        String fileContent = Parse.fileToString(file);
+        String fileContent = Handy.fileToString(file);
 
         String packageName = Parse.getPackageName(fileContent);
         if (!Handy.isNullOrEmpty(packageName)) {

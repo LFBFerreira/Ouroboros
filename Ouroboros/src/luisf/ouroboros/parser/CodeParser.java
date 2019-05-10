@@ -52,26 +52,20 @@ public class CodeParser {
             classModels.add(classModel);
         });
 
-        // parse file individually
-        //parseFile(fileList.get(0), model);
-        //classModels.add(model);
-
         // debug print
-
-        classModels.stream().forEach(c ->
-        {
-            log.info("\n-----------");
-            log.info("package " + c.getPackageName());
-            log.info("class " + c.getClassName());
-
-            String[] methodNames = c.getMethodNames();
-            if (methodNames != null) {
-                Arrays.asList(c.getMethodNames()).forEach(name -> log.info(Handy.f("\t\t%s", name)));
-            } else {
-                log.warning("\t\tNo methods found in this class!");
-            }
-
-        });
+//        classModels.stream().forEach(c ->
+//        {
+//            log.info("\n-----------");
+//            log.info("package " + c.getPackageName());
+//            log.info("class " + c.getClassName());
+//
+//            String[] methodNames = c.getMethodNames();
+//            if (methodNames != null) {
+//                Arrays.asList(c.getMethodNames()).forEach(name -> log.info(Handy.f("\t\t%s", name)));
+//            } else {
+//                log.warning("\t\tNo methods found in this class!");
+//            }
+//        });
 
         return !fileList.isEmpty();
     }

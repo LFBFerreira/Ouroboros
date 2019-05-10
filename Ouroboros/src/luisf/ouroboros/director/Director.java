@@ -21,11 +21,12 @@ public class Director {
     // ================================================================
 
 
-    public Director(boolean parseCode, File projectFilesFolder, boolean generateGraphics, File outputFolder) {
+    public Director(boolean parseCode, File projectFilesFolder, boolean generateGraphics, File graphicsFolder, File modelsFolder) {
 
         if (parseCode) {
             try {
                 log.info(Handy.f("Parsing code from '%s'", projectFilesFolder.getCanonicalPath()));
+                log.info(Handy.f("Saving models to '%s'", modelsFolder.getCanonicalPath()));
             } catch (IOException e) {
                 log.severe("An exception occurred while getting the canonical path");
                 e.printStackTrace();
@@ -36,7 +37,7 @@ public class Director {
 
         if (generateGraphics) {
             try {
-                log.info(Handy.f("Generate graphics to '%s'", outputFolder.getCanonicalPath()));
+                log.info(Handy.f("Saving graphics to '%s'", graphicsFolder.getCanonicalPath()));
             } catch (IOException e) {
                 log.severe("An exception occurred while getting the canonical path");
                 e.printStackTrace();
@@ -50,7 +51,7 @@ public class Director {
         }
 
         if (generateGraphics) {
-            startGenerator(projectFilesFolder, outputFolder);
+            startGenerator(projectFilesFolder, graphicsFolder);
         }
     }
 

@@ -49,7 +49,8 @@ public class Main {
     private static final String parseCodeArgument = "p";
     private static final String generateGraphicsArgument = "g";
     private static final String codeFolderArgument = "c";
-    private static final String outputFolderArgument = "o";
+    private static final String modelsOutputFolderArgument = "m";
+    private static final String visualsOutputFolderArgument = "v";
 
     public static void main(String[] args) throws IOException, IllegalArgumentException {
 
@@ -58,21 +59,30 @@ public class Main {
         // parse project files folder
         File projectFilesFolder = Director.validateFolderPath(argumentsMapping.get(codeFolderArgument));
         if (projectFilesFolder == null) {
-            log.severe(Handy.f("The project files folder is invalid"));
+            log.severe(Handy.f("The code folder is invalid"));
             System.exit(0);
         }
 
-        File outputFolder = Director.validateFolderPath(argumentsMapping.get(outputFolderArgument));
-        if (outputFolder == null) {
-            log.severe(Handy.f("The output folder is invalid"));
+        File modelsOutputFolder = Director.validateFolderPath(argumentsMapping.get(modelsOutputFolderArgument));
+        if (modelsOutputFolder == null) {
+            log.severe(Handy.f("The models output folder is invalid"));
             System.exit(0);
+        }
+
+        File visualsOutputFolder = null;
+        if (argumentsMapping.containsKey(generateGraphicsArgument)) {
+            visualsOutputFolder = Director.validateFolderPath(argumentsMapping.get(visualsOutputFolderArgument));
+            if (visualsOutputFolder == null) {
+                log.severe(Handy.f("The graphics output folder is invalid"));
+                System.exit(0);
+            }
         }
 
         log.info("Starting Ouroboros");
 
         Director director = new Director(argumentsMapping.containsKey(parseCodeArgument), projectFilesFolder,
-                argumentsMapping.containsKey(generateGraphicsArgument), outputFolder
-        );
+                argumentsMapping.containsKey(generateGraphicsArgument), visualsOutputFolder,
+                modelsOutputFolder);
     }
 
     // ================================================================
@@ -85,7 +95,8 @@ public class Main {
         argumentOptions.addOption(parseCodeArgument, false, "parse code");
         argumentOptions.addOption(generateGraphicsArgument, false, "generate graphics");
         argumentOptions.addOption(codeFolderArgument, true, "code folder path");
-        argumentOptions.addOption(outputFolderArgument, true, "output folder path");
+        argumentOptions.addOption(visualsOutputFolderArgument, true, "graphics output folder path");
+        argumentOptions.addOption(modelsOutputFolderArgument, true, "models output folder path");
 
         CommandLine commandLineArguments = null;
 
@@ -105,14 +116,21 @@ public class Main {
         if (commandLineArguments.hasOption(parseCodeArgument)) {
             argumentsMapping.put(parseCodeArgument, "");
         }
+
         if (commandLineArguments.hasOption(generateGraphicsArgument)) {
             argumentsMapping.put(generateGraphicsArgument, "");
         }
+
         if (commandLineArguments.hasOption(codeFolderArgument)) {
             argumentsMapping.put(codeFolderArgument, commandLineArguments.getOptionValue(codeFolderArgument));
         }
-        if (commandLineArguments.hasOption(outputFolderArgument)) {
-            argumentsMapping.put(outputFolderArgument, commandLineArguments.getOptionValue(outputFolderArgument));
+
+        if (commandLineArguments.hasOption(visualsOutputFolderArgument)) {
+            argumentsMapping.put(visualsOutputFolderArgument, commandLineArguments.getOptionValue(visualsOutputFolderArgument));
+        }
+
+        if (commandLineArguments.hasOption(modelsOutputFolderArgument)) {
+            argumentsMapping.put(modelsOutputFolderArgument, commandLineArguments.getOptionValue(modelsOutputFolderArgument));
         }
 
         return argumentsMapping;

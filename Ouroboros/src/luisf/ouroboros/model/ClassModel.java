@@ -72,22 +72,6 @@ public class ClassModel implements ClassModelInterface, Serializable {
         return packageName + "." + className;
     }
 
-//    @Override
-//    public void setClassMethods(List<String> methodsCode) {
-//
-//        for (String code : methodsCode) {
-//            String name = Parse.getMethodName(code);
-//            //log.info("Method className: " + className);
-//
-//            if (Handy.isNullOrEmpty(name)) {
-//                log.severe(Handy.f("Method className could not be parsed for %s.%s class", getPackageName(), getClassName()));
-//                //log.info("\n\n" + code + "\n\n");
-//            } else {
-//                methodModels.add(new MethodModel(this.className, name, code));
-//            }
-//        }
-//    }
-
     @Override
     public void setClassMethods(Map<String, String> methodsCode) {
         methodsCode.forEach((name, code) ->

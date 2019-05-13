@@ -83,4 +83,16 @@ public class Handy {
         }
         return content;
     }
+
+    public static String removeSubString(int startIndex, int endIndex, String content) {
+        if (startIndex < 0 || endIndex > content.length()) {
+            log.severe("The start or end indexes of the substring are incorrect");
+            return content;
+        }
+
+        String result = content.substring(0, startIndex);
+        result.concat(content.substring(endIndex + 1, content.length()));
+
+        return content;
+    }
 }

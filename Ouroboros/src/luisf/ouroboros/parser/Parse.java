@@ -41,6 +41,7 @@ public class Parse {
                 anyChar + "class" + anyChar + openBraces + "((" + anyChar + anyWhitespaceChar + ")*)" + closeBraces);
     }
 
+
     public static String getMethodName(String code) {
         String uncommentedCode = removeComments(code).trim();
 
@@ -50,6 +51,72 @@ public class Parse {
                 methodVisibilityKeywords + " *([\\w<>.?, \\[\\]]*)" + oneOrMoreSpaces + "(\\w+)" + anyWhitespaceChar +
                         "\\([\\w<>\\[\\]._?, \\n]*\\)" + anyWhitespaceChar + "([\\w ,\\n]*)" + anyWhitespaceChar + "\\{",
                 3);
+    }
+
+    public static String removeStaticBlocks(String content) {
+        Pattern pattern = Pattern.compile("\\s*static\\s*(\\{)");
+        Matcher matcher = pattern.matcher(content);
+
+        int blockStartIndex = -1;
+        int blockEndIndex = -1;
+
+        // create a copy of the content
+        String filteredContent = content;
+
+        do {
+            if (matcher.find()) {
+                blockStartIndex = matcher.start(1);
+                blockEndIndex = getMatchingBraceIndex(content, blockStartIndex);
+
+                if (blockEndIndex != -1) {
+                    filteredContent = Handy.removeSubString(blockStartIndex, blockEndIndex, content);
+                } else {
+                    log.severe(Handy.f("Could not find a matching closing brace"));
+                    break;
+                }
+            } else {
+                break;
+            }
+
+
+        } while (blockStartIndex != -1);
+
+        return filteredContent;
+    }
+
+    public static int getMatchingBraceIndex(String content, int openBraceIndex) {
+        int closingIndex = -1;
+
+        if (openBraceIndex >= content.length()) {
+            log.severe("The index of the open brace is incorrect");
+            return closingIndex;
+        }
+
+        Boolean isInsideString = false;
+        int scopeLevel = 0;
+
+        for (int i = 0; i < content.length(); i++) {
+            char charAt = content.charAt(i);
+
+            if (charAt == '"' || charAt == '\'') {
+                isInsideString = !isInsideString;
+            }
+
+            // if the cursor is past the open brace index, and its not inside a string
+            if (i > openBraceIndex && !isInsideString) {
+                if (charAt == '{') {
+                    scopeLevel++;
+                } else if (charAt == '}') {
+                    scopeLevel--;
+
+                    if (scopeLevel == 0) {
+                        closingIndex = i;
+                    }
+                }
+            }
+        }
+
+        return closingIndex;
     }
 
     /**

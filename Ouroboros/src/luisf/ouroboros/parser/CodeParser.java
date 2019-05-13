@@ -109,6 +109,7 @@ public class CodeParser {
 
             // parse class methods
             String classCode = Parse.getClassMethodsText(fileContent);
+
             if (!Handy.isNullOrEmpty(classCode)) {
                 List<String> methodCodes = Parse.getOuterScopes(classCode);
                 Map<String, String> methodsInfo = new HashMap <String, String>();
@@ -119,6 +120,7 @@ public class CodeParser {
 
                     if (Handy.isNullOrEmpty(methodName)) {
                         log.severe(Handy.f("Method name could not be parsed for the class %s.%s", packageName, className));
+                        //log.info(code);
                     } else {
                         methodsInfo.put(methodName, code);
                     }
@@ -126,8 +128,8 @@ public class CodeParser {
 
                 classModel.setClassMethods(methodsInfo);
             } else {
-                log.warning("Could not parse the methods!");
-                log.warning(fileContent);
+                log.severe("Could not parse the methods of this class");
+                log.severe(fileContent);
             }
 
         } else {

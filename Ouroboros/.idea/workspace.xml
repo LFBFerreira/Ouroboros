@@ -5,21 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="96fdb1cb-9c60-4ecc-94a7-9da8b24eeda5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/com_fasterxml_jackson_core_jackson_databind_2_9_8.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/luisf/ouroboros/modelsWriter/ModelsIO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ouroboros.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Ouroboros.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Ouroboros/luisf/ouroboros/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Ouroboros/luisf/ouroboros/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Ouroboros/luisf/ouroboros/director/Director.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Ouroboros/luisf/ouroboros/director/Director.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Ouroboros/luisf/ouroboros/model/ClassModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Ouroboros/luisf/ouroboros/model/ClassModel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/model/ClassModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/model/ClassModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/model/ClassModelInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/model/ClassModelInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/model/MethodModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/model/MethodModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/parser/CodeParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/parser/CodeParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/parser/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/parser/Parse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/parser/RegexConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/parser/RegexConstants.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,8 +28,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1049">
-              <caret line="76" lean-forward="true" selection-start-line="76" selection-end-line="76" />
+            <state relative-caret-position="441">
+              <caret line="69" column="39" selection-start-line="69" selection-start-column="39" selection-end-line="69" selection-end-column="39" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/modelsWriter/ModelsIO.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="303">
+              <caret line="117" lean-forward="true" selection-start-line="117" selection-end-line="117" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -46,38 +50,26 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/modelsWriter/ModelsIO.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="263">
-              <caret line="121" column="41" selection-start-line="121" selection-start-column="41" selection-end-line="121" selection-end-column="41" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2186#2198#0" expanded="true" />
-                <element signature="e#3461#3473#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/parser/CodeParser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="232">
-              <caret line="80" column="38" selection-start-line="80" selection-start-column="38" selection-end-line="80" selection-end-column="38" />
+            <state relative-caret-position="404">
+              <caret line="120" column="123" selection-start-line="120" selection-start-column="123" selection-end-line="120" selection-end-column="123" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#2202#2203#0" expanded="true" />
-                <element signature="e#2269#2270#0" expanded="true" />
+                <element signature="e#3641#3657#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/model/MethodModel.java">
+        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/model/ClassModelInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+            <state relative-caret-position="306">
+              <caret line="18" column="9" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -85,8 +77,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/parser/Parse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="383">
-              <caret line="154" column="5" selection-start-line="154" selection-start-column="5" selection-end-line="154" selection-end-column="5" />
+            <state relative-caret-position="304">
+              <caret line="43" column="25" selection-start-line="43" selection-start-column="25" selection-end-line="43" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -95,14 +87,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/parser/RegexConstants.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/model/ClassModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="92">
-              <caret line="16" column="22" lean-forward="true" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
+            <state relative-caret-position="249">
+              <caret line="77" column="43" lean-forward="true" selection-start-line="77" selection-start-column="43" selection-end-line="77" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1293#1294#0" expanded="true" />
-                <element signature="e#1344#1345#0" expanded="true" />
+                <element signature="e#3149#3150#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -121,10 +121,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getMethodCodes</find>
-      <find>map</find>
-      <find>getouterc</find>
-      <find>setClassMethods</find>
       <find>getFileListRecursive</find>
       <find>void test()</find>
       <find>private static String patternMatcher</find>
@@ -143,7 +139,6 @@
       <find>getMethodNames()</find>
       <find>classmodel</find>
       <find>classmode</find>
-      <find>Method name could not be parsed</find>
       <find>objectMapper</find>
       <find>methodNames</find>
       <find>JsonMappingException</find>
@@ -151,6 +146,11 @@
       <find>ClassModelInterface</find>
       <find>methodnames</find>
       <find>ClassNotFoundException</find>
+      <find>could not par</find>
+      <find>Method name could not be parsed</find>
+      <find>Map&lt;</find>
+      <find>Method name could not be parsed for</find>
+      <find>setClassMethods</find>
     </findStrings>
     <replaceStrings>
       <replace>ClassModel</replace>
@@ -172,18 +172,18 @@
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/commandLineArgumentsEnum.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/CommandLineArgumentsEnum.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/model/CodeModelInterface.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/parser/RegexConstants.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/model/CodeModel.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/modelsWriter/ModelsWriter.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/Main.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/parser/Parse.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/parser/CodeParser.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/model/MethodModel.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/modelsWriter/ModelsIO.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/parser/RegexConstants.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/parser/Parse.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/model/ClassModelInterface.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/model/ClassModel.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/model/MethodModel.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/modelsWriter/ModelsIO.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/parser/CodeParser.java" />
       </list>
     </option>
   </component>
@@ -205,6 +205,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -274,7 +275,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -310,8 +310,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Application.Run Parser">
+    <configuration name="Run All" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="luisf.ouroboros.Main" />
       <module name="Ouroboros" />
       <option name="PROGRAM_PARAMETERS" value="-p -c ./src -m ../models_output -g -v ../graphics_output" />
@@ -325,9 +325,27 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Run Parser" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="luisf.ouroboros.Main" />
+      <module name="Ouroboros" />
+      <option name="PROGRAM_PARAMETERS" value="-p -c ./src -m ../models_output" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="luisf.ouroboros.main.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Run Parser" />
+      <item itemvalue="Application.Run All" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Run All" />
       </list>
     </recent_temporary>
   </component>
@@ -345,11 +363,11 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="59" y="-8" width="1869" height="1096" extended-state="6" />
+    <frame x="54" y="-8" width="1874" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49636552" visible="true" weight="0.22443339" />
-      <window_info id="Structure" order="1" sideWeight="0.50363445" side_tool="true" visible="true" weight="0.22443339" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4939551" visible="true" weight="0.22712238" />
+      <window_info id="Structure" order="1" sideWeight="0.5060449" side_tool="true" visible="true" weight="0.22712238" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -357,8 +375,8 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32917964" />
-      <window_info active="true" anchor="bottom" x="-3264" y="-579" width="958" height="853" id="Run" order="2" type="FLOATING" visible="true" weight="0.32917964" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4997236" weight="0.39875388" />
+      <window_info anchor="bottom" x="-3264" y="-579" width="958" height="853" id="Run" order="2" type="FLOATING" visible="true" weight="0.32917964" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.4997236" visible="true" weight="0.39875388" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -380,16 +398,37 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java</url>
-          <line>67</line>
+          <url>file://$PROJECT_DIR$/src/luisf/ouroboros/parser/CodeParser.java</url>
+          <line>89</line>
           <properties />
-          <option name="timeStamp" value="21" />
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/luisf/ouroboros/parser/CodeParser.java</url>
+          <line>120</line>
+          <properties />
+          <option name="timeStamp" value="38" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>classModels</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>fileContent</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>anyChar + &quot;class&quot; + oneOrMoreSpaces + &quot;(\\w+)&quot; + &quot;[\\w\\s]+&quot; + openBraces</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>model</expression-string>
         <language-id>JAVA</language-id>
@@ -418,22 +457,7 @@
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>anyChar + &quot;class&quot; + oneOrMoreSpaces + &quot;(\\w+)&quot; + &quot;[\\w\\s]+&quot; + openBraces</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
         <expression-string>anyChar + &quot;class&quot; + anyChar + openBraces + &quot;((&quot; + anyChar + anyWhitespaceChar + &quot;)*)&quot; + closeBraces</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>anyChar + &quot;class&quot; + oneOrMoreSpaces + anythingCharGroup + anyWhitespaceChar + openBraces</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>c.getMethodNames()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -521,13 +545,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/parser/RegexConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/libraries/jackson/jackson-core-2.9.8.jar!/com/fasterxml/jackson/core/ObjectCodec.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
@@ -553,46 +570,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/parser/Parse.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="154" column="5" selection-start-line="154" selection-start-column="5" selection-end-line="154" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/parser/CodeParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="80" column="38" selection-start-line="80" selection-start-column="38" selection-end-line="80" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2202#2203#0" expanded="true" />
-            <element signature="e#2269#2270#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/libraries/jackson/jackson-databind-2.9.8.jar!/com/fasterxml/jackson/databind/ObjectMapper.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="311">
           <caret line="1220" column="18" selection-start-line="1220" selection-start-column="18" selection-end-line="1220" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/model/ClassModelInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/model/MethodModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -606,22 +587,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/model/ClassModel.java">
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/model/MethodModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="16" column="22" lean-forward="true" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1293#1294#0" expanded="true" />
-            <element signature="e#1344#1345#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="68">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/parser/RegexConstants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1039">
-          <caret line="49" column="32" selection-start-line="49" selection-start-column="32" selection-end-line="49" selection-end-column="32" />
+        <state relative-caret-position="289">
+          <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/modelsWriter/ModelsIO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="117" lean-forward="true" selection-start-line="117" selection-end-line="117" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -630,22 +613,63 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1049">
-          <caret line="76" lean-forward="true" selection-start-line="76" selection-end-line="76" />
+        <state relative-caret-position="441">
+          <caret line="69" column="39" selection-start-line="69" selection-start-column="39" selection-end-line="69" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/modelsWriter/ModelsIO.java">
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="263">
-          <caret line="121" column="41" selection-start-line="121" selection-start-column="41" selection-end-line="121" selection-end-column="41" />
+        <state relative-caret-position="183">
+          <caret line="90" column="8" selection-start-line="90" selection-start-column="8" selection-end-line="90" selection-end-column="8" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2186#2198#0" expanded="true" />
-            <element signature="e#3461#3473#0" expanded="true" />
+            <element signature="e#3341#3357#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/model/ClassModelInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="9" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/model/ClassModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="77" column="43" lean-forward="true" selection-start-line="77" selection-start-column="43" selection-end-line="77" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3149#3150#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/parser/Parse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="43" column="25" selection-start-line="43" selection-start-column="25" selection-end-line="43" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/parser/CodeParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="404">
+          <caret line="120" column="123" selection-start-line="120" selection-start-column="123" selection-end-line="120" selection-end-column="123" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3641#3657#0" expanded="true" />
           </folding>
         </state>
       </provider>

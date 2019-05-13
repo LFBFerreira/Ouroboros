@@ -24,12 +24,19 @@ public class Parse {
                 anyChar + "package" + oneOrMoreSpaces + anythingCharGroup + anyWhitespaceChar + semicolon);
     }
 
+
     public static String getClassName(String content) {
         return patternMatcher(content,
-                anyChar + "class" + oneOrMoreSpaces + "(\\w+)" + "[\\w\\s]+" + openBraces);
+                anyWord + oneOrMoreSpaces + "class" + oneOrMoreSpaces + "(\\w+)" + "[\\w\\s,]+" + openBraces);
     }
 
-    public static String getClassCode(String content) {
+    public static String getInterfaceName(String content) {
+        return patternMatcher(content,
+                anyWord + oneOrMoreSpaces + "interface" + oneOrMoreSpaces + "(\\w+)" + "[\\w\\s,]+" + openBraces);
+    }
+
+
+    public static String getClassMethodsText(String content) {
         return patternMatcher(content,
                 anyChar + "class" + anyChar + openBraces + "((" + anyChar + anyWhitespaceChar + ")*)" + closeBraces);
     }

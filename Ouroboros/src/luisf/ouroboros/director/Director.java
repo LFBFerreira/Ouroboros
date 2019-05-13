@@ -54,9 +54,6 @@ public class Director {
             saveModels(modelsFolder, classModels);
         }
 
-        // TODO remove this later, just for testing
-        classModels.clear();
-
         if (generateGraphics) {
             if(classModels.isEmpty())
             {

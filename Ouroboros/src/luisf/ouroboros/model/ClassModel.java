@@ -6,6 +6,7 @@ import luisf.ouroboros.parser.Parse;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
@@ -17,6 +18,8 @@ public class ClassModel implements ClassModelInterface, Serializable {
     private List<MethodModel> methodModels = new ArrayList<MethodModel>();
     private String packageName = "";
     private String className = "";
+
+    public Boolean isInterface = false;
 
     public String test = "This is a test";
 
@@ -49,7 +52,14 @@ public class ClassModel implements ClassModelInterface, Serializable {
 
     @Override
     public void setClassName(String name) {
-        className = name;
+        isInterface = false;
+        this.className = name;
+    }
+
+    @Override
+    public void setInterfaceName(String name) {
+        isInterface = true;
+        this.className = name;
     }
 
     @Override
@@ -62,20 +72,33 @@ public class ClassModel implements ClassModelInterface, Serializable {
         return packageName + "." + className;
     }
 
+//    @Override
+//    public void setClassMethods(List<String> methodsCode) {
+//
+//        for (String code : methodsCode) {
+//            String name = Parse.getMethodName(code);
+//            //log.info("Method className: " + className);
+//
+//            if (Handy.isNullOrEmpty(name)) {
+//                log.severe(Handy.f("Method className could not be parsed for %s.%s class", getPackageName(), getClassName()));
+//                //log.info("\n\n" + code + "\n\n");
+//            } else {
+//                methodModels.add(new MethodModel(this.className, name, code));
+//            }
+//        }
+//    }
+
     @Override
-    public void setClassMethods(List<String> methodsCode) {
-
-        for (String code : methodsCode) {
-            String name = Parse.getMethodName(code);
-            //log.info("Method name: " + name);
-
-            if (Handy.isNullOrEmpty(name)) {
-                log.severe(Handy.f("Method name could not be parsed for %s.%s class", getPackageName(), getClassName()));
-                //log.info("\n\n" + code + "\n\n");
-            } else {
-                methodModels.add(new MethodModel(className, name, code));
+    public void setClassMethods(Map<String, String> methodsCode) {
+        methodsCode.forEach((name, code) ->
+        {
+            if (Handy.isNullOrEmpty(name) || Handy.isNullOrEmpty(code))
+            {
+                log.severe(Handy.f("The method name or code are empty for class %s", className));
             }
+            methodModels.add(new MethodModel(this.className, name, code));
         }
+        );
     }
 
     @Override
@@ -92,6 +115,11 @@ public class ClassModel implements ClassModelInterface, Serializable {
         });
 
         return names;
+    }
+
+    @Override
+    public Boolean isInterface() {
+        return isInterface;
     }
 
     // ================================================================

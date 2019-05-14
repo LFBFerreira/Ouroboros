@@ -8,6 +8,7 @@ public class RegexConstants {
     public static String anythingCharGroup = "(" + anyChar + ")";
 
     public static String openBraces = "\\{";
+    public static String openBracesGroup = "(\\{)";
     public static String closeBraces = "\\}";
     public static String semicolon = "\\;";
 

@@ -3,7 +3,6 @@ package luisf.ouroboros.parser;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.model.ClassModel;
 import luisf.ouroboros.model.ClassModelInterface;
-import luisf.ouroboros.model.MethodModel;
 
 import java.io.File;
 import java.util.*;
@@ -79,7 +78,11 @@ public class CodeParser {
     // Helpers
 
     private void parseFile(File file, ClassModelInterface classModel) {
+        // read whole file to a string
         String fileContent = Handy.fileToString(file);
+
+        // remove comments to make the parsing later easier
+        fileContent = Parse.removeComments(fileContent);
 
         // parse package name
         String packageName = Parse.getPackageName(fileContent);
@@ -92,6 +95,7 @@ public class CodeParser {
 
         // parse class name
         String className = Parse.getClassName(fileContent);
+
         if (!Handy.isNullOrEmpty(className)) {
             classModel.setClassName(className);
         } else {
@@ -105,14 +109,21 @@ public class CodeParser {
             }
         }
 
+        // keep only the content of the class, whats inside braces
+        fileContent = Parse.extractClassMethods(fileContent);
+
+        fileContent = Parse.removeStaticBlocks(fileContent);
+
+        //getClassStartIndex
+
         if (!classModel.isInterface()) {
 
             // parse class methods
-            String classCode = Parse.getClassMethodsText(fileContent);
+            String classCode = fileContent;
 
             if (!Handy.isNullOrEmpty(classCode)) {
-                List<String> methodCodes = Parse.getOuterScopes(classCode);
-                Map<String, String> methodsInfo = new HashMap <String, String>();
+                List<String> methodCodes = Parse.getScopeCode(classCode);
+                Map<String, String> methodsInfo = new HashMap<String, String>();
 
                 // get chunks of code for each method, and the name
                 for (String code : methodCodes) {
@@ -122,14 +133,36 @@ public class CodeParser {
                         log.severe(Handy.f("Method name could not be parsed for the class %s.%s", packageName, className));
                         //log.info(code);
                     } else {
-                        methodsInfo.put(methodName, code);
+
+                        String cleanCode = Parse.removeStaticBlocks(code);
+                        int openBraceIndex = Parse.getMethodStartBrace(code);
+
+                        if (openBraceIndex > 0) {
+                            int closingBraceIndex = Parse.getMatchingBraceIndex(cleanCode, 0);
+                            if (closingBraceIndex > -1) {
+                                cleanCode = cleanCode.substring(openBraceIndex, closingBraceIndex);
+                            } else {
+                                log.warning(Handy.f("Could not find the closing brace for this method (open @ %d): \n%s",
+                                        openBraceIndex, cleanCode));
+                            }
+                        } else {
+                            log.warning(Handy.f("Could not find the opening brace for this method: \n%s", cleanCode));
+                        }
+
+                        //log.info("After \n" + cleanCode);
+
+                        if (Handy.isNullOrEmpty(cleanCode)) {
+                            log.warning(Handy.f("The method $s has no code", methodName));
+                        } else {
+                            methodsInfo.put(methodName, code);
+                        }
                     }
                 }
 
                 classModel.setClassMethods(methodsInfo);
             } else {
                 log.severe("Could not parse the methods of this class");
-                log.severe(fileContent);
+                //log.severe(fileContent);
             }
 
         } else {

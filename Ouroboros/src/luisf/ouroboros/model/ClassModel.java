@@ -74,14 +74,17 @@ public class ClassModel implements ClassModelInterface, Serializable {
 
     @Override
     public void setClassMethods(Map<String, String> methodsCode) {
+        log.info("Class " + className);
         methodsCode.forEach((name, code) ->
-        {
-            if (Handy.isNullOrEmpty(name) || Handy.isNullOrEmpty(code))
-            {
-                log.severe(Handy.f("The method name or code are empty for class %s", className));
-            }
-            methodModels.add(new MethodModel(this.className, name, code));
-        }
+                {
+                    if (Handy.isNullOrEmpty(name) || Handy.isNullOrEmpty(code)) {
+                        log.severe(Handy.f("The method name or code are empty for class %s", className));
+                    } else {
+                        methodModels.add(new MethodModel(this.className, name, code));
+                    }
+                    //log.info("Method " + name);
+                    //log.info("Code\n" + code + "\n");
+                }
         );
     }
 

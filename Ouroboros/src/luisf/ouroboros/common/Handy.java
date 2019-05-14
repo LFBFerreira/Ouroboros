@@ -91,8 +91,6 @@ public class Handy {
         }
 
         String result = content.substring(0, startIndex);
-        result.concat(content.substring(endIndex + 1, content.length()));
-
-        return content;
+        return result.concat(content.substring(endIndex + 1, content.length()));
     }
 }

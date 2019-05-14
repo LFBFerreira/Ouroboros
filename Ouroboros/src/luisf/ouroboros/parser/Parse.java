@@ -27,7 +27,13 @@ public class Parse {
 
     public static String getClassName(String content) {
         return patternMatcher(content,
-                anyWord + oneOrMoreSpaces + "class" + oneOrMoreSpaces + "(\\w+)" + "[\\w\\s,]+" + openBraces);
+                anyWord + oneOrMoreSpaces + "class" + oneOrMoreSpaces + "(\\w+)" + "[\\w\\s,]+" + openBracesGroup);
+    }
+
+    public static int getClassStartIndex(String content) {
+        return patternMatcherStartIndex(content,
+                anyWord + oneOrMoreSpaces + "class" + oneOrMoreSpaces + "(\\w+)" + "[\\w\\s,]+" + openBracesGroup,
+                2);
     }
 
     public static String getInterfaceName(String content) {
@@ -43,57 +49,103 @@ public class Parse {
 
 
     public static String getMethodName(String code) {
-        String uncommentedCode = removeComments(code).trim();
+        //String uncommentedCode = removeComments(code).trim();
 
         // regex taken from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
 
-        return patternMatcher(uncommentedCode,
+        return patternMatcher(code,
                 methodVisibilityKeywords + " *([\\w<>.?, \\[\\]]*)" + oneOrMoreSpaces + "(\\w+)" + anyWhitespaceChar +
                         "\\([\\w<>\\[\\]._?, \\n]*\\)" + anyWhitespaceChar + "([\\w ,\\n]*)" + anyWhitespaceChar + "\\{",
                 3);
     }
 
+    public static int getMethodStartBrace(String code) {
+        //String uncommentedCode = removeComments(code).trim();
+
+        // regex taken from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
+
+        Pattern pattern = Pattern.compile(methodVisibilityKeywords + " *([\\w<>.?, \\[\\]]*)" + oneOrMoreSpaces + "(\\w+)" + anyWhitespaceChar +
+                "\\([\\w<>\\[\\]._?, \\n]*\\)" + anyWhitespaceChar + "([\\w ,\\n]*)" + anyWhitespaceChar + "(\\{)");
+        Matcher matcher = pattern.matcher(code);
+
+        if (matcher.find()) {
+            return matcher.start(4);
+        } else {
+            return -1;
+        }
+    }
+
     public static String removeStaticBlocks(String content) {
-        Pattern pattern = Pattern.compile("\\s*static\\s*(\\{)");
-        Matcher matcher = pattern.matcher(content);
 
-        int blockStartIndex = -1;
-        int blockEndIndex = -1;
+        String regex = "(static\\s*(\\{))";
+//        Pattern pattern = Pattern.compile();
+//        Matcher matcher = pattern.matcher(uncommentedCode);
 
-        // create a copy of the content
+        // copy the content, to be modified later
         String filteredContent = content;
 
-        do {
-            if (matcher.find()) {
-                blockStartIndex = matcher.start(1);
-                blockEndIndex = getMatchingBraceIndex(content, blockStartIndex);
+        // find index of the start of the static block
+        int blockStartIndex = patternMatcherStartIndex(filteredContent, regex, 1);
+        int openBraceIndex = patternMatcherStartIndex(filteredContent, regex, 2);
+        int blockEndIndex = -1;
+        Boolean foundBlock = false;
 
-                if (blockEndIndex != -1) {
-                    filteredContent = Handy.removeSubString(blockStartIndex, blockEndIndex, content);
-                } else {
-                    log.severe(Handy.f("Could not find a matching closing brace"));
-                    break;
-                }
+        log.info(content);
+
+        while (blockStartIndex > -1) {
+            blockEndIndex = getMatchingBraceIndex(filteredContent, blockStartIndex);
+
+            if (blockEndIndex != -1) {
+                filteredContent = Handy.removeSubString(blockStartIndex, blockEndIndex, filteredContent);
             } else {
+                log.severe(Handy.f("Could not find a matching closing brace"));
                 break;
             }
 
+            // find new static block
+            blockStartIndex = patternMatcherStartIndex(filteredContent, regex, 1);
+        }
 
-        } while (blockStartIndex != -1);
+//        do {
+//
+//            foundBlock = matcher.find();
+//
+//            if (foundBlock) {
+//                blockStartIndex = matcher.start(1);
+//                blockEndIndex = getMatchingBraceIndex(uncommentedCode, blockStartIndex);
+//
+//                if (blockEndIndex != -1) {
+//                    filteredContent = Handy.removeSubString(blockStartIndex, blockEndIndex, uncommentedCode);
+//                } else {
+//                    log.severe(Handy.f("Could not find a matching closing brace"));
+//                    break;
+//                }
+//            } else {
+//                break;
+//            }
+//
+//
+//        } while (blockStartIndex != -1);
 
         return filteredContent;
     }
 
+    /**
+     * @param content
+     * @param openBraceIndex
+     * @return
+     */
     public static int getMatchingBraceIndex(String content, int openBraceIndex) {
-        int closingIndex = -1;
 
-        if (openBraceIndex >= content.length()) {
+        if (openBraceIndex >= content.length() || content.charAt(openBraceIndex) != '{') {
             log.severe("The index of the open brace is incorrect");
-            return closingIndex;
+            return -1;
         }
 
         Boolean isInsideString = false;
         int scopeLevel = 0;
+
+        int lasti = 0;
 
         for (int i = 0; i < content.length(); i++) {
             char charAt = content.charAt(i);
@@ -103,29 +155,33 @@ public class Parse {
             }
 
             // if the cursor is past the open brace index, and its not inside a string
-            if (i > openBraceIndex && !isInsideString) {
+            if (i >= openBraceIndex && !isInsideString) {
                 if (charAt == '{') {
                     scopeLevel++;
                 } else if (charAt == '}') {
                     scopeLevel--;
 
                     if (scopeLevel == 0) {
-                        closingIndex = i;
+                        return i;
                     }
                 }
             }
+
+            lasti = i;
         }
 
-        return closingIndex;
+        log.info("char: " + content.charAt(lasti) + " " + lasti);
+
+        return -1;
     }
 
     /**
-     * Extracts a list of plain text methods from a given content
+     * Extracts all the text inside a certain scope
      *
      * @param content
      * @return
      */
-    public static List<String> getOuterScopes(String content) {
+    public static List<String> getScopeCode(String content) {
 
         Map<Integer, Character> occurrences = traceScopes(content);
         List<String> methods = new LinkedList<String>();
@@ -197,23 +253,34 @@ public class Parse {
         return occurrences;
     }
 
-//    private int scopeCrawlerRecursive(String content, int scopeDepth, List<String> methods) {
-//        int scopeBeginIndex = content.indexOf('{');
-//        int scopeEndIndex = content.indexOf('}');
-//
-//
-//        // stop condition, closing brace comes before the next
-//        if (scopeEndIndex < scopeBeginIndex && scopeBeginIndex != -1)
-//        {
-//            return scopeEndIndex;
-//        }
-//
-//        // call again
-//        scopeCrawlerRecursive(content.substring(scopeBeginIndex + 1), scopeDepth + 1, methods);
-//
-//        return -1;
-//    }
+    public static String extractClassMethods(String content) {
+        //FIX THIS METHOD!
+        int openBraceIndex = getClassStartIndex(content);
 
+        if (openBraceIndex == -1) {
+            log.warning("The class starting brace could not be found");
+            log.warning(content);
+            return "";
+        }
+
+        int closeBraceIndex = getMatchingBraceIndex(content, openBraceIndex);
+
+        // incremente once, so the open brace is not included in the result
+        openBraceIndex++;
+
+        // validate the open and close braces index
+        if (openBraceIndex < closeBraceIndex &&
+                openBraceIndex > -1 &&
+                closeBraceIndex > -1 &&
+                openBraceIndex < content.length() &&
+                closeBraceIndex < content.length()) {
+
+            return content.substring(openBraceIndex, closeBraceIndex);
+        } else {
+            log.warning(Handy.f("The open or close brace index is invalid %d - %d", openBraceIndex, closeBraceIndex));
+            return content;
+        }
+    }
 
     public static void getFileListRecursive(String folderPath, List<File> files, String extension) {
         File[] topLevelFiles = new File(folderPath).listFiles();
@@ -236,13 +303,30 @@ public class Parse {
      * @return
      */
     public static String removeComments(String content) {
-        return content.replaceAll("\\/\\*[\\s\\S]*?\\*\\/|([^:]|^)\\/\\/.*$", "$1 ").trim();
+        return content.replaceAll("\\/\\*[\\s\\S]*?\\*\\/|([^:]|^)\\/\\/.*", " ").trim();
     }
 
+    /**
+     * Finds a match in the input content, using a regular expression.
+     * Returns the result of the first group by default
+     *
+     * @param content
+     * @param patternText
+     * @return
+     */
     private static String patternMatcher(String content, String patternText) {
         return patternMatcher(content, patternText, 1);
     }
 
+    /**
+     * Finds a match in the input content, using a regular expression.
+     * Returns the result of the selected group
+     *
+     * @param content
+     * @param patternText
+     * @param groupIndex
+     * @return
+     */
     private static String patternMatcher(String content, String patternText, int groupIndex) {
         Pattern pattern = Pattern.compile(patternText);
         Matcher matcher = pattern.matcher(content);
@@ -251,6 +335,17 @@ public class Parse {
             return matcher.group(groupIndex);
         } else {
             return "";
+        }
+    }
+
+    private static int patternMatcherStartIndex(String content, String patternText, int groupIndex) {
+        Pattern pattern = Pattern.compile(patternText);
+        Matcher matcher = pattern.matcher(content);
+
+        if (matcher.find()) {
+            return matcher.start(groupIndex);
+        } else {
+            return -1;
         }
     }
 }

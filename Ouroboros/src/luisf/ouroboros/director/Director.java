@@ -21,7 +21,6 @@ public class Director {
 
     // ================================================================
 
-
     public Director(boolean parseCode, File projectFilesFolder, boolean generateGraphics, File graphicsFolder, File modelsFolder) {
 
         if (parseCode) {
@@ -55,8 +54,7 @@ public class Director {
         }
 
         if (generateGraphics) {
-            if(classModels.isEmpty())
-            {
+            if (classModels.isEmpty()) {
                 classModels = readModels(modelsFolder);
             }
             startGenerator(projectFilesFolder, graphicsFolder, classModels);
@@ -66,11 +64,9 @@ public class Director {
     }
 
 
-
     // ================================================================
 
     // Public
-
 
 
     // ================================================================
@@ -88,12 +84,11 @@ public class Director {
     private void parseProjectFiles(File projectFilesFolder, List<ClassModel> models) {
         models.clear();
 
-        parser = new CodeParser(projectFilesFolder, projectFilesFolder, models);
+        parser = new CodeParser(projectFilesFolder, models);
         parser.parseFiles();
     }
 
-    private void saveModels(File modelsFolder, List<ClassModel> models)
-    {
+    private void saveModels(File modelsFolder, List<ClassModel> models) {
         ModelsIO modelsIo = new ModelsIO(modelsFolder);
 //        modelsIo.saveModels(models);
         modelsIo.saveModelsBinary(models);

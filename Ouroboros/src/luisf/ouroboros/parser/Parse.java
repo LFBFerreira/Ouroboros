@@ -3,8 +3,6 @@ package luisf.ouroboros.parser;
 import luisf.ouroboros.common.Handy;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -49,8 +47,6 @@ public class Parse {
 
 
     public static String getMethodName(String code) {
-        //String uncommentedCode = removeComments(code).trim();
-
         // regex taken from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
 
         return patternMatcher(code,
@@ -60,8 +56,6 @@ public class Parse {
     }
 
     public static int getMethodStartBrace(String code) {
-        //String uncommentedCode = removeComments(code).trim();
-
         // regex taken from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
 
         Pattern pattern = Pattern.compile(methodVisibilityKeywords + " *([\\w<>.?, \\[\\]]*)" + oneOrMoreSpaces + "(\\w+)" + anyWhitespaceChar +
@@ -89,7 +83,7 @@ public class Parse {
         Boolean foundBlock = false;
 
         while (openBraceIndex > -1) {
-            blockEndIndex = getMatchingBraceIndex(filteredContent, openBraceIndex);
+            blockEndIndex = findClosingBraceIndex(filteredContent, openBraceIndex);
 
             if (blockEndIndex != -1) {
                 filteredContent = Handy.removeSubString(blockStartIndex, blockEndIndex, filteredContent);
@@ -111,12 +105,7 @@ public class Parse {
      * @param openBraceIndex
      * @return
      */
-    public static int getMatchingBraceIndex(String content, int openBraceIndex) {
-
-        if (content.contains("getFileExtension"))
-        {
-//            log.info("got it");
-        }
+    public static int findClosingBraceIndex(String content, int openBraceIndex) {
 
         if (openBraceIndex >= content.length() || content.charAt(openBraceIndex) != '{') {
             log.severe("The index of the open brace is incorrect, " + openBraceIndex);
@@ -126,28 +115,28 @@ public class Parse {
         Boolean isInsideString = false;
         int scopeLevel = 0;
 
+        // analyze character by character
         for (int i = 0; i < content.length(); i++) {
             char charAt = content.charAt(i);
 
-            if (charAt == '"') {  // bug catching single quotes, its catching the \ as well
-//                log.info(content.substring(0, i+1));
+            if (charAt == '"') {
                 isInsideString = !isInsideString;
             }
 
-            if(charAt == '\'' && !isInsideString)
-            {
-                // skip char inside single quote
-                i += 3;
+            if (charAt == '\'' && !isInsideString) {
+                // skip single quotes if they are not inside a string
+                i+=2;
                 continue;
             }
 
-            // if the cursor is past the open brace index, and its not inside a string
-            if (i >= openBraceIndex && !isInsideString ) {
+            // increase or decrease the scope accordingly, ignoring string occurrences
+            if (i >= openBraceIndex && !isInsideString) {
                 if (charAt == '{') {
                     scopeLevel++;
+                    //log.info(content.substring(i, content.length()));
                 } else if (charAt == '}') {
                     scopeLevel--;
-
+                    //log.info(content.substring(i, content.length()));
                     if (scopeLevel == 0) {
                         return i;
                     }
@@ -159,49 +148,50 @@ public class Parse {
     }
 
     /**
-     * Extracts all the text inside a the outermost scope
+     * Extracts all the text inside of the outermost scopes
      *
      * @param content
      * @return
      */
-    public static List<String> getOuterScopeContent(String content) {
-
-        Map<Integer, Character> occurrences = traceScopes(content);
-        List<String> methods = new LinkedList<String>();
-
-        if (occurrences.isEmpty()) {
-            log.warning("No braces were found in the code");
-            return methods;
-        }
-
-        int scopeDepth = 0;
-        int lastMethodEndIndex = 0;
-
-        Iterator<Map.Entry<Integer, Character>> iterator = occurrences.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry entry = iterator.next();
-            int characterIndex = (Integer) entry.getKey();
-            Character brace = (Character) entry.getValue();
-
-            // count scope depth
-            if (brace.equals(openBraceCharater)) {
-                scopeDepth++;
-            } else if (brace.equals(closeBraceCharater)) {
-                scopeDepth--;
-            } else {
-                log.warning("Unexpected character in scope tracing!");
-            }
-
-            if (scopeDepth == 0) {
-                methods.add(content.substring(lastMethodEndIndex, characterIndex + 1).trim());
-                lastMethodEndIndex = characterIndex + 1;
-            } else if (scopeDepth < 0) {
-                log.warning("Scope depth is lower then 0. That can't be good!");
-            }
-        }
-
-        return methods;
-    }
+//    public static List<String> getOuterScopesContent(String content) {
+//
+//        Map<Integer, Character> occurrences = traceScopes(content);
+//
+//        List<String> methods = new LinkedList<String>();
+//
+//        if (occurrences.isEmpty()) {
+//            log.warning("No braces were found in the code");
+//            return methods;
+//        }
+//
+//        int scopeDepth = 0;
+//        int lastMethodEndIndex = 0;
+//
+//        Iterator<Map.Entry<Integer, Character>> iterator = occurrences.entrySet().iterator();
+//        while (iterator.hasNext()) {
+//            Map.Entry entry = iterator.next();
+//            int characterIndex = (Integer) entry.getKey();
+//            Character brace = (Character) entry.getValue();
+//
+//            // count scope depth
+//            if (brace.equals(openBraceCharater)) {
+//                scopeDepth++;
+//            } else if (brace.equals(closeBraceCharater)) {
+//                scopeDepth--;
+//            } else {
+//                log.warning("Unexpected character in scope tracing!");
+//            }
+//
+//            if (scopeDepth == 0) {
+//                methods.add(content.substring(lastMethodEndIndex, characterIndex + 1).trim());
+//                lastMethodEndIndex = characterIndex + 1;
+//            } else if (scopeDepth < 0) {
+//                log.warning("Scope depth is lower then 0. That can't be good!");
+//            }
+//        }
+//
+//        return methods;
+//    }
 
     /**
      * Creates an ordered map of the occurrences of opening and closing braces
@@ -221,7 +211,7 @@ public class Parse {
         // repeat until there are no more braces in the content
         while (lastOpenBraceIndex != -1 || lastCloseBraceIndex != -1) {
             lastOpenBraceIndex = content.indexOf(openBraceCharater, openBraceSearchStartIndex);
-            lastCloseBraceIndex = content.indexOf('}', closeBraceSearchStartIndex);
+            lastCloseBraceIndex = content.indexOf(closeBraceCharater, closeBraceSearchStartIndex);
 
             if (lastOpenBraceIndex < lastCloseBraceIndex && lastOpenBraceIndex != -1) {
                 occurrences.put(lastOpenBraceIndex, openBraceCharater);
@@ -232,12 +222,12 @@ public class Parse {
             }
         }
 
-        //occurrences.forEach((l, c) -> log.info(Handy.f("%s @ %d", c, l)));
         return occurrences;
     }
 
     /**
      * Extracts the text between the classe's open and closing braces
+     *
      * @param content
      * @return
      */
@@ -251,7 +241,12 @@ public class Parse {
             return "";
         }
 
-        int closeBraceIndex = getMatchingBraceIndex(content, openBraceIndex);
+        if (content.contains("public class Parse"))
+        {
+            log.info("This!");
+        }
+
+        int closeBraceIndex = findClosingBraceIndex(content, openBraceIndex);
 
         // increment once, so the open brace is not included in the result
         openBraceIndex++;
@@ -268,6 +263,49 @@ public class Parse {
             log.warning(Handy.f("The open or close brace index is invalid %d - %d", openBraceIndex, closeBraceIndex));
             return content;
         }
+    }
+
+    public static Map<String, String> parseMethods(String fileContent) {
+        Map<String, String> methodsInfo = new HashMap<String, String>();
+
+        // copy the content, to be modified later
+        String partialContent = fileContent;
+
+        String methodName = getMethodName(partialContent);
+
+        if (Handy.isNullOrEmpty(methodName)) {
+            return methodsInfo;
+        }
+
+        int openBraceIndex = getMethodStartBrace(partialContent);
+        int blockEndIndex = -1;
+
+        while (openBraceIndex > -1) {
+            blockEndIndex = findClosingBraceIndex(partialContent, openBraceIndex);
+
+            if (blockEndIndex != -1) {
+                // get next method name
+                methodName = getMethodName(partialContent);
+
+                if (Handy.isNullOrEmpty(methodName)) {
+                    return methodsInfo;
+                }
+
+                // add into to the map
+                methodsInfo.put(methodName, partialContent.substring(openBraceIndex + 1, blockEndIndex));
+
+                // remove analyzed content
+                partialContent = Handy.removeSubString(0, blockEndIndex, partialContent);
+            } else {
+                log.severe(Handy.f("Could not find a matching closing brace"));
+                return methodsInfo;
+            }
+
+            // find next method if it exists
+            openBraceIndex = getMethodStartBrace(partialContent);
+        }
+
+        return methodsInfo;
     }
 
     public static void getFileListRecursive(String folderPath, List<File> files, String extension) {
@@ -336,4 +374,6 @@ public class Parse {
             return -1;
         }
     }
+
+
 }

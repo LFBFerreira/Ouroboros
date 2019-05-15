@@ -15,17 +15,15 @@ public class CodeParser {
     private final String fileExtensionFilter = "java";
 
     private File projectFilesFolder;
-    private File outputFolder;
 
     private List<ClassModel> classModels;
 
 
     // ================================================================
 
-    public CodeParser(File projectFilesFolder, File outputFolder, List<ClassModel> classModels) {
+    public CodeParser(File projectFilesFolder, List<ClassModel> classModels) {
 
         this.projectFilesFolder = projectFilesFolder;
-        this.outputFolder = outputFolder;
         this.classModels = classModels;
     }
 
@@ -50,20 +48,20 @@ public class CodeParser {
             classModels.add(classModel);
         });
 
-        // debug print
-//        classModels.stream().forEach(c ->
-//        {
-//            log.info("\n-----------");
-//            log.info("package " + c.getPackageName());
-//            log.info("class " + c.getClassName());
-//
-//            String[] methodNames = c.getMethodNames();
-//            if (methodNames != null) {
-//                Arrays.asList(c.getMethodNames()).forEach(name -> log.info(Handy.f("\t\t%s", name)));
-//            } else {
-//                log.warning("\t\tNo methods found in this class!");
-//            }
-//        });
+//         debug print
+        classModels.stream().forEach(c ->
+        {
+            log.info("------------------------");
+            log.info("package " + c.getPackageName());
+            log.info("class " + c.getClassName());
+
+            String[] methodNames = c.getMethodNames();
+            if (methodNames != null) {
+                Arrays.asList(c.getMethodNames()).forEach(name -> log.info(Handy.f("\t\t%s", name)));
+            } else {
+                log.info("\t\tClass has no methods");
+            }
+        });
 
         return !fileList.isEmpty();
     }
@@ -93,9 +91,8 @@ public class CodeParser {
             log.warning(fileContent);
         }
 
-        // parse class name
+        // parse class / interface name
         String className = Parse.getClassName(fileContent);
-
         if (!Handy.isNullOrEmpty(className)) {
             classModel.setClassName(className);
         } else {
@@ -109,53 +106,18 @@ public class CodeParser {
             }
         }
 
+        // parse class method's
         if (!classModel.isInterface()) {
-            // keep only the content of the class, whats inside braces
+            // filter text outside of the classe's braces
             fileContent = Parse.extractClassContent(fileContent);
 
             // remove static blocks
             fileContent = Parse.removeStaticBlocks(fileContent);
 
+            Map<String, String> methodsInfo = Parse.parseMethods(fileContent);
 
-            // parse class methods
-            List<String> methodCodes = Parse.getOuterScopeContent(fileContent);
-            Map<String, String> methodsInfo = new HashMap<String, String>();
-
-            // get chunks of code for each method, and the name
-            for (String code : methodCodes) {
-                String methodName = Parse.getMethodName(code);
-
-
-                if (Handy.isNullOrEmpty(methodName)) {
-                    log.severe(Handy.f("Method name could not be parsed for the class %s.%s", packageName, className));
-                    //log.info(code);
-                } else {
-
-                    String cleanCode = code; //Parse.removeStaticBlocks(code);
-                    int openBraceIndex = Parse.getMethodStartBrace(code);
-
-                    if (openBraceIndex > 0) {
-                        int closingBraceIndex = Parse.getMatchingBraceIndex(cleanCode, openBraceIndex);
-
-                        if (closingBraceIndex > -1) {
-                            // increment once to ignore the open brace
-                            openBraceIndex++;
-
-                            cleanCode = cleanCode.substring(openBraceIndex, closingBraceIndex);
-                        } else {
-                            log.warning(Handy.f("Could not find the closing brace for this method (open @ %d): \n%s",
-                                    openBraceIndex, cleanCode));
-                        }
-                    } else {
-                        log.warning(Handy.f("Could not find the opening brace for this method: \n%s", cleanCode));
-                    }
-
-                    if (Handy.isNullOrEmpty(cleanCode)) {
-                        log.warning(Handy.f("The method $s has no code", methodName));
-                    } else {
-                        methodsInfo.put(methodName, cleanCode);
-                    }
-                }
+            if (methodsInfo.isEmpty()) {
+                log.warning(Handy.f("Could not find any methods in the class %s.%s", packageName, className));
             }
 
             classModel.setClassMethods(methodsInfo);

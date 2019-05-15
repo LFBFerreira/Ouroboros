@@ -68,8 +68,8 @@ public class Parse {
                 "\\([\\w<>\\[\\]._?, \\n]*\\)" + anyWhitespaceChar + "([\\w ,\\n]*)" + anyWhitespaceChar + "(\\{)");
         Matcher matcher = pattern.matcher(code);
 
-        if (matcher.find()) {
-            return matcher.start(4);
+        if (matcher.find() && code.charAt(matcher.start(5)) == '{') {
+            return matcher.start(5);
         } else {
             return -1;
         }
@@ -78,8 +78,6 @@ public class Parse {
     public static String removeStaticBlocks(String content) {
 
         String regex = "(static\\s*(\\{))";
-//        Pattern pattern = Pattern.compile();
-//        Matcher matcher = pattern.matcher(uncommentedCode);
 
         // copy the content, to be modified later
         String filteredContent = content;
@@ -90,10 +88,8 @@ public class Parse {
         int blockEndIndex = -1;
         Boolean foundBlock = false;
 
-        log.info(content);
-
-        while (blockStartIndex > -1) {
-            blockEndIndex = getMatchingBraceIndex(filteredContent, blockStartIndex);
+        while (openBraceIndex > -1) {
+            blockEndIndex = getMatchingBraceIndex(filteredContent, openBraceIndex);
 
             if (blockEndIndex != -1) {
                 filteredContent = Handy.removeSubString(blockStartIndex, blockEndIndex, filteredContent);
@@ -102,30 +98,10 @@ public class Parse {
                 break;
             }
 
-            // find new static block
+            // find new static block if it exists
             blockStartIndex = patternMatcherStartIndex(filteredContent, regex, 1);
+            openBraceIndex = patternMatcherStartIndex(filteredContent, regex, 1);
         }
-
-//        do {
-//
-//            foundBlock = matcher.find();
-//
-//            if (foundBlock) {
-//                blockStartIndex = matcher.start(1);
-//                blockEndIndex = getMatchingBraceIndex(uncommentedCode, blockStartIndex);
-//
-//                if (blockEndIndex != -1) {
-//                    filteredContent = Handy.removeSubString(blockStartIndex, blockEndIndex, uncommentedCode);
-//                } else {
-//                    log.severe(Handy.f("Could not find a matching closing brace"));
-//                    break;
-//                }
-//            } else {
-//                break;
-//            }
-//
-//
-//        } while (blockStartIndex != -1);
 
         return filteredContent;
     }
@@ -137,25 +113,36 @@ public class Parse {
      */
     public static int getMatchingBraceIndex(String content, int openBraceIndex) {
 
+        if (content.contains("getFileExtension"))
+        {
+//            log.info("got it");
+        }
+
         if (openBraceIndex >= content.length() || content.charAt(openBraceIndex) != '{') {
-            log.severe("The index of the open brace is incorrect");
+            log.severe("The index of the open brace is incorrect, " + openBraceIndex);
             return -1;
         }
 
         Boolean isInsideString = false;
         int scopeLevel = 0;
 
-        int lasti = 0;
-
         for (int i = 0; i < content.length(); i++) {
             char charAt = content.charAt(i);
 
-            if (charAt == '"' || charAt == '\'') {
+            if (charAt == '"') {  // bug catching single quotes, its catching the \ as well
+//                log.info(content.substring(0, i+1));
                 isInsideString = !isInsideString;
             }
 
+            if(charAt == '\'' && !isInsideString)
+            {
+                // skip char inside single quote
+                i += 3;
+                continue;
+            }
+
             // if the cursor is past the open brace index, and its not inside a string
-            if (i >= openBraceIndex && !isInsideString) {
+            if (i >= openBraceIndex && !isInsideString ) {
                 if (charAt == '{') {
                     scopeLevel++;
                 } else if (charAt == '}') {
@@ -166,22 +153,18 @@ public class Parse {
                     }
                 }
             }
-
-            lasti = i;
         }
-
-        log.info("char: " + content.charAt(lasti) + " " + lasti);
 
         return -1;
     }
 
     /**
-     * Extracts all the text inside a certain scope
+     * Extracts all the text inside a the outermost scope
      *
      * @param content
      * @return
      */
-    public static List<String> getScopeCode(String content) {
+    public static List<String> getOuterScopeContent(String content) {
 
         Map<Integer, Character> occurrences = traceScopes(content);
         List<String> methods = new LinkedList<String>();
@@ -253,8 +236,13 @@ public class Parse {
         return occurrences;
     }
 
-    public static String extractClassMethods(String content) {
-        //FIX THIS METHOD!
+    /**
+     * Extracts the text between the classe's open and closing braces
+     * @param content
+     * @return
+     */
+    public static String extractClassContent(String content) {
+
         int openBraceIndex = getClassStartIndex(content);
 
         if (openBraceIndex == -1) {
@@ -265,7 +253,7 @@ public class Parse {
 
         int closeBraceIndex = getMatchingBraceIndex(content, openBraceIndex);
 
-        // incremente once, so the open brace is not included in the result
+        // increment once, so the open brace is not included in the result
         openBraceIndex++;
 
         // validate the open and close braces index

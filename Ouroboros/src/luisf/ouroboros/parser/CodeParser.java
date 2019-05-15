@@ -109,67 +109,60 @@ public class CodeParser {
             }
         }
 
-        // keep only the content of the class, whats inside braces
-        fileContent = Parse.extractClassMethods(fileContent);
-
-        fileContent = Parse.removeStaticBlocks(fileContent);
-
-        //getClassStartIndex
-
         if (!classModel.isInterface()) {
+            // keep only the content of the class, whats inside braces
+            fileContent = Parse.extractClassContent(fileContent);
+
+            // remove static blocks
+            fileContent = Parse.removeStaticBlocks(fileContent);
+
 
             // parse class methods
-            String classCode = fileContent;
+            List<String> methodCodes = Parse.getOuterScopeContent(fileContent);
+            Map<String, String> methodsInfo = new HashMap<String, String>();
 
-            if (!Handy.isNullOrEmpty(classCode)) {
-                List<String> methodCodes = Parse.getScopeCode(classCode);
-                Map<String, String> methodsInfo = new HashMap<String, String>();
+            // get chunks of code for each method, and the name
+            for (String code : methodCodes) {
+                String methodName = Parse.getMethodName(code);
 
-                // get chunks of code for each method, and the name
-                for (String code : methodCodes) {
-                    String methodName = Parse.getMethodName(code);
 
-                    if (Handy.isNullOrEmpty(methodName)) {
-                        log.severe(Handy.f("Method name could not be parsed for the class %s.%s", packageName, className));
-                        //log.info(code);
+                if (Handy.isNullOrEmpty(methodName)) {
+                    log.severe(Handy.f("Method name could not be parsed for the class %s.%s", packageName, className));
+                    //log.info(code);
+                } else {
+
+                    String cleanCode = code; //Parse.removeStaticBlocks(code);
+                    int openBraceIndex = Parse.getMethodStartBrace(code);
+
+                    if (openBraceIndex > 0) {
+                        int closingBraceIndex = Parse.getMatchingBraceIndex(cleanCode, openBraceIndex);
+
+                        if (closingBraceIndex > -1) {
+                            // increment once to ignore the open brace
+                            openBraceIndex++;
+
+                            cleanCode = cleanCode.substring(openBraceIndex, closingBraceIndex);
+                        } else {
+                            log.warning(Handy.f("Could not find the closing brace for this method (open @ %d): \n%s",
+                                    openBraceIndex, cleanCode));
+                        }
                     } else {
+                        log.warning(Handy.f("Could not find the opening brace for this method: \n%s", cleanCode));
+                    }
 
-                        String cleanCode = Parse.removeStaticBlocks(code);
-                        int openBraceIndex = Parse.getMethodStartBrace(code);
-
-                        if (openBraceIndex > 0) {
-                            int closingBraceIndex = Parse.getMatchingBraceIndex(cleanCode, 0);
-                            if (closingBraceIndex > -1) {
-                                cleanCode = cleanCode.substring(openBraceIndex, closingBraceIndex);
-                            } else {
-                                log.warning(Handy.f("Could not find the closing brace for this method (open @ %d): \n%s",
-                                        openBraceIndex, cleanCode));
-                            }
-                        } else {
-                            log.warning(Handy.f("Could not find the opening brace for this method: \n%s", cleanCode));
-                        }
-
-                        //log.info("After \n" + cleanCode);
-
-                        if (Handy.isNullOrEmpty(cleanCode)) {
-                            log.warning(Handy.f("The method $s has no code", methodName));
-                        } else {
-                            methodsInfo.put(methodName, code);
-                        }
+                    if (Handy.isNullOrEmpty(cleanCode)) {
+                        log.warning(Handy.f("The method $s has no code", methodName));
+                    } else {
+                        methodsInfo.put(methodName, cleanCode);
                     }
                 }
-
-                classModel.setClassMethods(methodsInfo);
-            } else {
-                log.severe("Could not parse the methods of this class");
-                //log.severe(fileContent);
             }
+
+            classModel.setClassMethods(methodsInfo);
 
         } else {
             // parse interface methods
             log.info("TODO: parse interface methods");
         }
-
-        //methodCodes.stream().forEach(m -> log.info("\n" + m + "\n"));
     }
 }

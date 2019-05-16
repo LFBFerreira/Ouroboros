@@ -2,8 +2,8 @@ package luisf.ouroboros.modelsWriter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import luisf.ouroboros.common.Handy;
-import luisf.ouroboros.model.ClassModel;
-import luisf.ouroboros.model.ClassModelInterface;
+import luisf.ouroboros.analyzer.models.ClassModel;
+import luisf.ouroboros.analyzer.models.ClassModelInterface;
 
 import java.io.*;
 import java.nio.file.Paths;

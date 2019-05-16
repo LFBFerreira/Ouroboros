@@ -1,15 +1,16 @@
-package luisf.ouroboros.parser;
+package luisf.ouroboros.analyzer;
 
+import luisf.ouroboros.analyzer.models.DeclarationModel;
 import luisf.ouroboros.common.Handy;
-import luisf.ouroboros.model.ClassModel;
-import luisf.ouroboros.model.ClassModelInterface;
+import luisf.ouroboros.analyzer.models.ClassModel;
+import luisf.ouroboros.analyzer.models.ClassModelInterface;
 
 import java.io.File;
 import java.util.*;
 import java.util.logging.Logger;
 
 
-public class CodeParser {
+public class CodeAnalyzer {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     private final String fileExtensionFilter = "java";
@@ -21,7 +22,7 @@ public class CodeParser {
 
     // ================================================================
 
-    public CodeParser(File projectFilesFolder, List<ClassModel> classModels) {
+    public CodeAnalyzer(File projectFilesFolder, List<ClassModel> classModels) {
 
         this.projectFilesFolder = projectFilesFolder;
         this.classModels = classModels;
@@ -48,20 +49,20 @@ public class CodeParser {
             classModels.add(classModel);
         });
 
-//         debug print
-        classModels.stream().forEach(c ->
-        {
-            log.info("------------------------");
-            log.info("package " + c.getPackageName());
-            log.info("class " + c.getClassName());
-
-            String[] methodNames = c.getMethodNames();
-            if (methodNames != null) {
-                Arrays.asList(c.getMethodNames()).forEach(name -> log.info(Handy.f("\t\t%s", name)));
-            } else {
-                log.info("\t\tClass has no methods");
-            }
-        });
+        // debug print
+//        classModels.stream().forEach(c ->
+//        {
+//            log.info("------------------------");
+//            log.info("package " + c.getPackageName());
+//            log.info("class " + c.getClassName());
+//
+//            String[] methodNames = c.getMethodNames();
+//            if (methodNames != null) {
+//                Arrays.asList(c.getMethodNames()).forEach(name -> log.info(Handy.f("\t\t%s", name)));
+//            } else {
+//                log.info("\t\tClass has no methods");
+//            }
+//        });
 
         return !fileList.isEmpty();
     }
@@ -91,28 +92,34 @@ public class CodeParser {
             log.warning(fileContent);
         }
 
-        // parse class / interface name
+        // parse class / interface / enum name
         String className = Parse.getClassName(fileContent);
         if (!Handy.isNullOrEmpty(className)) {
             classModel.setClassName(className);
         } else {
             className = Parse.getInterfaceName(fileContent);
-
             if (!Handy.isNullOrEmpty(className)) {
                 classModel.setInterfaceName(className);
             } else {
-                log.warning("Could not parse the class or interface name!");
-                log.warning(fileContent);
+                className = Parse.getEnumName(fileContent);
+                if (!Handy.isNullOrEmpty(className)) {
+                    classModel.setEnumName(className);
+                } else {
+                    log.warning("Could not parse the class or interface name!");
+                    log.warning(fileContent);
+                }
             }
         }
 
-        // parse class method's
+        // parse class methods'
         if (!classModel.isInterface()) {
-            // filter text outside of the classe's braces
+            // filter text outside of the classes braces
             fileContent = Parse.extractClassContent(fileContent);
 
             // remove static blocks
             fileContent = Parse.removeStaticBlocks(fileContent);
+
+            //List<DeclarationModel> declarations = Parse.extractClassDeclarations(fileContent);
 
             Map<String, String> methodsInfo = Parse.parseMethods(fileContent);
 

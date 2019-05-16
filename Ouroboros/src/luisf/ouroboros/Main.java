@@ -137,11 +137,11 @@ public class Main {
     }
 
     private static void testResources() {
-//        CodeParser parser = new CodeParser();
-//        System.out.println(parser);
+//        CodeAnalyzer analyzer = new CodeAnalyzer();
+//        System.out.println(analyzer);
 //
 //        ClassLoader classLoader = new Main().getClass().getClassLoader();
-//        File file = parser.getFileFromResources("configuration.xml");
+//        File file = analyzer.getFileFromResources("configuration.xml");
 //
 //        if (file != null) {
 //            System.out.println("Got it!");

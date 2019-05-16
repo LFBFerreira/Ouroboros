@@ -1,4 +1,4 @@
-package luisf.ouroboros.model;
+package luisf.ouroboros.analyzer.models;
 
 import java.io.Serializable;
 

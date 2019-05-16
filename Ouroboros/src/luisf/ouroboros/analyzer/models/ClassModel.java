@@ -1,7 +1,6 @@
-package luisf.ouroboros.model;
+package luisf.ouroboros.analyzer.models;
 
 import luisf.ouroboros.common.Handy;
-import luisf.ouroboros.parser.Parse;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,13 +17,16 @@ public class ClassModel implements ClassModelInterface, Serializable {
     private List<MethodModel> methodModels = new ArrayList<MethodModel>();
     private String packageName = "";
     private String className = "";
+    private List<DeclarationModel> localDeclarations = new ArrayList<DeclarationModel>();
 
     public Boolean isInterface = false;
 
-    public String test = "This is a test";
 
     // ================================================================
 
+    /**
+     * Constructor
+     */
     public ClassModel() {
 
     }
@@ -58,6 +60,13 @@ public class ClassModel implements ClassModelInterface, Serializable {
 
     @Override
     public void setInterfaceName(String name) {
+        isInterface = true;
+        this.className = name;
+    }
+
+    @Override
+    public void setEnumName(String name) {
+        // TODO specify the type with enum instead of boolean
         isInterface = true;
         this.className = name;
     }

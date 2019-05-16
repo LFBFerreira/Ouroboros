@@ -2,9 +2,9 @@ package luisf.ouroboros.director;
 
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.generator.Generator;
-import luisf.ouroboros.model.ClassModel;
+import luisf.ouroboros.analyzer.models.ClassModel;
 import luisf.ouroboros.modelsWriter.ModelsIO;
-import luisf.ouroboros.parser.CodeParser;
+import luisf.ouroboros.analyzer.CodeAnalyzer;
 import processing.core.PApplet;
 
 import java.io.File;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class Director {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
-    private CodeParser parser;
+    private CodeAnalyzer parser;
     private List<ClassModel> classModels;
 
     // ================================================================
@@ -84,7 +84,7 @@ public class Director {
     private void parseProjectFiles(File projectFilesFolder, List<ClassModel> models) {
         models.clear();
 
-        parser = new CodeParser(projectFilesFolder, models);
+        parser = new CodeAnalyzer(projectFilesFolder, models);
         parser.parseFiles();
     }
 

@@ -1,5 +1,6 @@
-package luisf.ouroboros.parser;
+package luisf.ouroboros.analyzer;
 
+import luisf.ouroboros.analyzer.models.DeclarationModel;
 import luisf.ouroboros.common.Handy;
 
 import java.io.File;
@@ -8,14 +9,16 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static luisf.ouroboros.parser.RegexConstants.*;
-import static luisf.ouroboros.parser.RegexConstants.closeBraces;
+import static luisf.ouroboros.analyzer.RegexConstants.*;
+import static luisf.ouroboros.analyzer.RegexConstants.closeBraces;
 
 public class Parse {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
-    private final static Character openBraceCharater = '{';
-    private final static Character closeBraceCharater = '}';
+    private final static Character openBraceCharacter = '{';
+    private final static Character closeBraceCharacter = '}';
+
+    // ================================================================
 
     public static String getPackageName(String content) {
         return patternMatcher(content,
@@ -39,6 +42,10 @@ public class Parse {
                 anyWord + oneOrMoreSpaces + "interface" + oneOrMoreSpaces + "(\\w+)" + "[\\w\\s,]+" + openBraces);
     }
 
+    public static String getEnumName(String content) {
+        return patternMatcher(content,
+                anyWord + oneOrMoreSpaces + "enum" + oneOrMoreSpaces + "(\\w+)" + "[\\w\\s,]+" + openBraces);
+    }
 
     public static String getClassMethodsText(String content) {
         return patternMatcher(content,
@@ -50,7 +57,7 @@ public class Parse {
         // regex taken from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
 
         return patternMatcher(code,
-                methodVisibilityKeywords + " *([\\w<>.?, \\[\\]]*)" + oneOrMoreSpaces + "(\\w+)" + anyWhitespaceChar +
+                methodVisibilityKeywords + " *" + "([\\w<>.?, \\[\\]]*)" + oneOrMoreSpaces + "(\\w+)" + anyWhitespaceChar +
                         "\\([\\w<>\\[\\]._?, \\n]*\\)" + anyWhitespaceChar + "([\\w ,\\n]*)" + anyWhitespaceChar + "\\{",
                 3);
     }
@@ -58,7 +65,7 @@ public class Parse {
     public static int getMethodStartBrace(String code) {
         // regex taken from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
 
-        Pattern pattern = Pattern.compile(methodVisibilityKeywords + " *([\\w<>.?, \\[\\]]*)" + oneOrMoreSpaces + "(\\w+)" + anyWhitespaceChar +
+        Pattern pattern = Pattern.compile(methodVisibilityKeywords + " *" + "([\\w<>.?, \\[\\]]*)" + oneOrMoreSpaces + "(\\w+)" + anyWhitespaceChar +
                 "\\([\\w<>\\[\\]._?, \\n]*\\)" + anyWhitespaceChar + "([\\w ,\\n]*)" + anyWhitespaceChar + "(\\{)");
         Matcher matcher = pattern.matcher(code);
 
@@ -125,7 +132,7 @@ public class Parse {
 
             if (charAt == '\'' && !isInsideString) {
                 // skip single quotes if they are not inside a string
-                i+=2;
+                i += 2;
                 continue;
             }
 
@@ -174,9 +181,9 @@ public class Parse {
 //            Character brace = (Character) entry.getValue();
 //
 //            // count scope depth
-//            if (brace.equals(openBraceCharater)) {
+//            if (brace.equals(openBraceCharacter)) {
 //                scopeDepth++;
-//            } else if (brace.equals(closeBraceCharater)) {
+//            } else if (brace.equals(closeBraceCharacter)) {
 //                scopeDepth--;
 //            } else {
 //                log.warning("Unexpected character in scope tracing!");
@@ -210,14 +217,14 @@ public class Parse {
 
         // repeat until there are no more braces in the content
         while (lastOpenBraceIndex != -1 || lastCloseBraceIndex != -1) {
-            lastOpenBraceIndex = content.indexOf(openBraceCharater, openBraceSearchStartIndex);
-            lastCloseBraceIndex = content.indexOf(closeBraceCharater, closeBraceSearchStartIndex);
+            lastOpenBraceIndex = content.indexOf(openBraceCharacter, openBraceSearchStartIndex);
+            lastCloseBraceIndex = content.indexOf(closeBraceCharacter, closeBraceSearchStartIndex);
 
             if (lastOpenBraceIndex < lastCloseBraceIndex && lastOpenBraceIndex != -1) {
-                occurrences.put(lastOpenBraceIndex, openBraceCharater);
+                occurrences.put(lastOpenBraceIndex, openBraceCharacter);
                 openBraceSearchStartIndex = lastOpenBraceIndex + 1;
             } else if (lastCloseBraceIndex != -1) {
-                occurrences.put(lastCloseBraceIndex, closeBraceCharater);
+                occurrences.put(lastCloseBraceIndex, closeBraceCharacter);
                 closeBraceSearchStartIndex = lastCloseBraceIndex + 1;
             }
         }
@@ -241,11 +248,6 @@ public class Parse {
             return "";
         }
 
-        if (content.contains("public class Parse"))
-        {
-            log.info("This!");
-        }
-
         int closeBraceIndex = findClosingBraceIndex(content, openBraceIndex);
 
         // increment once, so the open brace is not included in the result
@@ -264,6 +266,39 @@ public class Parse {
             return content;
         }
     }
+
+    public static List<DeclarationModel> extractClassDeclarations(String content) {
+
+        List<DeclarationModel> declarations = new ArrayList<>();
+
+        int openBraceIndex = getClassStartIndex(content);
+
+        if (openBraceIndex == -1) {
+            log.warning("The class starting brace could not be found");
+            log.warning(content);
+            return declarations;
+        }
+
+        int closeBraceIndex = findClosingBraceIndex(content, openBraceIndex);
+
+        // increment once, so the open brace is not included in the result
+        openBraceIndex++;
+
+        // validate the open and close braces index
+        if (openBraceIndex < closeBraceIndex &&
+                closeBraceIndex > -1 &&
+                openBraceIndex < content.length() &&
+                closeBraceIndex < content.length()) {
+
+            List<String> declarationsText = extractDeclarations(content.substring(openBraceIndex, closeBraceIndex));
+            declarations = parseDeclarations(declarationsText);
+            return declarations;
+        } else {
+            log.warning(Handy.f("The open or close brace index is invalid %d - %d", openBraceIndex, closeBraceIndex));
+            return declarations;
+        }
+    }
+
 
     public static Map<String, String> parseMethods(String fileContent) {
         Map<String, String> methodsInfo = new HashMap<String, String>();
@@ -332,6 +367,11 @@ public class Parse {
         return content.replaceAll("\\/\\*[\\s\\S]*?\\*\\/|([^:]|^)\\/\\/.*", " ").trim();
     }
 
+
+    // ================================================================
+
+    // Helpers
+
     /**
      * Finds a match in the input content, using a regular expression.
      * Returns the result of the first group by default
@@ -375,5 +415,23 @@ public class Parse {
         }
     }
 
+    private static List<String> extractDeclarations(String content) {
+        List<String> declarations = new ArrayList<>();
+
+//        Pattern pattern = Pattern.compile(patternText);
+//        Matcher matcher = pattern.matcher(content);
+//
+//        if (matcher.find()) {
+//            return matcher.start(groupIndex);
+//        } else {
+//            return -1;
+//        }
+
+        return declarations;
+    }
+
+    private static List<DeclarationModel> parseDeclarations(List<String> declarationsText) {
+        return null;
+    }
 
 }

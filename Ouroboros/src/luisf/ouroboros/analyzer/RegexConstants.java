@@ -1,4 +1,4 @@
-package luisf.ouroboros.parser;
+package luisf.ouroboros.analyzer;
 
 public class RegexConstants {
 
@@ -17,5 +17,7 @@ public class RegexConstants {
     public static String atLeastOneSpace = "\\s+";
 
     public static String anyWord = "\\w*";
+
+    public static String anyWordGroup = "\\w*";
 
 }

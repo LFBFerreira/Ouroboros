@@ -15,9 +15,10 @@ public class ClassModel implements ClassModelInterface, Serializable {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     private List<MethodModel> methodModels = new ArrayList<MethodModel>();
+    private List<DeclarationModel> declarations = new ArrayList<>();
+
     private String packageName = "";
     private String className = "";
-    private List<DeclarationModel> localDeclarations = new ArrayList<DeclarationModel>();
 
     public Boolean isInterface = false;
 
@@ -34,13 +35,6 @@ public class ClassModel implements ClassModelInterface, Serializable {
     // ================================================================
 
     // ClassModelInterface
-
-    @Override
-    public void addMethod(MethodModel method) {
-        if (method != null) {
-            methodModels.add(method);
-        }
-    }
 
     @Override
     public void setPackageName(String name) {
@@ -83,7 +77,7 @@ public class ClassModel implements ClassModelInterface, Serializable {
 
     @Override
     public void setClassMethods(Map<String, String> methodsCode) {
-        log.info("Class " + className);
+        // TODO refactor this to include methods modifiers
         methodsCode.forEach((name, code) ->
                 {
                     if (Handy.isNullOrEmpty(name) || Handy.isNullOrEmpty(code)) {
@@ -91,24 +85,27 @@ public class ClassModel implements ClassModelInterface, Serializable {
                     } else {
                         methodModels.add(new MethodModel(this.className, name, code));
                     }
-                    //log.info("Method " + name);
-                    //log.info("Code\n" + code + "\n");
                 }
         );
     }
 
     @Override
-    public String[] getMethodNames() {
-        if (methodModels.isEmpty()) {
-            return null;
+    public void setDeclarations(List<DeclarationModel> declarations) {
+        this.declarations = declarations;
+    }
+
+    @Override
+    public List<DeclarationModel> getDeclarations() {
+        return declarations;
+    }
+
+    @Override
+    public List<String> getMethodNames() {
+        List<String> names = new ArrayList<>();
+
+        if (!methodModels.isEmpty()) {
+            methodModels.forEach(m -> names.add(m.name));
         }
-
-        String[] names = new String[methodModels.size()];
-
-        IntStream.range(0, methodModels.size()).forEach(i ->
-        {
-            names[i] = methodModels.get(i).name;
-        });
 
         return names;
     }

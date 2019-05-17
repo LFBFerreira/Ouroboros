@@ -1,10 +1,9 @@
 package luisf.ouroboros.analyzer.models;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ClassModelInterface {
-    void addMethod(MethodModel method);
-
     void setPackageName(String name);
     String getPackageName();
 
@@ -13,12 +12,13 @@ public interface ClassModelInterface {
     void setEnumName(String name);
 
     String getClassName();
-
     String getFullClassName();
 
     void setClassMethods(Map<String, String> methods);
+    List<String> getMethodNames();
 
-    String[] getMethodNames();
+    void setDeclarations(List<DeclarationModel> declarations);
+    List<DeclarationModel> getDeclarations();
 
     Boolean isInterface();
 }

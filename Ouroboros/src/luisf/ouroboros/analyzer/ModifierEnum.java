@@ -1,6 +1,6 @@
 package luisf.ouroboros.analyzer;
 
-public enum VisibilityEnum {
+public enum ModifierEnum {
     PUBLIC,
     PRIVATE,
     STATIC,
@@ -8,5 +8,6 @@ public enum VisibilityEnum {
     ABSTRACT,
     NATIVE,
     SYNCHRONIZED,
+    FINAL,
     NONE
 }

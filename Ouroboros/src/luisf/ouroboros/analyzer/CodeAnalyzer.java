@@ -50,21 +50,33 @@ public class CodeAnalyzer {
         });
 
         // debug print
-//        classModels.stream().forEach(c ->
-//        {
-//            log.info("------------------------");
-//            log.info("package " + c.getPackageName());
-//            log.info("class " + c.getClassName());
-//
-//            String[] methodNames = c.getMethodNames();
-//            if (methodNames != null) {
-//                Arrays.asList(c.getMethodNames()).forEach(name -> log.info(Handy.f("\t\t%s", name)));
-//            } else {
-//                log.info("\t\tClass has no methods");
-//            }
-//        });
+        debugPrint(classModels);
 
         return !fileList.isEmpty();
+    }
+
+    private void debugPrint(List<ClassModel> classes) {
+        classes.stream().forEach(c ->
+        {
+            log.info("------------------------");
+            log.info("package " + c.getPackageName());
+            log.info("class " + c.getClassName());
+
+            List<DeclarationModel> declarations = c.getDeclarations();
+            if (!declarations.isEmpty()) {
+                c.getDeclarations().forEach(d -> log.info(Handy.f("\t\t%s - %s", d.type, d.name)));
+                log.info("\t\t-----");
+            } else {
+                log.info("\t\tClass has no declarations");
+            }
+
+            List<String> methodNames = c.getMethodNames();
+            if (!methodNames.isEmpty()) {
+                c.getMethodNames().forEach(name -> log.info(Handy.f("\t\t%s", name)));
+            } else {
+                log.info("\t\tClass has no methods");
+            }
+        });
     }
 
     public List<ClassModel> getModels() {
@@ -114,20 +126,21 @@ public class CodeAnalyzer {
         // parse class methods'
         if (!classModel.isInterface()) {
             // filter text outside of the classes braces
-            fileContent = Parse.extractClassContent(fileContent);
+            String filteredContent = Parse.extractClassContent(fileContent);
 
             // remove static blocks
-            fileContent = Parse.removeStaticBlocks(fileContent);
+            filteredContent = Parse.removeStaticBlocks(filteredContent);
 
-            //List<DeclarationModel> declarations = Parse.extractClassDeclarations(fileContent);
+            List<DeclarationModel> declarations = Parse.extractClassDeclarations(filteredContent);
 
-            Map<String, String> methodsInfo = Parse.parseMethods(fileContent);
+            Map<String, String> methodsInfo = Parse.parseMethods(filteredContent);
 
             if (methodsInfo.isEmpty()) {
-                log.warning(Handy.f("Could not find any methods in the class %s.%s", packageName, className));
+                log.warning(Handy.f("Could not find any methods in the class '%s.%s'", packageName, className));
             }
 
             classModel.setClassMethods(methodsInfo);
+            classModel.setDeclarations(declarations);
 
         } else {
             // parse interface methods

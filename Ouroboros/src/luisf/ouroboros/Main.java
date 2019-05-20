@@ -87,6 +87,13 @@ public class Main {
 
     // ================================================================
 
+    // Helpers
+
+    /**
+     * Converts the arguments from an array of strings to map of argument and value if any
+     * @param args
+     * @return
+     */
     private static Map<String, String> getArguments(String[] args) {
         Map<String, String> argumentsMapping = new HashMap<String, String>();
         Options argumentOptions = new Options();

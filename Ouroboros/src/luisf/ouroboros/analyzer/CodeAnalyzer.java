@@ -35,6 +35,7 @@ public class CodeAnalyzer {
 
     /**
      * Parses the files define during construction time
+     *
      * @return
      */
     public Boolean parseFiles() {
@@ -73,20 +74,20 @@ public class CodeAnalyzer {
         classes.stream().forEach(c ->
         {
             log.info("------------------------");
-            log.info("package " + c.getPackageName());
-            log.info("class " + c.getClassName());
+            log.info(Handy.f("class %s (%s)", c.getClassName(), c.getPackageName()));
 
             List<DeclarationModel> declarations = c.getDeclarations();
             if (!declarations.isEmpty()) {
-                c.getDeclarations().forEach(d -> log.info(Handy.f("\t\t%s - %s", d.type, d.name)));
+                c.getDeclarations().forEach(d -> log.info(Handy.f("\t\t%s: %s \t%s", d.name, d.type, d.modifiers.toString())));
                 log.info("\t\t-----");
             } else {
                 log.info("\t\tClass has no declarations");
             }
 
-            List<String> methodNames = c.getMethodNames();
-            if (!methodNames.isEmpty()) {
-                c.getMethodNames().forEach(name -> log.info(Handy.f("\t\t%s", name)));
+            List<MethodModel> methods = c.getMethods();
+
+            if (!methods.isEmpty()) {
+                methods.forEach(m -> log.info(Handy.f("\t\t%s: %s \t%s", m.name, m.returnType, m.modifiers.toString())));
             } else {
                 log.info("\t\tClass has no methods");
             }
@@ -95,6 +96,7 @@ public class CodeAnalyzer {
 
     /**
      * Parses an individual file, and saves the result in the ClassModelInterface
+     *
      * @param file
      * @param classModel
      */
@@ -141,8 +143,7 @@ public class CodeAnalyzer {
             // remove static blocks
             filteredContent = Parse.removeStaticBlocks(filteredContent);
 
-            List<DeclarationModel> declarations = new LinkedList<>(); //= Parse.parseClassDeclarations(filteredContent);
-             declarations = Parse.parseClassDeclarations(filteredContent);
+            List<DeclarationModel> declarations = Parse.parseClassDeclarations(filteredContent);
 
             String methodsText = Parse.removeClassDeclarations(filteredContent);
 

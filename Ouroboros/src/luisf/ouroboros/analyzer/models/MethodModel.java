@@ -12,15 +12,17 @@ public class MethodModel implements Serializable {
 
     public String name = "";
     public String code = "";
+    public String returnType = "";
     public List<ModifierEnum> modifiers = new LinkedList<>();
 
 
     // ================================================================
 
 
-    public MethodModel(String name, String code, List<ModifierEnum> modifiers) {
+    public MethodModel(String name, String code, List<ModifierEnum> modifiers, String returnType) {
         this.name = name;
         this.code = code;
         this.modifiers = modifiers;
+        this.returnType = returnType;
     }
 }

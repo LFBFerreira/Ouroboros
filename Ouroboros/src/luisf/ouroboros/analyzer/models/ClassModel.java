@@ -3,6 +3,7 @@ package luisf.ouroboros.analyzer.models;
 import luisf.ouroboros.common.Handy;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -82,19 +83,6 @@ public class ClassModel implements ClassModelInterface, Serializable {
     }
 
     @Override
-    public void setClassMethods(Map<String, String> methodsCode) {
-        methodsCode.forEach((name, code) ->
-                {
-                    if (Handy.isNullOrEmpty(name) || Handy.isNullOrEmpty(code)) {
-                        log.severe(Handy.f("The method name or code are empty for class %s", className));
-                    } else {
-                        methodModels.add(new MethodModel(name, code, new LinkedList<>()));
-                    }
-                }
-        );
-    }
-
-    @Override
     public void setDeclarations(List<DeclarationModel> declarations) {
         this.declarations = declarations;
     }
@@ -102,6 +90,11 @@ public class ClassModel implements ClassModelInterface, Serializable {
     @Override
     public List<DeclarationModel> getDeclarations() {
         return declarations;
+    }
+
+    @Override
+    public List<MethodModel> getMethods() {
+        return methodModels;
     }
 
     @Override

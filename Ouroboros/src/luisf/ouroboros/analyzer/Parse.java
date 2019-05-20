@@ -26,7 +26,6 @@ public class Parse {
                 anyChar + "package" + oneOrMoreWhitespaces + anythingCharGroup + anyWhitespaces + semicolon);
     }
 
-
     public static String getClassName(String code) {
         return patternMatcher(code,
                 anyWord + oneOrMoreWhitespaces + "class" + oneOrMoreWhitespaces + "(\\w+)" + "[\\w\\s,]+" + openBracesGroup);
@@ -48,40 +47,47 @@ public class Parse {
                 anyWord + oneOrMoreWhitespaces + "enum" + oneOrMoreWhitespaces + "(\\w+)" + "[\\w\\s,]+" + openBraces);
     }
 
-    public static String getClassMethodsText(String code) {
-        return patternMatcher(code,
-                anyChar + "class" + anyChar + openBraces + "((" + anyChar + anyWhitespaces + ")*)" + closeBraces);
-    }
 
-
+    /**
+     * Extracts the method name from the method header, including open brace
+     *
+     * @param code
+     * @return
+     */
     public static String getMethodName(String code) {
         // regex taken from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
 
-        return patternMatcher(code,
-                modifierKeywordsGroup + anyWhitespaces + "([\\w<>.?, \\[\\]]*)" + oneOrMoreWhitespaces + "(\\w+)" + anyWhitespaces +
-                        "\\([\\w<>\\[\\]._?, \\n]*\\)" + anyWhitespaces + "([\\w ,\\n]*)" + anyWhitespaces + "\\{",
-                3);
+        return patternMatcher(code, methodHeader + anyWhitespaces + "\\{", 4);
+    }
+
+    /**
+     * Extracts the method name from the method header, including open brace
+     *
+     * @param code
+     * @return
+     */
+    public static String getMethodReturnType(String code) {
+        // regex taken from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
+
+        return patternMatcher(code, methodHeader + anyWhitespaces + "\\{", 3);
     }
 
     public static int getMethodDeclarationStart(String code) {
         // regex taken from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
 
-        return patternMatcherStartIndex(code,
-                modifierKeywordsGroup + anyWhitespaces + "([\\w<>.?, \\[\\]]*)" + oneOrMoreWhitespaces + "(\\w+)" + anyWhitespaces +
-                        "\\([\\w<>\\[\\]._?, \\n]*\\)" + anyWhitespaces + "([\\w ,\\n]*)" + anyWhitespaces + "\\{",
-                0);
+        return patternMatcherStartIndex(code, methodHeader + anyWhitespaces + "\\{", 0);
     }
 
     /**
      * Finds the open brace in a method declaration and returns its index
+     *
      * @param code
      * @return
      */
     public static int getMethodStartBrace(String code) {
         // regex taken from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
 
-        Pattern pattern = Pattern.compile(modifierKeywordsGroup + " *" + "([\\w<>.?, \\[\\]]*)" + oneOrMoreWhitespaces + "(\\w+)" + anyWhitespaces +
-                "\\([\\w<>\\[\\]._?, \\n]*\\)" + anyWhitespaces + "([\\w ,\\n]*)" + anyWhitespaces + "(\\{)");
+        Pattern pattern = Pattern.compile(methodHeader + anyWhitespaces + "(\\{)");
         Matcher matcher = pattern.matcher(code);
 
         if (matcher.find() && code.charAt(matcher.start(5)) == '{') {
@@ -93,6 +99,7 @@ public class Parse {
 
     /**
      * Removes static blocks from the code
+     *
      * @param code
      * @return
      */
@@ -128,6 +135,7 @@ public class Parse {
 
     /**
      * Finds the matching closing brace for the requested open brace
+     *
      * @param code
      * @param openBraceIndex
      * @return
@@ -176,6 +184,7 @@ public class Parse {
 
     /**
      * Creates an ordered map of the occurrences of opening and closing braces
+     *
      * @param code
      * @return
      */
@@ -207,6 +216,7 @@ public class Parse {
 
     /**
      * Extracts the text between the classe's open and closing braces
+     *
      * @param code
      * @return
      */
@@ -241,6 +251,7 @@ public class Parse {
 
     /**
      * Extracts the variables declared inside a class but outside of methods
+     *
      * @param content
      * @return text without class declarations
      */
@@ -282,6 +293,7 @@ public class Parse {
 
     /**
      * Removes the all the classes's text except for methods
+     *
      * @param content
      * @return
      */
@@ -318,6 +330,7 @@ public class Parse {
     }
 
     /**
+     * Parses the information in the received methods text
      *
      * @param fileContent
      * @return
@@ -344,18 +357,25 @@ public class Parse {
             blockEndIndex = findClosingBraceIndex(partialContent, openBraceIndex);
 
             if (blockEndIndex != -1) {
+
+                String methodHeader = partialContent.substring(0, openBraceIndex + 1);
+
                 // get next method name
-                methodName = getMethodName(partialContent);
+                methodName = getMethodName(methodHeader);
 
                 // if the method name cannot be parsed, return
-                if (Handy.isNullOrEmpty(methodName)) {
-                   break;
-                }
+//                if (Handy.isNullOrEmpty(methodName)) {
+//                    break;
+//                }
+
+                List<ModifierEnum> modifiers = parseModifiers(methodHeader);
+
+                String returnType = getMethodReturnType(methodHeader);
 
                 // add into to the map
                 methods.add(new MethodModel(methodName,
                         partialContent.substring(openBraceIndex + 1, blockEndIndex),
-                        new LinkedList<>() ));
+                        modifiers, returnType));
 
                 // remove analyzed content
                 partialContent = Handy.removeSubString(0, blockEndIndex, partialContent);
@@ -374,6 +394,7 @@ public class Parse {
 
     /**
      * Gets a list of files from the current folder and sub folders, filtered by extension
+     *
      * @param folderPath
      * @param files
      * @param extension
@@ -396,6 +417,7 @@ public class Parse {
 
     /**
      * Removes single line and multiline comments from the input text
+     *
      * @param content
      * @return
      */
@@ -443,6 +465,7 @@ public class Parse {
 
     /**
      * Searchs the code for the index of the first char matched by the specified group
+     *
      * @param code
      * @param patternText
      * @param groupIndex
@@ -461,6 +484,7 @@ public class Parse {
 
     /**
      * Splits variable declarations by the semicolon into a list of strings
+     *
      * @param content
      * @return
      */
@@ -481,11 +505,12 @@ public class Parse {
 
     /**
      * Parse a list of text declarations into a logic structure
+     *
      * @param declarationsText
      * @return
      */
     private static List<DeclarationModel> parseDeclarations(List<String> declarationsText) {
-        Pattern pattern = Pattern.compile(anyWhitespaces + "(" + modifierKeywordsGroup + "*)" + typeDeclarationGroup + " +" + atleastOneWordGroup);
+        Pattern pattern = Pattern.compile(modifierKeywordsGroup + typeDeclarationGroup + " +" + atleastOneWordGroup);
 
         List<DeclarationModel> models = new ArrayList<>();
 
@@ -507,6 +532,7 @@ public class Parse {
 
     /**
      * Parses the received modifiers in text form to a list of ModifierEnum
+     *
      * @param text
      * @return
      */

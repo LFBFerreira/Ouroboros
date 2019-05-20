@@ -2,6 +2,7 @@ package luisf.ouroboros.analyzer;
 
 import luisf.ouroboros.analyzer.models.DeclarationModel;
 import luisf.ouroboros.analyzer.models.MethodModel;
+import luisf.ouroboros.analyzer.models.metrics.*;
 import luisf.ouroboros.common.Handy;
 
 import java.io.File;
@@ -11,13 +12,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static luisf.ouroboros.analyzer.RegexConstants.*;
-import static luisf.ouroboros.analyzer.RegexConstants.closeBraces;
 
 public class Parse {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     private final static Character openBraceCharacter = '{';
     private final static Character closeBraceCharacter = '}';
+
+    private final static List<MetricBase> codeMetrics = new LinkedList<MetricBase>(Arrays.asList(
+            new BraceCloseMetric(),
+            new BraceOpenMetric(),
+            new LineEndMetric(),
+            new ReturnMetric(),
+            new SymbolMetric(),
+            new WordMetric() /* WordMetric needs to be the last because its the most general*/));
+
 
     // ================================================================
 
@@ -288,7 +297,7 @@ public class Parse {
 
         List<String> declarationsText = splitDeclarations(partialContent);
 
-        return parseDeclarations(declarationsText);
+        return parseClassDeclarations(declarationsText);
     }
 
     /**
@@ -359,6 +368,7 @@ public class Parse {
             if (blockEndIndex != -1) {
 
                 String methodHeader = partialContent.substring(0, openBraceIndex + 1);
+                String methodContent = partialContent.substring(openBraceIndex + 1, blockEndIndex);
 
                 // get next method name
                 methodName = getMethodName(methodHeader);
@@ -374,8 +384,10 @@ public class Parse {
 
                 // add into to the map
                 methods.add(new MethodModel(methodName,
-                        partialContent.substring(openBraceIndex + 1, blockEndIndex),
-                        modifiers, returnType));
+                        methodContent,
+                        modifiers,
+                        returnType,
+                        parseMetrics(methodContent)));
 
                 // remove analyzed content
                 partialContent = Handy.removeSubString(0, blockEndIndex, partialContent);
@@ -390,6 +402,63 @@ public class Parse {
         }
 
         return methods;
+    }
+
+    /**
+     * @param content
+     * @return
+     */
+    private static List<MetricBase> parseMetrics(String content) {
+        List<MetricBase> metrics = new LinkedList<>();
+
+        if (Handy.isNullOrEmpty(content)) {
+            return metrics;
+        }
+
+        // create the regex as a concatenation of all the metrics
+        StringBuilder regex = new StringBuilder();
+        codeMetrics.forEach(m -> regex.append(m.getRegex() + "|"));
+
+        Pattern pattern = Pattern.compile(regex.substring(0, regex.length() - 1));
+        Matcher matcher = pattern.matcher(content);
+
+        while (matcher.find()) {
+            // skip index 0 because group0 is the whole match
+            for (int i = 1; i <= matcher.groupCount(); i++) {
+                String match = matcher.group(i);
+
+                if (!Handy.isNullOrEmpty(match)) {
+                    if (i - 1 < codeMetrics.size()) {
+                        metrics.add(createMetricInstance(codeMetrics.get(i - 1), match));
+                        break;
+                    } else {
+                        log.severe("There is a mistach between the matched group number and the metrics");
+                    }
+                }
+            }
+        }
+
+        return metrics;
+    }
+
+
+    private static <T> MetricBase createMetricInstance(T test, String text) {
+        if (test instanceof BraceCloseMetric) {
+            return new BraceCloseMetric(text);
+        }else if (test instanceof BraceOpenMetric) {
+            return new BraceOpenMetric(text);
+        }else if (test instanceof LineEndMetric) {
+            return new LineEndMetric(text);
+        }else if (test instanceof ReturnMetric) {
+            return new ReturnMetric(text);
+        } else if (test instanceof SymbolMetric) {
+            return new SymbolMetric(text);
+        } else if (test instanceof WordMetric) {
+            return new WordMetric(text);
+        } else {
+            log.severe("Could not match the metric type");
+            return new FallbackMetric(text);
+        }
     }
 
     /**
@@ -509,8 +578,8 @@ public class Parse {
      * @param declarationsText
      * @return
      */
-    private static List<DeclarationModel> parseDeclarations(List<String> declarationsText) {
-        Pattern pattern = Pattern.compile(modifierKeywordsGroup + typeDeclarationGroup + " +" + atleastOneWordGroup);
+    private static List<DeclarationModel> parseClassDeclarations(List<String> declarationsText) {
+        Pattern pattern = Pattern.compile(modifierKeywordsGroup + typeDeclarationGroup + oneOrMoreWhitespaces + atleastOneWordGroup);
 
         List<DeclarationModel> models = new ArrayList<>();
 

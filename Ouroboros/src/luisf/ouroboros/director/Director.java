@@ -5,7 +5,6 @@ import luisf.ouroboros.generator.Generator;
 import luisf.ouroboros.analyzer.models.ClassModel;
 import luisf.ouroboros.modelsWriter.ModelsIO;
 import luisf.ouroboros.analyzer.CodeAnalyzer;
-import processing.core.PApplet;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,16 +56,12 @@ public class Director {
             if (classModels.isEmpty()) {
                 classModels = readModels(modelsFolder);
             }
+
             startGenerator(projectFilesFolder, graphicsFolder, classModels);
         }
 
-        log.info("Got " + classModels.size() + " models");
+        log.info("Parsed " + classModels.size() + " classes");
     }
-
-
-    // ================================================================
-
-    // Public
 
 
     // ================================================================
@@ -94,7 +89,7 @@ public class Director {
         modelsIo.saveModelsBinary(models);
     }
 
-    private void startGenerator(File projectFilesFolder, File outputFolder, List<ClassModel> models) {
-        PApplet.main(Generator.class.getCanonicalName());
+    private void startGenerator(File projectFilesFolder, File graphicsFolder, List<ClassModel> models) {
+        Generator.launchProcessing(graphicsFolder, models);
     }
 }

@@ -140,10 +140,6 @@ public class CodeAnalyzer {
             // filter text outside of the classes braces
             String filteredContent = Parse.extractClassContent(fileContent);
 
-            if (className.equals("Main"))
-            {
-                log.info("HEre");
-            }
             // remove static blocks
             filteredContent = Parse.removeStaticBlocks(filteredContent);
 

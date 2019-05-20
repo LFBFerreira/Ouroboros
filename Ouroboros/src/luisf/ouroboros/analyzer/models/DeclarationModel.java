@@ -10,15 +10,14 @@ import java.util.logging.Logger;
 public class DeclarationModel implements Serializable {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
-    public List<ModifierEnum> visibility = new ArrayList<>();
-
+    public List<ModifierEnum> modifiers = new ArrayList<>();
     public String name = "";
     public String type = "";
 
     // ================================================================
 
-    public DeclarationModel(String name, String type, List<ModifierEnum> visibility) {
-        this.visibility = visibility;
+    public DeclarationModel(String name, String type, List<ModifierEnum> modifiers) {
+        this.modifiers = modifiers;
         this.name = name;
         this.type = type;
     }

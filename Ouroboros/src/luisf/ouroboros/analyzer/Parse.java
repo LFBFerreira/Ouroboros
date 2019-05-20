@@ -1,6 +1,7 @@
 package luisf.ouroboros.analyzer;
 
 import luisf.ouroboros.analyzer.models.DeclarationModel;
+import luisf.ouroboros.analyzer.models.MethodModel;
 import luisf.ouroboros.common.Handy;
 
 import java.io.File;
@@ -241,11 +242,15 @@ public class Parse {
     /**
      * Extracts the variables declared inside a class but outside of methods
      * @param content
-     * @return
+     * @return text without class declarations
      */
-    public static List<DeclarationModel> extractClassDeclarations(String content) {
+    public static List<DeclarationModel> parseClassDeclarations(String content) {
+
+        List<DeclarationModel> declarationModels = new LinkedList<>();
+
         // copy the content, to be modified later
         String partialContent = content;
+        StringBuffer contentWithoutDeclarations = new StringBuffer();
 
         int openBraceIndex = getMethodStartBrace(partialContent);
         int blockEndIndex = -1;
@@ -255,6 +260,9 @@ public class Parse {
 
             if (blockEndIndex != -1) {
                 int methodStartIndex = getMethodDeclarationStart(partialContent);
+
+                // save all of the removed content for later
+                contentWithoutDeclarations.append(partialContent.substring(methodStartIndex, blockEndIndex + 1));
 
                 // remove analyzed content
                 partialContent = Handy.removeSubString(methodStartIndex, blockEndIndex, partialContent);
@@ -272,23 +280,16 @@ public class Parse {
         return parseDeclarations(declarationsText);
     }
 
-
     /**
-     * Parses a list of methods as text into a logical structure
-     * @param fileContent
+     * Removes the all the classes's text except for methods
+     * @param content
      * @return
      */
-    public static Map<String, String> parseMethods(String fileContent) {
-        Map<String, String> methodsInfo = new HashMap<String, String>();
+    public static String removeClassDeclarations(String content) {
 
         // copy the content, to be modified later
-        String partialContent = fileContent;
-
-        String methodName = getMethodName(partialContent);
-
-        if (Handy.isNullOrEmpty(methodName)) {
-            return methodsInfo;
-        }
+        String partialContent = content;
+        StringBuffer contentWithoutDeclarations = new StringBuffer();
 
         int openBraceIndex = getMethodStartBrace(partialContent);
         int blockEndIndex = -1;
@@ -297,28 +298,78 @@ public class Parse {
             blockEndIndex = findClosingBraceIndex(partialContent, openBraceIndex);
 
             if (blockEndIndex != -1) {
-                // get next method name
-                methodName = getMethodName(partialContent);
+                int methodStartIndex = getMethodDeclarationStart(partialContent);
 
-                if (Handy.isNullOrEmpty(methodName)) {
-                    return methodsInfo;
-                }
-
-                // add into to the map
-                methodsInfo.put(methodName, partialContent.substring(openBraceIndex + 1, blockEndIndex));
+                // save all of the removed content for later
+                contentWithoutDeclarations.append(partialContent.substring(methodStartIndex, blockEndIndex + 1));
 
                 // remove analyzed content
-                partialContent = Handy.removeSubString(0, blockEndIndex, partialContent);
+                partialContent = Handy.removeSubString(methodStartIndex, blockEndIndex, partialContent);
             } else {
                 log.severe(Handy.f("Could not find a matching closing brace"));
-                return methodsInfo;
+                break;
             }
 
             // find next method if it exists
             openBraceIndex = getMethodStartBrace(partialContent);
         }
 
-        return methodsInfo;
+        return contentWithoutDeclarations.toString();
+    }
+
+    /**
+     *
+     * @param fileContent
+     * @return
+     */
+    public static List<MethodModel> parseMethods(String fileContent) {
+        List<MethodModel> methods = new LinkedList<>();
+
+        // copy the content, to be modified later
+        String partialContent = fileContent;
+
+        // get the name of the first method
+        String methodName = getMethodName(partialContent);
+
+        if (Handy.isNullOrEmpty(methodName)) {
+            return methods;
+        }
+
+        // get open brace of the first method
+        int openBraceIndex = getMethodStartBrace(partialContent);
+        int blockEndIndex = -1;
+
+        // repeat the process till all methods have been processed
+        while (openBraceIndex > -1) {
+            blockEndIndex = findClosingBraceIndex(partialContent, openBraceIndex);
+
+            if (blockEndIndex != -1) {
+                // get next method name
+                methodName = getMethodName(partialContent);
+
+                // if the method name cannot be parsed, return
+                if (Handy.isNullOrEmpty(methodName)) {
+                   break;
+                }
+
+                // add into to the map
+                methods.add(new MethodModel(methodName,
+                        partialContent.substring(openBraceIndex + 1, blockEndIndex),
+                        new LinkedList<>() ));
+
+                // remove analyzed content
+                partialContent = Handy.removeSubString(0, blockEndIndex, partialContent);
+            } else {
+                log.severe(Handy.f("Could not find a matching closing brace"));
+                // if the end of the method body could not be found, return
+                break;
+            }
+
+            // find next method if it exists
+            openBraceIndex = getMethodStartBrace(partialContent);
+        }
+
+        return methods;
     }
 
     /**

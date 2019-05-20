@@ -15,6 +15,7 @@ public interface ClassModelInterface {
     String getFullClassName();
 
     void setClassMethods(Map<String, String> methods);
+    void setClassMethods(List<MethodModel> methods);
     List<String> getMethodNames();
 
     void setDeclarations(List<DeclarationModel> declarations);

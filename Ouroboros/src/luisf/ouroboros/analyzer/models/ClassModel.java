@@ -4,6 +4,7 @@ import luisf.ouroboros.common.Handy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -76,14 +77,18 @@ public class ClassModel implements ClassModelInterface, Serializable {
     }
 
     @Override
+    public void setClassMethods(List<MethodModel> methods) {
+        methodModels = methods;
+    }
+
+    @Override
     public void setClassMethods(Map<String, String> methodsCode) {
-        // TODO refactor this to include methods modifiers
         methodsCode.forEach((name, code) ->
                 {
                     if (Handy.isNullOrEmpty(name) || Handy.isNullOrEmpty(code)) {
                         log.severe(Handy.f("The method name or code are empty for class %s", className));
                     } else {
-                        methodModels.add(new MethodModel(this.className, name, code));
+                        methodModels.add(new MethodModel(name, code, new LinkedList<>()));
                     }
                 }
         );

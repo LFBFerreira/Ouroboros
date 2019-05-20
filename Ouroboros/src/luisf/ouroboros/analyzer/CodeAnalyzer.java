@@ -1,6 +1,7 @@
 package luisf.ouroboros.analyzer;
 
 import luisf.ouroboros.analyzer.models.DeclarationModel;
+import luisf.ouroboros.analyzer.models.MethodModel;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.analyzer.models.ClassModel;
 import luisf.ouroboros.analyzer.models.ClassModelInterface;
@@ -32,6 +33,10 @@ public class CodeAnalyzer {
 
     // Public
 
+    /**
+     * Parses the files define during construction time
+     * @return
+     */
     public Boolean parseFiles() {
         List<File> fileList = new ArrayList<File>();
 
@@ -54,6 +59,15 @@ public class CodeAnalyzer {
 
         return !fileList.isEmpty();
     }
+
+    public List<ClassModel> getModels() {
+        return classModels;
+    }
+
+
+    // ================================================================
+
+    // Helpers
 
     private void debugPrint(List<ClassModel> classes) {
         classes.stream().forEach(c ->
@@ -79,15 +93,11 @@ public class CodeAnalyzer {
         });
     }
 
-    public List<ClassModel> getModels() {
-        return classModels;
-    }
-
-
-    // ================================================================
-
-    // Helpers
-
+    /**
+     * Parses an individual file, and saves the result in the ClassModelInterface
+     * @param file
+     * @param classModel
+     */
     private void parseFile(File file, ClassModelInterface classModel) {
         // read whole file to a string
         String fileContent = Handy.fileToString(file);
@@ -123,7 +133,7 @@ public class CodeAnalyzer {
             }
         }
 
-        // parse class methods'
+        // parse class methods
         if (!classModel.isInterface()) {
             // filter text outside of the classes braces
             String filteredContent = Parse.extractClassContent(fileContent);
@@ -131,16 +141,19 @@ public class CodeAnalyzer {
             // remove static blocks
             filteredContent = Parse.removeStaticBlocks(filteredContent);
 
-            List<DeclarationModel> declarations = Parse.extractClassDeclarations(filteredContent);
+            List<DeclarationModel> declarations = new LinkedList<>(); //= Parse.parseClassDeclarations(filteredContent);
+             declarations = Parse.parseClassDeclarations(filteredContent);
 
-            Map<String, String> methodsInfo = Parse.parseMethods(filteredContent);
+            String methodsText = Parse.removeClassDeclarations(filteredContent);
+
+            List<MethodModel> methodsInfo = Parse.parseMethods(methodsText);
 
             if (methodsInfo.isEmpty()) {
                 log.warning(Handy.f("Could not find any methods in the class '%s.%s'", packageName, className));
             }
 
-            classModel.setClassMethods(methodsInfo);
             classModel.setDeclarations(declarations);
+            classModel.setClassMethods(methodsInfo);
 
         } else {
             // parse interface methods

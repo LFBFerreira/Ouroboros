@@ -275,6 +275,7 @@ public class Parse {
         int openBraceIndex = getMethodStartBrace(partialContent);
         int blockEndIndex = -1;
 
+        // create string only with declarations and one without any declarations
         while (openBraceIndex > -1) {
             blockEndIndex = findClosingBraceIndex(partialContent, openBraceIndex);
 

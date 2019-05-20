@@ -81,7 +81,7 @@ public class CodeAnalyzer {
                 c.getDeclarations().forEach(d -> log.info(Handy.f("\t\t%s: %s \t%s", d.name, d.type, d.modifiers.toString())));
                 log.info("\t\t-----");
             } else {
-                log.info("\t\tClass has no declarations");
+                log.info("\t\tClass has no parameters");
             }
 
             List<MethodModel> methods = c.getMethods();
@@ -140,6 +140,10 @@ public class CodeAnalyzer {
             // filter text outside of the classes braces
             String filteredContent = Parse.extractClassContent(fileContent);
 
+            if (className.equals("Main"))
+            {
+                log.info("HEre");
+            }
             // remove static blocks
             filteredContent = Parse.removeStaticBlocks(filteredContent);
 

@@ -16,15 +16,17 @@ public class RegexConstants {
 
     public static String semicolon = "\\;";
 
-    public static String modifierKeywordsGroup = "((public|private|static|protected|abstract|native|synchronized|final| )+)";
+    public static String modifierKeywordsGroup = "((public|private|static|protected|abstract|native|synchronized|final|\\b )+)";
 
     public static String typeDeclarationGroup = "([\\w<>.?, \\[\\]]*)";
+
+    public static String methodHeaderParameters = "\\([\\w<>\\[\\]._?, \\n]*\\)";
 
     public static String anyWord = "\\w*";
     public static String anyWordGroup = "(\\w*)";
     public static String atleastOneWordGroup = "(\\w+)";
 
     public static String methodHeader = modifierKeywordsGroup + typeDeclarationGroup + oneOrMoreWhitespaces + atleastOneWordGroup + anyWhitespaces +
-            "\\([\\w<>\\[\\]._?, \\n]*\\)" + anyWhitespaces + "([\\w ,\\n]*)";
+            methodHeaderParameters + anyWhitespaces + "([\\w ,\\n]*)";
 
 }

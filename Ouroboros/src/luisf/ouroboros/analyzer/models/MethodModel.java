@@ -1,7 +1,8 @@
 package luisf.ouroboros.analyzer.models;
 
 import luisf.ouroboros.analyzer.ModifierEnum;
-import luisf.ouroboros.analyzer.models.metrics.MetricBase;
+import luisf.ouroboros.analyzer.models.metrics.CodeModel;
+import luisf.ouroboros.analyzer.models.metrics.Metric;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -15,12 +16,12 @@ public class MethodModel implements Serializable {
     public String code = "";
     public String returnType = "";
     public List<ModifierEnum> modifiers = new LinkedList<>();
-    public List<MetricBase> metrics;
+    public List<CodeModel> metrics;
 
     // ================================================================
 
 
-    public MethodModel(String name, String code, List<ModifierEnum> modifiers, String returnType, List<MetricBase> metrics) {
+    public MethodModel(String name, String code, List<ModifierEnum> modifiers, String returnType, List<CodeModel> metrics) {
         this.name = name;
         this.code = code;
         this.modifiers = modifiers;

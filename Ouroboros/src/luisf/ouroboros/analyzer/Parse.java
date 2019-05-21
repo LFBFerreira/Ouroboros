@@ -19,15 +19,6 @@ public class Parse {
     private final static Character openBraceCharacter = '{';
     private final static Character closeBraceCharacter = '}';
 
-    private final static List<MetricBase> codeMetrics = new LinkedList<MetricBase>(Arrays.asList(
-            new BraceCloseMetric(),
-            new BraceOpenMetric(),
-            new LineEndMetric(),
-            new ReturnMetric(),
-            new SymbolMetric(),
-            new WordMetric() /* WordMetric needs to be the last because its the most general*/));
-
-
     // ================================================================
 
     public static String getPackageName(String code) {
@@ -405,20 +396,33 @@ public class Parse {
         return methods;
     }
 
+
     /**
      * @param content
      * @return
      */
-    private static List<MetricBase> parseMetrics(String content) {
-        List<MetricBase> metrics = new LinkedList<>();
+    private static List<CodeModel> parseMetrics(String content) {
+        List<CodeModel> metrics = new LinkedList<>();
 
         if (Handy.isNullOrEmpty(content)) {
+            log.info("The string is empty or null");
             return metrics;
         }
 
+        Metric[] codeMetrics = new Metric[]
+        {
+                new Metric(CodeMetricEnum.BRACE_OPEN),
+                new Metric(CodeMetricEnum.BRACE_CLOSE),
+                new Metric(CodeMetricEnum.LINE_END),
+                new Metric(CodeMetricEnum.RETURN),
+                new Metric(CodeMetricEnum.DOT),
+                new Metric(CodeMetricEnum.OTHER_SYMBOL),
+                new Metric(CodeMetricEnum.WORD),    // WordMetric needs to be the last because its the most general
+        };
+
         // create the regex as a concatenation of all the metrics
         StringBuilder regex = new StringBuilder();
-        codeMetrics.forEach(m -> regex.append(m.getRegex() + "|"));
+        Arrays.stream(codeMetrics).forEach(m -> regex.append(m.regex + "|"));
 
         Pattern pattern = Pattern.compile(regex.substring(0, regex.length() - 1));
         Matcher matcher = pattern.matcher(content);
@@ -429,37 +433,17 @@ public class Parse {
                 String match = matcher.group(i);
 
                 if (!Handy.isNullOrEmpty(match)) {
-                    if (i - 1 < codeMetrics.size()) {
-                        metrics.add(createMetricInstance(codeMetrics.get(i - 1), match));
+                    if (i - 1 < codeMetrics.length) {
+                        metrics.add(new CodeModel(codeMetrics[i - 1].metric, match));
                         break;
                     } else {
-                        log.severe("There is a mistach between the matched group number and the metrics");
+                        log.severe("There is a mismatch between the matched group number and the metrics");
                     }
                 }
             }
         }
 
         return metrics;
-    }
-
-
-    private static <T> MetricBase createMetricInstance(T test, String text) {
-        if (test instanceof BraceCloseMetric) {
-            return new BraceCloseMetric(text);
-        }else if (test instanceof BraceOpenMetric) {
-            return new BraceOpenMetric(text);
-        }else if (test instanceof LineEndMetric) {
-            return new LineEndMetric(text);
-        }else if (test instanceof ReturnMetric) {
-            return new ReturnMetric(text);
-        } else if (test instanceof SymbolMetric) {
-            return new SymbolMetric(text);
-        } else if (test instanceof WordMetric) {
-            return new WordMetric(text);
-        } else {
-            log.severe("Could not match the metric type");
-            return new FallbackMetric(text);
-        }
     }
 
     /**

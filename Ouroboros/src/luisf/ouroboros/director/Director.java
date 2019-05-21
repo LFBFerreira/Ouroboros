@@ -1,7 +1,7 @@
 package luisf.ouroboros.director;
 
 import luisf.ouroboros.common.Handy;
-import luisf.ouroboros.generator.Generator;
+import luisf.ouroboros.visualizer.Visualizer;
 import luisf.ouroboros.analyzer.models.ClassModel;
 import luisf.ouroboros.modelsWriter.ModelsIO;
 import luisf.ouroboros.analyzer.CodeAnalyzer;
@@ -90,6 +90,6 @@ public class Director {
     }
 
     private void startGenerator(File projectFilesFolder, File graphicsFolder, List<ClassModel> models) {
-        Generator.launchGenerator(graphicsFolder, models);
+        Visualizer.launchGenerator(graphicsFolder, models);
     }
 }

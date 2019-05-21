@@ -1,8 +1,6 @@
 package luisf.ouroboros.analyzer.models;
 
 import luisf.ouroboros.analyzer.ModifierEnum;
-import luisf.ouroboros.analyzer.models.metrics.CodeModel;
-import luisf.ouroboros.analyzer.models.metrics.Metric;
 
 import java.io.Serializable;
 import java.util.LinkedList;

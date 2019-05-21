@@ -90,6 +90,6 @@ public class Director {
     }
 
     private void startGenerator(File projectFilesFolder, File graphicsFolder, List<ClassModel> models) {
-        Generator.launchProcessing(graphicsFolder, models);
+        Generator.launchGenerator(graphicsFolder, models);
     }
 }

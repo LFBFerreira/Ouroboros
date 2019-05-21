@@ -1,5 +1,6 @@
 package luisf.ouroboros.analyzer;
 
+import luisf.ouroboros.analyzer.models.CodeModel;
 import luisf.ouroboros.analyzer.models.DeclarationModel;
 import luisf.ouroboros.analyzer.models.MethodModel;
 import luisf.ouroboros.analyzer.models.metrics.*;
@@ -397,11 +398,23 @@ public class Parse {
     }
 
 
+    private static final Metric[] codeMetrics = new Metric[]
+            {
+                    new Metric(CodeMetricEnum.BRACE_OPEN),
+                    new Metric(CodeMetricEnum.BRACE_CLOSE),
+                    new Metric(CodeMetricEnum.LINE_END),
+                    new Metric(CodeMetricEnum.RETURN),
+                    new Metric(CodeMetricEnum.DOT),
+                    new Metric(CodeMetricEnum.OTHER_SYMBOL),
+                    new Metric(CodeMetricEnum.WORD),    // WordMetric needs to be the last because its the most general
+            };
+
     /**
      * @param content
      * @return
      */
     private static List<CodeModel> parseMetrics(String content) {
+
         List<CodeModel> metrics = new LinkedList<>();
 
         if (Handy.isNullOrEmpty(content)) {
@@ -409,16 +422,6 @@ public class Parse {
             return metrics;
         }
 
-        Metric[] codeMetrics = new Metric[]
-        {
-                new Metric(CodeMetricEnum.BRACE_OPEN),
-                new Metric(CodeMetricEnum.BRACE_CLOSE),
-                new Metric(CodeMetricEnum.LINE_END),
-                new Metric(CodeMetricEnum.RETURN),
-                new Metric(CodeMetricEnum.DOT),
-                new Metric(CodeMetricEnum.OTHER_SYMBOL),
-                new Metric(CodeMetricEnum.WORD),    // WordMetric needs to be the last because its the most general
-        };
 
         // create the regex as a concatenation of all the metrics
         StringBuilder regex = new StringBuilder();

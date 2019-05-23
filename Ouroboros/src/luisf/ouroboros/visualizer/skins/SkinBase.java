@@ -10,7 +10,6 @@ import java.util.List;
 public abstract class SkinBase extends GraphicsResources implements DrawableInterface  {
     protected List<ClassModel> models;
 
-
     public SkinBase(List<ClassModel> models, PGraphics graphics, PApplet parent) {
         super(parent, graphics);
 

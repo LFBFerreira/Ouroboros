@@ -5,31 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="96fdb1cb-9c60-4ecc-94a7-9da8b24eeda5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Proscene.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/CameraMan.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/GraphicsResources.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraMan.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ouroboros.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Ouroboros.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/generator/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/generator/skins/DrawableInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/DrawableInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/generator/skins/SkinBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SkinBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/generator/skins/SlicedSkin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SlicedSkin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_analyzer_models_metrics_BraceCloseMetric.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_analyzer_models_metrics_BraceOpenMetric.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_analyzer_models_metrics_CodeModel.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_analyzer_models_metrics_FallbackMetric.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_analyzer_models_metrics_LineEndMetric.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_analyzer_models_metrics_MetricBase.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_analyzer_models_metrics_ReturnMetric.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_analyzer_models_metrics_SymbolMetric.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_analyzer_models_metrics_WordMetric.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_director_Director.oro" beforeDir="false" afterPath="$PROJECT_DIR$/../models_output/luisf_ouroboros_director_Director.oro" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_generator_Generator.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_generator_skins_DrawableInterface.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_generator_skins_SkinBase.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_generator_skins_SlicedSkin.oro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_generator_skins_SlicesSkin.oro" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/CameraMan.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SkinBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SkinBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SlicedSkin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SlicedSkin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_visualizer_Visualizer.oro" beforeDir="false" afterPath="$PROJECT_DIR$/../models_output/luisf_ouroboros_visualizer_Visualizer.oro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_visualizer_skins_SlicedSkin.oro" beforeDir="false" afterPath="$PROJECT_DIR$/../models_output/luisf_ouroboros_visualizer_skins_SlicedSkin.oro" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,12 +29,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/CodeAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="419">
+            <state relative-caret-position="2227">
               <caret line="141" selection-start-line="141" selection-end-line="141" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#2583#2584#0" expanded="true" />
-                <element signature="e#2617#2618#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -60,31 +41,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="662">
-              <caret line="94" column="59" selection-start-line="94" selection-start-column="59" selection-end-line="94" selection-end-column="59" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1533#1534#0" expanded="true" />
-                <element signature="e#1624#1625#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/DrawableInterface.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="14" selection-start-line="5" selection-start-column="14" selection-end-line="5" selection-end-column="14" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/CameraMan.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="589">
-              <caret line="46" column="119" selection-start-line="46" selection-start-column="119" selection-end-line="46" selection-end-column="119" />
+            <state relative-caret-position="314">
+              <caret line="66" column="28" selection-start-line="66" selection-start-column="28" selection-end-line="66" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -95,22 +53,22 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SlicedSkin.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="559">
-              <caret line="38" selection-start-line="38" selection-end-line="39" selection-end-column="29" />
+            <state relative-caret-position="765">
+              <caret line="52" column="8" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="8" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#615#616#0" expanded="true" />
-                <element signature="e#662#663#0" expanded="true" />
+                <element signature="e#679#680#0" expanded="true" />
+                <element signature="e#726#727#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/GraphicsResources.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraMan.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="11" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="11" />
+            <state relative-caret-position="589">
+              <caret line="42" column="36" selection-start-line="42" selection-start-column="36" selection-end-line="42" selection-end-column="36" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -131,8 +89,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>todo</find>
-      <find>methodVisibilityKeywords</find>
       <find>ss starting brace could not be found</find>
       <find>visibi</find>
       <find>The class starting brace could not be found</find>
@@ -161,6 +117,8 @@
       <find>void runSketch(</find>
       <find>private</find>
       <find>extends</find>
+      <find>this.pg()</find>
+      <find>beingdr</find>
     </findStrings>
     <replaceStrings>
       <replace>ClassModel</replace>
@@ -172,8 +130,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/parser/RegexConstants.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/parser/Parse.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/parser/models/model/ClassModel.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/parser/VisibilityEnum.java" />
@@ -219,10 +175,12 @@
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/generator/Visualizer.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/Main.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/GraphicsResources.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/CameraMan.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SkinBase.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SlicedSkin.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/CameraMan.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/Cameraman.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraMan.java" />
       </list>
     </option>
   </component>
@@ -244,8 +202,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -281,14 +237,6 @@
               <item name="Ouroboros" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="ouroboros" type="462c0819:PsiDirectoryNode" />
-              <item name="analyzer" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Ouroboros" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Ouroboros" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="ouroboros" type="462c0819:PsiDirectoryNode" />
               <item name="common" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -303,18 +251,29 @@
               <item name="Ouroboros" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="ouroboros" type="462c0819:PsiDirectoryNode" />
+              <item name="modelsWriter" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ouroboros" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ouroboros" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="ouroboros" type="462c0819:PsiDirectoryNode" />
               <item name="visualizer" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Ouroboros" type="b2602c69:ProjectViewProjectNode" />
               <item name="Ouroboros" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="ouroboros" type="462c0819:PsiDirectoryNode" />
+              <item name="visualizer" type="462c0819:PsiDirectoryNode" />
+              <item name="skins" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -426,16 +385,16 @@
     <frame x="54" y="-8" width="1874" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.57320875" visible="true" weight="0.23759647" />
-      <window_info id="Structure" order="1" sideWeight="0.42679128" side_tool="true" visible="true" weight="0.23759647" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.5711319" visible="true" weight="0.24310915" />
+      <window_info id="Structure" order="1" sideWeight="0.42886811" side_tool="true" visible="true" weight="0.24310915" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.31879544" />
-      <window_info active="true" anchor="bottom" x="-3234" y="-560" width="924" height="835" id="Run" order="2" type="WINDOWED" visible="true" weight="0.32917964" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.2647975" />
+      <window_info active="true" anchor="bottom" x="-3236" y="-560" width="926" height="835" id="Run" order="2" type="WINDOWED" visible="true" weight="0.32917964" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4997236" weight="0.40706128" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -510,7 +469,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/resources/configuration.xml" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_201/src.zip!/java/util/Properties.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="206">
@@ -677,27 +635,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/FallbackMetric.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" selection-start-line="3" selection-end-line="16" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/BraceOpenMetric.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="44" selection-start-line="3" selection-start-column="44" selection-end-line="3" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/ReturnMetric.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="48" selection-start-line="3" selection-start-column="48" selection-end-line="3" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/FallbackMetric.java" />
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/BraceOpenMetric.java" />
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/ReturnMetric.java" />
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/DeclarationModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -725,34 +665,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/BraceCloseMetric.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="40" lean-forward="true" selection-start-line="3" selection-start-column="40" selection-end-line="3" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/LineEndMetric.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" selection-start-line="3" selection-end-line="16" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/SymbolMetric.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="65" selection-start-line="3" selection-start-column="41" selection-end-line="3" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/WordMetric.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="53" lean-forward="true" selection-start-line="4" selection-start-column="41" selection-end-line="4" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/BraceCloseMetric.java" />
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/LineEndMetric.java" />
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/SymbolMetric.java" />
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/WordMetric.java" />
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/MethodModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
@@ -814,16 +730,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="705">
-          <caret line="84" column="36" selection-start-line="84" selection-start-column="36" selection-end-line="84" selection-end-column="36" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/libraries/processing-3.4/core.jar!/processing/core/PApplet.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="311">
@@ -835,18 +741,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="27" column="17" selection-start-line="27" selection-start-column="17" selection-end-line="27" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/CodeAnalyzer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="419">
-          <caret line="141" selection-start-line="141" selection-end-line="141" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2583#2584#0" expanded="true" />
-            <element signature="e#2617#2618#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -865,10 +759,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="453">
+          <caret line="84" column="36" selection-start-line="84" selection-start-column="36" selection-end-line="84" selection-end-column="36" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene.java" />
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/CameraMan.java" />
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/DrawableInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="14" selection-start-line="5" selection-start-column="14" selection-end-line="5" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SkinBase.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="32" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="32" />
+        <state relative-caret-position="153">
+          <caret line="9" column="50" lean-forward="true" selection-start-line="9" selection-start-column="50" selection-end-line="9" selection-end-column="50" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -877,49 +790,57 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/GraphicsResources.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="11" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="11" />
+        <state relative-caret-position="85">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/DrawableInterface.java">
+    <entry file="jar://$PROJECT_DIR$/libraries/proscene-3.0.0/library/proscene.jar!/remixlab/proscene/Scene.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="14" selection-start-line="5" selection-start-column="14" selection-end-line="5" selection-end-column="14" />
+        <state relative-caret-position="252">
+          <caret line="889" lean-forward="true" selection-start-line="889" selection-end-line="889" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/CodeAnalyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2227">
+          <caret line="141" selection-start-line="141" selection-end-line="141" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SlicedSkin.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="559">
-          <caret line="38" selection-start-line="38" selection-end-line="39" selection-end-column="29" />
+        <state relative-caret-position="765">
+          <caret line="52" column="8" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="8" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#615#616#0" expanded="true" />
-            <element signature="e#662#663#0" expanded="true" />
+            <element signature="e#679#680#0" expanded="true" />
+            <element signature="e#726#727#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="662">
-          <caret line="94" column="59" selection-start-line="94" selection-start-column="59" selection-end-line="94" selection-end-column="59" />
+        <state relative-caret-position="314">
+          <caret line="66" column="28" selection-start-line="66" selection-start-column="28" selection-end-line="66" selection-end-column="28" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1533#1534#0" expanded="true" />
-            <element signature="e#1624#1625#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/CameraMan.java">
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraMan.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="589">
-          <caret line="46" column="119" selection-start-line="46" selection-start-column="119" selection-end-line="46" selection-end-column="119" />
+          <caret line="42" column="36" selection-start-line="42" selection-start-column="36" selection-end-line="42" selection-end-column="36" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

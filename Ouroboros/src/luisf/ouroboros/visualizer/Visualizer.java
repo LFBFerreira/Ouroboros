@@ -1,6 +1,7 @@
 package luisf.ouroboros.visualizer;
 
 import luisf.ouroboros.analyzer.models.ClassModel;
+import luisf.ouroboros.visualizer.scene.CameraMan;
 import luisf.ouroboros.visualizer.skins.DrawableInterface;
 import luisf.ouroboros.visualizer.skins.SlicedSkin;
 import processing.core.PApplet;
@@ -74,12 +75,12 @@ public class Visualizer extends PApplet {
      * Setup
      */
     public void setup() {
-        log.warning("Hey Setup!");
 
         skinGraphics = createGraphics(windowWidth, windowHeight, P3D);
 
         codeSkin = new SlicedSkin(models, skinGraphics, this);
-        cameraMan = new CameraMan(skinGraphics, this);
+        cameraMan = new CameraMan(this, skinGraphics);
+        cameraMan.init();
     }
 
     // ================================================================
@@ -88,15 +89,17 @@ public class Visualizer extends PApplet {
      * Draw
      */
     public void draw() {
-        clear();
-        lights();
         background(100);
 
-        cameraMan.updateCamera(mousePressed, mouseX, mouseY);
+        cameraMan.beginDraw();
 
         if (codeSkin != null) {
-            image(codeSkin.draw(), 0, 0);
+            codeSkin.draw();
         }
+
+        cameraMan.endDraw();
+
+        cameraMan.display();
     }
 
     // ================================================================

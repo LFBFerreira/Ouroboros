@@ -31,7 +31,10 @@ public class SlicedSkin extends SkinBase {
 
     @Override
     public PGraphics draw() {
+        graphics.lights();
+
         graphics.beginDraw();
+
         graphics.clear();
         graphics.pushMatrix();
 
@@ -39,13 +42,14 @@ public class SlicedSkin extends SkinBase {
         graphics.fill(60);
         graphics.stroke(200);
 
-        graphics.translate(graphics.width/2, graphics.height/2, 0);
-        //graphics.rotateY(rotationY);
-        //rotationY +=0.01;
+//        graphics.translate(graphics.width/2, graphics.height/2, 0);
+        rotationY +=0.01;
+        graphics.rotateY(rotationY);
 
-        graphics.box(100, 100, 80);
+        graphics.box(60, 60, 20);
 
         graphics.popMatrix();
+
         graphics.endDraw();
         return graphics;
     }

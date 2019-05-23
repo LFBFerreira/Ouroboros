@@ -99,7 +99,7 @@ public class Visualizer extends PApplet {
         cameraMan.pg().clear();
 
         if (codeSkin != null) {
-            codeSkin.draw();
+            codeSkin.draw(cameraMan.pg());
         }
 
         cameraMan.endDraw();

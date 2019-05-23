@@ -6,7 +6,6 @@ import processing.core.PGraphics;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
 public class SlicedSkin extends SkinBase {
@@ -14,7 +13,7 @@ public class SlicedSkin extends SkinBase {
 
     private final float sliceMargin = 20;
     private final float sliceThickness = 20;
-    private final float lineThickness = 10;
+    private final float lineThickness = 4;
     private final float lineMargin = 5;
 
     private List<ClassSlice> slices = new LinkedList<>();
@@ -49,7 +48,7 @@ public class SlicedSkin extends SkinBase {
     // DrawableInterface Interface
 
     @Override
-    public PGraphics draw() {
+    public void draw(PGraphics g) {
         graphics.lights();
 
         graphics.beginDraw();
@@ -57,40 +56,27 @@ public class SlicedSkin extends SkinBase {
         graphics.clear();
 
         int i = 0;
-        int zOffset = 0;
+        float zOffset = sliceThickness + sliceMargin;
+
         for (ClassSlice slice : slices) {
             graphics.pushMatrix();
 
-            graphics.translate(0, -slice.sliceHeight/2, i * (sliceThickness + sliceMargin));
+            graphics.translate(0, -slice.sliceHeight/2, i * zOffset);
 
-            loadClassSliceStyle();
-            graphics.box(slice.sliceWidth, slice.sliceHeight, sliceThickness);
-            graphics.popStyle();
+            slice.draw(graphics);
 
             graphics.popMatrix();
             i++;
+
+            // TODO remove later
+            break;
         }
 
-        slices.forEach(s ->
-        {
-
-        });
-
-
         graphics.endDraw();
-        return graphics;
     }
 
     // ================================================================
 
     // Helpers
 
-    private void loadClassSliceStyle()
-    {
-        graphics.pushStyle();
-
-        graphics.stroke(0);
-        graphics.strokeWeight(0.5f);
-        graphics.fill(200, 100);
-    }
 }

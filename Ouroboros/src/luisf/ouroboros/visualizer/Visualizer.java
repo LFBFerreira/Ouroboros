@@ -3,6 +3,7 @@ package luisf.ouroboros.visualizer;
 import luisf.ouroboros.analyzer.models.ClassModel;
 import luisf.ouroboros.visualizer.scene.CameraMan;
 import luisf.ouroboros.visualizer.skins.DrawableInterface;
+import luisf.ouroboros.visualizer.skins.SkinBase;
 import luisf.ouroboros.visualizer.skins.SlicedSkin;
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -18,14 +19,14 @@ public class Visualizer extends PApplet {
     public List<ClassModel> models = new LinkedList<>();
     public File graphicsFolder = null;
 
-    private DrawableInterface codeSkin;
+    private SkinBase codeSkin;
     private PGraphics skinGraphics;
     private CameraMan cameraMan;
 
-    private final int windowHeight = 400;
-    private final int windowWidth = 600;
+    private final int windowHeight = 768;
+    private final int windowWidth = 1024;
 
-    String renderer = P3D;
+    private final String renderer = P3D;
 
     // ================================================================
 
@@ -66,7 +67,7 @@ public class Visualizer extends PApplet {
      */
     public void settings() {
         log.warning("Hey Settings!");
-        size(windowWidth, windowHeight, P3D);
+        size(windowWidth, windowHeight, renderer);
         smooth(8);
 //    hint()
     }
@@ -76,9 +77,12 @@ public class Visualizer extends PApplet {
      */
     public void setup() {
 
-        skinGraphics = createGraphics(windowWidth, windowHeight, P3D);
+        skinGraphics = createGraphics(windowWidth, windowHeight, renderer);
 
         codeSkin = new SlicedSkin(models, skinGraphics, this);
+
+        codeSkin.initialize();
+
         cameraMan = new CameraMan(this, skinGraphics);
         cameraMan.init();
     }
@@ -92,6 +96,7 @@ public class Visualizer extends PApplet {
         background(100);
 
         cameraMan.beginDraw();
+        cameraMan.pg().clear();
 
         if (codeSkin != null) {
             codeSkin.draw();

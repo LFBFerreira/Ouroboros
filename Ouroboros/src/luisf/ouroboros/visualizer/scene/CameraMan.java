@@ -19,13 +19,14 @@ public class CameraMan extends Scene {
         this(p, p.g);
     }
 
+    private int platformSize = 600;
     // ================================================================
 
     // Public
 
     public void init()
     {
-        setRadius(150);
+        setRadius(700);
 
         setGridVisualHint(true);
         setAxesVisualHint(true);
@@ -33,7 +34,7 @@ public class CameraMan extends Scene {
         //eyeFrame().setDamping(0);
 
         camera().setUpVector(0, 1, 0);
-        camera().setPosition(0, -50, 200);
+        camera().setPosition(0, -10, 100);
         camera().lookAt(0, 0, 0);
 
         showAll();
@@ -45,13 +46,28 @@ public class CameraMan extends Scene {
      */
     @Override
     public void proscenium() {
-        //pg().background(123, 151, 32);
+        pg().lights();
 
-        beginScreenDrawing();
-        pg().stroke(255);
-        pg().line(60, 10, 60, 110);
-        pg().line(10, 60, 110, 60);
-        endScreenDrawing();
+        pg().ambientLight(150, 150, 150);
+
+        // floor
+//        pg().pushMatrix();
+//
+//        translate(0, -4, 0);
+//
+//        pg().pushStyle();
+//        pg().fill(150);
+//        pg().noStroke();
+//        pg().box(platformSize, 3, platformSize);
+//        pg().popStyle();
+//
+//        pg().popMatrix();
+
+//        beginScreenDrawing();
+//        pg().stroke(255);
+//        pg().line(60, 10, 60, 110);
+//        pg().line(10, 60, 110, 60);
+//        endScreenDrawing();
     }
 
 

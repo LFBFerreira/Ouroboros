@@ -15,4 +15,6 @@ public abstract class SkinBase extends GraphicsResources implements DrawableInte
 
         this.models = models;
     }
+
+    public abstract void initialize();
 }

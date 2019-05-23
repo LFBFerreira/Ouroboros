@@ -56,7 +56,7 @@ public class CodeAnalyzer {
         });
 
         // debug print
-        debugPrint(classModels);
+        //debugPrint(classModels);
 
         return !fileList.isEmpty();
     }

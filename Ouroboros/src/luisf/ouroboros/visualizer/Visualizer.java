@@ -66,7 +66,6 @@ public class Visualizer extends PApplet {
      * Settings
      */
     public void settings() {
-        log.warning("Hey Settings!");
         size(windowWidth, windowHeight, renderer);
         smooth(8);
 //    hint()
@@ -105,6 +104,18 @@ public class Visualizer extends PApplet {
         cameraMan.endDraw();
 
         cameraMan.display();
+    }
+
+    // ================================================================
+
+
+    /**
+     * Key pressed
+     */
+    public void keyPressed()
+    {
+        // forward the event
+        codeSkin.keyPressed(key);
     }
 
     // ================================================================

@@ -1,6 +1,7 @@
 package luisf.ouroboros.visualizer.skins;
 
 import luisf.ouroboros.analyzer.models.ClassModel;
+import luisf.ouroboros.common.Handy;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
@@ -18,8 +19,8 @@ public class SlicedSkin extends SkinBase {
 
     private List<ClassSlice> slices = new LinkedList<>();
 
-    private int rotationX = 0;
-    private float rotationY = 0;
+    private int numberSlicesToDraw = 1;
+
 
     // ================================================================
 
@@ -41,6 +42,8 @@ public class SlicedSkin extends SkinBase {
         {
             slices.add(new ClassSlice(m, sliceThickness, lineThickness, lineMargin));
         });
+
+        numberSlicesToDraw = slices.size();
     }
 
     // ================================================================
@@ -55,28 +58,62 @@ public class SlicedSkin extends SkinBase {
 
         graphics.clear();
 
+//        drawSlices(slices);
+        drawSlices(slices, numberSlicesToDraw);
+
+        graphics.endDraw();
+    }
+
+    @Override
+    public void keyPressed(int key) {
+        switch (key) {
+            case '+':
+                if (numberSlicesToDraw < slices.size()) {
+                    numberSlicesToDraw++;
+                }
+                log.info(Handy.f("Slices to draw: %d / %d", numberSlicesToDraw, slices.size()));
+                break;
+            case '-':
+                if (numberSlicesToDraw > 1) {
+                    numberSlicesToDraw--;
+                }
+                log.info(Handy.f("Slices to draw: %d / %d", numberSlicesToDraw, slices.size()));
+                break;
+        }
+    }
+
+
+    // ================================================================
+
+    // Helpers
+
+    private void drawSlices(List<ClassSlice> slicesList) {
+        drawSlices(slicesList, slicesList.size());
+    }
+
+    private void drawSlices(List<ClassSlice> slicesList, int slicesToDraw) {
+        if (slicesToDraw > slicesList.size() || slicesToDraw < 1) {
+            slicesToDraw = slicesList.size();
+            log.info("The amount of slices to be drawn is incorrect");
+        }
+
         int i = 0;
         float zOffset = sliceThickness + sliceMargin;
 
-        for (ClassSlice slice : slices) {
+        for (ClassSlice slice : slicesList) {
             graphics.pushMatrix();
 
-            graphics.translate(0, -slice.sliceHeight/2, i * zOffset);
+            graphics.translate(0, -slice.sliceHeight / 2, i * zOffset);
 
             slice.draw(graphics);
 
             graphics.popMatrix();
             i++;
 
-            // TODO remove later
-            break;
+            // stop the cycle if the right amount of slices has been drawn
+            if (i == slicesToDraw) {
+                break;
+            }
         }
-
-        graphics.endDraw();
     }
-
-    // ================================================================
-
-    // Helpers
-
 }

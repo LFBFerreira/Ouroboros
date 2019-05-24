@@ -17,4 +17,6 @@ public abstract class SkinBase extends GraphicsResources implements DrawableInte
     }
 
     public abstract void initialize();
+
+    public abstract void keyPressed(int key);
 }

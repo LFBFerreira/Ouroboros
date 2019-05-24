@@ -9,16 +9,26 @@ public class MethodLine implements DrawableInterface{
 
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
-    private float size = 0;
+    private float thickness = 0;
+    private float incrementSize = 0;
     private MethodModel method;
 
     // ================================================================
 
-    public MethodLine(MethodModel method, float size) {
-        this.size = size;
+    public MethodLine(MethodModel method, float incrementSize, float thickness) {
+        this.thickness = thickness;
+        this.incrementSize = incrementSize;
         this.method = method;
     }
 
+    // ================================================================
+
+    // Public
+
+    public float getHeight()
+    {
+        return method.metrics.size() * incrementSize;
+    }
 
     // ================================================================
 
@@ -26,15 +36,11 @@ public class MethodLine implements DrawableInterface{
 
     @Override
     public void draw(PGraphics g) {
-        g.pushMatrix();
+        //g.pushMatrix();
 
-        float height = method.metrics.size() * size;
+        g.box(thickness, getHeight(), thickness);
 
-        g.translate(size/2, height/2, 0 );
-
-        g.box(size, height, size);
-
-        g.popMatrix();
+        //g.popMatrix();
     }
 
     // ================================================================

@@ -14,8 +14,9 @@ public class SlicedSkin extends SkinBase {
 
     private final float sliceMargin = 20;
     private final float sliceThickness = 20;
-    private final float lineThickness = 4;
+    private final float lineThickness = 8;
     private final float lineMargin = 5;
+    private final float lineIncrement = 2;
 
     private List<ClassSlice> slices = new LinkedList<>();
 
@@ -40,7 +41,7 @@ public class SlicedSkin extends SkinBase {
     public void initialize() {
         models.forEach(m ->
         {
-            slices.add(new ClassSlice(m, sliceThickness, lineThickness, lineMargin));
+            slices.add(new ClassSlice(m, sliceThickness, lineThickness, lineMargin, lineIncrement));
         });
 
         numberSlicesToDraw = slices.size();
@@ -58,8 +59,10 @@ public class SlicedSkin extends SkinBase {
 
         graphics.clear();
 
-//        drawSlices(slices);
         drawSlices(slices, numberSlicesToDraw);
+//        drawSlices(slices, 1);
+
+        Handy.drawAxes(graphics, false, 60);
 
         graphics.endDraw();
     }
@@ -105,6 +108,7 @@ public class SlicedSkin extends SkinBase {
 
             graphics.translate(0, -slice.sliceHeight / 2, i * zOffset);
 
+            //Handy.drawAxes(graphics, false, 20);
             slice.draw(graphics);
 
             graphics.popMatrix();

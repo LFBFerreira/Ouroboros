@@ -1,5 +1,7 @@
 package luisf.ouroboros.common;
 
+import processing.core.PGraphics;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -92,5 +94,59 @@ public class Handy {
 
         String result = content.substring(0, startIndex);
         return result.concat(content.substring(endIndex + 1, content.length()));
+    }
+
+    private static final int axisThickness = 1;
+
+    /**
+     * Draw X, Y and Z representations of the axes
+     * @param g
+     * @param prepare
+     */
+    public static void drawAxes(PGraphics g, Boolean prepare, int axisLength)
+    {
+        if (prepare)
+        {
+            g.beginDraw();
+        }
+
+        g.pushStyle();
+
+        // X axis, red
+        g.strokeWeight(0.5f);
+        g.fill(180, 0, 0, 80);
+        g.stroke(255, 0, 0);
+        g.pushMatrix();
+        g.translate(axisLength/2, 0, 0);
+        g.box(axisLength, axisThickness, axisThickness);
+        g.popMatrix();
+
+        // Y axis, green
+        g.fill(0, 180, 0, 80);
+        g.stroke(0, 255, 0);
+        g.pushMatrix();
+        g.translate(0, axisLength/2, 0);
+        g.box(axisThickness, axisLength, axisThickness);
+        g.popMatrix();
+
+        // Z axis, blue
+        g.fill(0, 0, 180, 80);
+        g.stroke(0, 0, 255);
+        g.pushMatrix();
+        g.translate(0, 0, axisLength/2);
+        g.box(axisThickness, axisThickness, axisLength);
+        g.popMatrix();
+
+        g.popStyle();
+
+        if (prepare)
+        {
+            g.endDraw();
+        }
+    }
+
+    public static void drawAxes(PGraphics g, Boolean prepare)
+    {
+        drawAxes(g, prepare, 80);
     }
 }

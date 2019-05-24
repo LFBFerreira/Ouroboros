@@ -2,11 +2,11 @@ package luisf.ouroboros.visualizer;
 
 import luisf.ouroboros.analyzer.models.ClassModel;
 import luisf.ouroboros.visualizer.scene.CameraMan;
-import luisf.ouroboros.visualizer.skins.DrawableInterface;
 import luisf.ouroboros.visualizer.skins.SkinBase;
 import luisf.ouroboros.visualizer.skins.SlicedSkin;
 import processing.core.PApplet;
 import processing.core.PGraphics;
+
 
 import java.io.File;
 import java.util.LinkedList;
@@ -56,18 +56,12 @@ public class Visualizer extends PApplet {
     // ================================================================
 
     /**
-     * Dispose
-     */
-    public void dispose() {
-        log.info(String.format("Terminating %s", Visualizer.class.getSimpleName()));
-    }
-
-    /**
      * Settings
      */
     public void settings() {
         size(windowWidth, windowHeight, renderer);
         smooth(8);
+
 //    hint()
     }
 
@@ -75,6 +69,7 @@ public class Visualizer extends PApplet {
      * Setup
      */
     public void setup() {
+        frameRate(60);
 
         skinGraphics = createGraphics(windowWidth, windowHeight, renderer);
 
@@ -82,8 +77,17 @@ public class Visualizer extends PApplet {
 
         codeSkin.initialize();
 
-        cameraMan = new CameraMan(this, skinGraphics);
+        cameraMan = new CameraMan(this, skinGraphics, graphicsFolder);
         cameraMan.init();
+    }
+
+    /**
+     * Dispose
+     */
+    public void dispose() {
+        log.info(String.format("Terminating %s", Visualizer.class.getSimpleName()));
+
+        cameraMan.dispose();
     }
 
     // ================================================================
@@ -95,6 +99,7 @@ public class Visualizer extends PApplet {
         background(100);
 
         cameraMan.beginDraw();
+
         cameraMan.pg().clear();
 
         if (codeSkin != null) {
@@ -104,6 +109,9 @@ public class Visualizer extends PApplet {
         cameraMan.endDraw();
 
         cameraMan.display();
+
+        // must be called after main buffer is updated
+        cameraMan.newCaptureFrame(g);
     }
 
     // ================================================================
@@ -116,6 +124,7 @@ public class Visualizer extends PApplet {
     {
         // forward the event
         codeSkin.keyPressed(key);
+        cameraMan.keyPressed(key, keyCode);
     }
 
     // ================================================================

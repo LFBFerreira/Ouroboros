@@ -22,6 +22,7 @@ public class SlicedSkin extends SkinBase {
 
     private int numberSlicesToDraw = 1;
 
+    private Boolean lightsOn = true;
 
     // ================================================================
 
@@ -45,6 +46,8 @@ public class SlicedSkin extends SkinBase {
         });
 
         numberSlicesToDraw = slices.size();
+
+        parent.ambientLight(150, 150, 150);
     }
 
     // ================================================================
@@ -53,7 +56,9 @@ public class SlicedSkin extends SkinBase {
 
     @Override
     public void draw(PGraphics g) {
-        graphics.lights();
+        if (lightsOn) {
+            graphics.lights();
+        }
 
         graphics.beginDraw();
 
@@ -81,6 +86,10 @@ public class SlicedSkin extends SkinBase {
                     numberSlicesToDraw--;
                 }
                 log.info(Handy.f("Slices to draw: %d / %d", numberSlicesToDraw, slices.size()));
+                break;
+
+            case 'l':
+                lightsOn = !lightsOn;
                 break;
         }
     }

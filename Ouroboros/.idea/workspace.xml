@@ -4,62 +4,7 @@
     <bookmark url="file://$PROJECT_DIR$/src/luisf/ouroboros/modelsWriter/ModelsIO.java" line="129" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96fdb1cb-9c60-4ecc-94a7-9da8b24eeda5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/video_export_processing_0_2.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ouroboros.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Ouroboros.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.classpath" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.idea/ant.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.idea/codeStyleSettings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.idea/copyright/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.idea/dictionaries/funpro.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.idea/libraries/jna_platform.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.idea/libraries/p5.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/.project" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/VideoExport.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/data/README" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/basic/basic.pde" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/basic/basic.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/interactive/interactive.pde" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/interactive/interactive.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/internetVideo/internetVideo.pde" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/internetVideo/internetVideo.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/multipleMovies/multipleMovies.pde" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/multipleMovies/multipleMovies.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/options/options.pde" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/options/options.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/usingPGraphics/usingPGraphics.pde" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/usingPGraphics/usingPGraphics.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/webcamSaving/webcamSaving.pde" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/webcamSaving/webcamSaving.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/withAudio/withAudio.pde" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/withAudio/withAudio.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/withAudioUrl/data/withAudioUrl.pde" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/withAudioViz/withAudioViz.pde" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/withAudioViz/withAudioViz.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/zCustomCommand/zCustomCommand.pde" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/examples/zCustomCommand/zCustomCommand.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/lib/README" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/lib/jna-platform.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/lib/jna.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/license.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/resources/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/resources/build.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/resources/build.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/resources/code/ExampleTaglet.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/resources/code/ExampleTaglet.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/resources/code/ant-contrib-1.0b3.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/resources/code/doc.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/resources/library.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/resources/stylesheet.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/src/com/hamoid/VideoExport.java" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/src/com/hamoid/VideoExport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/web/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/video_export_processing-0.2.3/web/stylesheet.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraMan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraMan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SlicedSkin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SlicedSkin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_visualizer_Visualizer.oro" beforeDir="false" afterPath="$PROJECT_DIR$/../models_output/luisf_ouroboros_visualizer_Visualizer.oro" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_visualizer_scene_Cameraman.oro" beforeDir="false" afterPath="$PROJECT_DIR$/../models_output/luisf_ouroboros_visualizer_scene_Cameraman.oro" afterDir="false" />
-    </list>
+    <list default="true" id="96fdb1cb-9c60-4ecc-94a7-9da8b24eeda5" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -90,8 +35,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="777">
-              <caret line="112" column="54" selection-start-line="112" selection-start-column="54" selection-end-line="112" selection-end-column="54" />
+            <state relative-caret-position="97">
+              <caret line="72" selection-start-line="72" selection-end-line="72" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -402,7 +347,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Console Font" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -495,7 +440,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="54" y="-8" width="1874" height="1096" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.79750776" visible="true" weight="0.24310915" />
       <window_info id="Structure" order="1" sideWeight="0.2024922" side_tool="true" visible="true" weight="0.24310915" />
@@ -525,6 +469,11 @@
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Coverage" order="8" side_tool="true" weight="0.3296582" />
     </layout>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/libraries/video_export_processing-0.2.3" />
+    </ignored-roots>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -990,8 +939,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="777">
-          <caret line="112" column="54" selection-start-line="112" selection-start-column="54" selection-end-line="112" selection-end-column="54" />
+        <state relative-caret-position="97">
+          <caret line="72" selection-start-line="72" selection-end-line="72" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

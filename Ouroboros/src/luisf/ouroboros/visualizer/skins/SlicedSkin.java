@@ -4,7 +4,6 @@ package luisf.ouroboros.visualizer.skins;
 import luisf.ouroboros.analyzer.models.ClassModel;
 import luisf.ouroboros.common.Handy;
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PGraphics;
 
 import java.util.LinkedList;
@@ -42,10 +41,12 @@ public class SlicedSkin extends SkinBase {
     // Public
 
     public void initialize() {
-        models.forEach(m ->
-        {
-            slices.add(new ClassSlice(m, sliceThickness, lineThickness, lineMargin, lineIncrement));
-        });
+        models.forEach(m -> slices.add(new ClassSlice(m,
+                sliceThickness,
+                lineThickness,
+                lineMargin,
+                lineIncrement,
+                parent)));
 
         numberSlicesToDraw = slices.size();
 
@@ -58,23 +59,20 @@ public class SlicedSkin extends SkinBase {
 
     @Override
     public void draw(PGraphics g) {
-        if (lightsOn) {
-//            graphics.shader(parent.pointShader, PConstants.POINTS);
-//            graphics.shader(lineShader, PConstants.LINES);
-//            graphics.shader(polyShader); // Processing will autodetect
-//            graphics.lights();
-        }
+        graphics.beginDraw();
 
         graphics.pushMatrix();
 
         // pushes everything back, so the model is centered in the world
-        graphics.translate(0, 0, -1 * numberSlicesToDraw/2f * (sliceMargin + sliceMargin)) ;
+        graphics.translate(0, 0, numberSlicesToDraw / -2f * sliceMargin * 2);
 
         drawSlices(slices, numberSlicesToDraw);
 
         //Handy.drawAxes(graphics, false, 60);
 
         graphics.popMatrix();
+
+        graphics.endDraw();
     }
 
     @Override

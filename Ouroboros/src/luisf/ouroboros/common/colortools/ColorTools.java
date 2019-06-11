@@ -402,15 +402,14 @@ public class ColorTools {
 
     //-------------------------------------------------------------------------------
 
-    public static void fillLineGradientRGB(int[] palette,
-                                           PVector startPoint,
-                                           PVector endPoint,
-                                           PGraphics graphics ,
-                                           Boolean showLine) {
+    public static void fillGradient(int[] palette,
+                                    PVector startPoint,
+                                    PVector endPoint,
+                                    PGraphics graphics,
+                                    Boolean showLine) {
         float w = graphics.width;
         float h = graphics.height;
 
-        graphics.beginDraw();
         graphics.loadPixels();
 
         // Imaginary line of gradient.
@@ -421,22 +420,48 @@ public class ColorTools {
         float st;
 
         // paint pixel by pixel of the graphics
-//        for (int i = 0, y = 0, x; y < h; ++y) {
-//            for (x = 0; x < w; ++x, ++i) {
-//                st = project(ox, oy, dx, dy, x, y);
-//                graphics.pixels[i] = ColorTools.lerpColors(palette, st, PConstants.RGB);
-//            }
-//        }
-//
+        for (int i = 0, y = 0, x; y < h; ++y) {
+            for (x = 0; x < w; ++x, ++i) {
+                st = project(ox, oy, dx, dy, x, y);
+                graphics.pixels[i] = ColorTools.lerpColors(palette, st, PConstants.RGB);
+            }
+        }
+
         graphics.updatePixels();
-        graphics.endDraw();
 
         if (showLine) {
+            graphics.pushStyle();
             graphics.strokeWeight(1);
             graphics.stroke(255);
             graphics.line(ox, oy, dx, dy);
+            graphics.popStyle();
+        }
+    }
+
+
+    private static void setGradient(int x, int y, float w, float h, int c1, int c2, boolean vertical, int colorMode, PGraphics graphics) {
+
+        graphics.pushStyle();
+
+        graphics.noFill();
+
+        if (vertical) {  // Top to bottom gradient
+            for (int i = y; i <= y + h; i++) {
+                float inter = PApplet.map(i, y, y + h, 0, 1);
+                int c = PApplet.lerpColor(c1, c2, inter, colorMode);
+                graphics.stroke(c);
+                graphics.line(x, i, x + w, i);
+            }
+        } else {  // Left to right gradient
+            for (int i = x; i <= x + w; i++) {
+                float inter = PApplet.map(i, x, x + w, 0, 1);
+                int c = PApplet.lerpColor(c1, c2, inter, colorMode);
+                graphics.stroke(c);
+                graphics.line(i, y, i, y + h);
+            }
         }
 
+        graphics.popStyle();
     }
 
     //-------------------------------------------------------------------------------

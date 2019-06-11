@@ -7,7 +7,9 @@ import luisf.ouroboros.visualizer.skins.SkinBase;
 import luisf.ouroboros.visualizer.skins.SlicedSkin;
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.core.PShape;
 import processing.core.PVector;
+import processing.opengl.PGraphics3D;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -30,8 +32,11 @@ public class Visualizer extends PApplet {
 
     private final String renderer = P3D;
 
-    private PGraphics backgroundGraphics;
+    private PShape floor;
+    private final int floorWidth = 600;
+    private final int floorDepth = 1100;
 
+    private final int[] backgroundColors = new int[]{0xFFD5D8DC, 0xFFACB5C6};
 
     // ================================================================
 
@@ -79,19 +84,15 @@ public class Visualizer extends PApplet {
         skinGraphics = createGraphics(windowWidth, windowHeight, renderer);
         background = createGraphics(windowWidth, windowHeight, renderer);
 
-//        backgroundGraphics = createGraphics(g.width, g.height);
-//        backgroundGraphics.beginDraw();
-//        backgroundGraphics.background(100, 20, 20);
-//        backgroundGraphics.endDraw();
-//
+        cameraMan = new CameraMan(this, (PGraphics3D) skinGraphics, graphicsFolder);
+        cameraMan.initialize();
 
-
-        cameraMan = new CameraMan(this, skinGraphics, graphicsFolder);
-        cameraMan.init();
-
-        codeSkin = new SlicedSkin(models, cameraMan.pg(), this);
+        codeSkin = new SlicedSkin(models, skinGraphics, this);
         codeSkin.initialize();
-        cameraMan.setSkin(codeSkin);
+
+        floor = initializeFloor();
+
+        initializeBackground();
     }
 
     /**
@@ -109,12 +110,24 @@ public class Visualizer extends PApplet {
      * Draw
      */
     public void draw() {
-        //clear();
+        surface.setTitle(String.format("Ouroboros (%d fps)", (int)frameRate));
 
-        background(150);
+        lights();
 
+        // Background
+        //background(100);
+        image(background, 0, 0);
+
+        // Camera and Skin
         cameraMan.beginDraw();
+
+        skinGraphics.clear();
+
+        drawFloor(skinGraphics);
+        codeSkin.draw(skinGraphics);
+
         cameraMan.endDraw();
+
         cameraMan.display();
 
 //         must be called after main buffer is updated
@@ -129,6 +142,7 @@ public class Visualizer extends PApplet {
      */
 
     public void keyPressed() {
+
         // forward the event
         codeSkin.keyPressed(key, keyCode);
         cameraMan.keyPressed(key, keyCode);
@@ -138,25 +152,37 @@ public class Visualizer extends PApplet {
 
     // Helpers
 
+    private void initializeBackground() {
+        background.beginDraw();
 
-    private void setGradient(int x, int y, float w, float h, int c1, int c2, boolean vertical, PGraphics graphics) {
+//        setGradient(0, 0, background.width, background.height, 0xFF000000, 0xFFFFFFFF, true, background);
 
-        graphics.noFill();
+        ColorTools.fillGradient(backgroundColors,
+                new PVector(background.width * 0.1f, 0),
+                new PVector(background.width * 0.8f, background.height),
+                background,
+                false);
 
-        if (vertical) {  // Top to bottom gradient
-            for (int i = y; i <= y + h; i++) {
-                float inter = map(i, y, y + h, 0, 1);
-                int c = lerpColor(c1, c2, inter);
-                stroke(c);
-                line(x, i, x + w, i);
-            }
-        } else {  // Left to right gradient
-            for (int i = x; i <= x + w; i++) {
-                float inter = map(i, x, x + w, 0, 1);
-                int c = lerpColor(c1, c2, inter);
-                stroke(c);
-                line(i, y, i, y + h);
-            }
-        }
+        background.endDraw();
+    }
+
+    private PShape initializeFloor()
+    {
+        PShape floor = createShape(BOX, floorWidth, 4, floorDepth);
+        floor.setFill(color(180));
+        floor.setStroke(200);
+
+        return floor;
+    }
+
+    private void drawFloor(PGraphics graphics) {
+        graphics.pushMatrix();
+
+        // lower the floor so that the surface matches y = 0
+        graphics.translate(0, 5, 0);
+
+        graphics.shape(floor);
+
+        graphics.popMatrix();
     }
 }

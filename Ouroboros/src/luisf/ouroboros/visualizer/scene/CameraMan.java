@@ -39,10 +39,6 @@ public class CameraMan extends Scene {
         this.outputFolder = outputFolder;
     }
 
-    public void setSkin(SkinBase skin) {
-        this.skin = skin;
-    }
-
     // ================================================================
 
     /**
@@ -59,7 +55,7 @@ public class CameraMan extends Scene {
 
     // Public
 
-    public void init() {
+    public void initialize() {
         setRadius(700);
 
         setGridVisualHint(false);
@@ -68,7 +64,7 @@ public class CameraMan extends Scene {
         eyeFrame().setDamping(0.5f);
 
         camera().setUpVector(0, 1, 0);
-        camera().setPosition(0, -10, 100);
+        camera().setPosition(0, -50, 100);
         camera().lookAt(0, 0, 0);
 
         showAll();
@@ -123,28 +119,6 @@ public class CameraMan extends Scene {
      */
     @Override
     public void proscenium() {
-
-        log.info("Proscenium");
-//        beginDraw();
-
-        clearBackground();
-        //cameraMan.drawBackground();
-
-        skin.draw(null);
-
-        pg().pushMatrix();
-        pg().pushStyle();
-        pg().translate(0, 4, 0);
-        pg().fill(150, 100);
-        pg().noStroke();
-
-        pg().box(600, 2, 1000);
-        pg().popStyle();
-        pg().popMatrix();
-
-
-//        endDraw();
-        //pg().background(100, 20, 20);
     }
 
     public void keyPressed(int key, int keyCode) {
@@ -175,30 +149,6 @@ public class CameraMan extends Scene {
         }
     }
 
-    public void clearBackground() {
-        pg().clear();
-    }
-
-
-//    public void drawBackground() {
-//        if (backgroundGraphics == null) {
-//            backgroundGraphics = parent.createGraphics(pg().width, pg().height);
-//
-//            backgroundGraphics.beginDraw();
-//
-//            ColorTools.fillLineGradientRGB(new int[]{0xFFFFFF, 0x000000},
-//                    new PVector(0, 0),
-//                    new PVector(backgroundGraphics.width * 0.8f, backgroundGraphics.height),
-//                    backgroundGraphics,
-//                    true);
-//
-////            backgroundGraphics.background(150);
-//            backgroundGraphics.beginDraw();
-//        }
-//
-//        pg().image(backgroundGraphics, 0, 0);
-//    }
-
 
     // ================================================================
 
@@ -210,6 +160,5 @@ public class CameraMan extends Scene {
         //videoExport.setLoadPixels(false); // calls loadpixels
         videoExport.setQuality(90, 128);
     }
-
 
 }

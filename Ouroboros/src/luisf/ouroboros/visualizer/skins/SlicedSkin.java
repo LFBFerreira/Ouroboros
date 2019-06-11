@@ -1,8 +1,10 @@
 package luisf.ouroboros.visualizer.skins;
 
+
 import luisf.ouroboros.analyzer.models.ClassModel;
 import luisf.ouroboros.common.Handy;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 
 import java.util.LinkedList;
@@ -57,23 +59,26 @@ public class SlicedSkin extends SkinBase {
     @Override
     public void draw(PGraphics g) {
         if (lightsOn) {
-            graphics.lights();
+//            graphics.shader(parent.pointShader, PConstants.POINTS);
+//            graphics.shader(lineShader, PConstants.LINES);
+//            graphics.shader(polyShader); // Processing will autodetect
+//            graphics.lights();
         }
 
-        graphics.beginDraw();
+        graphics.pushMatrix();
 
-        graphics.clear();
+        // pushes everything back, so the model is centered in the world
+        graphics.translate(0, 0, -1 * numberSlicesToDraw/2f * (sliceMargin + sliceMargin)) ;
 
         drawSlices(slices, numberSlicesToDraw);
-//        drawSlices(slices, 1);
 
-        Handy.drawAxes(graphics, false, 60);
+        //Handy.drawAxes(graphics, false, 60);
 
-        graphics.endDraw();
+        graphics.popMatrix();
     }
 
     @Override
-    public void keyPressed(int key) {
+    public void keyPressed(int key, int keyCode) {
         switch (key) {
             case '+':
                 if (numberSlicesToDraw < slices.size()) {

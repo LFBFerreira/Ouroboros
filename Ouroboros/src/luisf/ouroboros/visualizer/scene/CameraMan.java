@@ -1,10 +1,11 @@
 package luisf.ouroboros.visualizer.scene;
 
+import com.hamoid.VideoExport;
 import luisf.ouroboros.common.Handy;
+import luisf.ouroboros.visualizer.skins.SkinBase;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import remixlab.proscene.Scene;
-import com.hamoid.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,18 +24,23 @@ public class CameraMan extends Scene {
     private String videoPath = "";
     private File outputFolder;
 
-    // ================================================================
+    private SkinBase skin;
 
+    // ================================================================
 
     /**
      * Constructor
      *
      * @param p
-     * @param canvas
+     * @param graphics
      */
-    public CameraMan(PApplet p, PGraphics canvas, File outputFolder) {
-        super(p, canvas);
+    public CameraMan(PApplet p, PGraphics graphics, File outputFolder) {
+        super(p, graphics);
         this.outputFolder = outputFolder;
+    }
+
+    public void setSkin(SkinBase skin) {
+        this.skin = skin;
     }
 
     // ================================================================
@@ -56,8 +62,8 @@ public class CameraMan extends Scene {
     public void init() {
         setRadius(700);
 
-        setGridVisualHint(true);
-        setAxesVisualHint(true);
+        setGridVisualHint(false);
+        setAxesVisualHint(false);
 
         eyeFrame().setDamping(0.5f);
 
@@ -100,10 +106,15 @@ public class CameraMan extends Scene {
         videoExport.endMovie();
     }
 
-    public void newCaptureFrame(PGraphics frame) {
+    public void addFrameToVideo(PGraphics frame) {
         if (captureStarted) {
             videoExport.saveFrame();
         }
+    }
+
+    @Override
+    public void draw() {
+        log.info("Draw");
     }
 
     /**
@@ -112,13 +123,28 @@ public class CameraMan extends Scene {
      */
     @Override
     public void proscenium() {
-        pg().lights();
 
-//        beginScreenDrawing();
-//        pg().stroke(255);
-//        pg().line(60, 10, 60, 110);
-//        pg().line(10, 60, 110, 60);
-//        endScreenDrawing();
+        log.info("Proscenium");
+//        beginDraw();
+
+        clearBackground();
+        //cameraMan.drawBackground();
+
+        skin.draw(null);
+
+        pg().pushMatrix();
+        pg().pushStyle();
+        pg().translate(0, 4, 0);
+        pg().fill(150, 100);
+        pg().noStroke();
+
+        pg().box(600, 2, 1000);
+        pg().popStyle();
+        pg().popMatrix();
+
+
+//        endDraw();
+        //pg().background(100, 20, 20);
     }
 
     public void keyPressed(int key, int keyCode) {
@@ -149,13 +175,36 @@ public class CameraMan extends Scene {
         }
     }
 
+    public void clearBackground() {
+        pg().clear();
+    }
+
+
+//    public void drawBackground() {
+//        if (backgroundGraphics == null) {
+//            backgroundGraphics = parent.createGraphics(pg().width, pg().height);
+//
+//            backgroundGraphics.beginDraw();
+//
+//            ColorTools.fillLineGradientRGB(new int[]{0xFFFFFF, 0x000000},
+//                    new PVector(0, 0),
+//                    new PVector(backgroundGraphics.width * 0.8f, backgroundGraphics.height),
+//                    backgroundGraphics,
+//                    true);
+//
+////            backgroundGraphics.background(150);
+//            backgroundGraphics.beginDraw();
+//        }
+//
+//        pg().image(backgroundGraphics, 0, 0);
+//    }
+
 
     // ================================================================
 
     // Helpers
 
-    private void configureVideo(VideoExport video)
-    {
+    private void configureVideo(VideoExport video) {
         videoExport.setFrameRate(60);
         videoExport.setDebugging(false);
         //videoExport.setLoadPixels(false); // calls loadpixels

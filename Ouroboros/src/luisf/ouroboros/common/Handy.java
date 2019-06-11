@@ -1,6 +1,8 @@
 package luisf.ouroboros.common;
 
+import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.core.PShape;
 
 import java.io.File;
 import java.io.IOException;
@@ -101,11 +103,11 @@ public class Handy {
     /**
      * Draw X, Y and Z representations of the axes
      * @param g
-     * @param prepare
+     * @param loadBuffer
      */
-    public static void drawAxes(PGraphics g, Boolean prepare, int axisLength)
+    public static void drawAxes(PGraphics g, Boolean loadBuffer, int axisLength)
     {
-        if (prepare)
+        if (loadBuffer)
         {
             g.beginDraw();
         }
@@ -139,7 +141,7 @@ public class Handy {
 
         g.popStyle();
 
-        if (prepare)
+        if (loadBuffer)
         {
             g.endDraw();
         }
@@ -149,4 +151,32 @@ public class Handy {
     {
         drawAxes(g, prepare, 80);
     }
+
+    public static PShape box(float width, float height, float depth, PApplet parent)
+    {
+        PShape s = parent.createShape(parent.BOX, 0, 0, 50, 50);
+
+        s.beginShape();
+
+        s.fill(255);
+        s.stroke(0);
+        s.strokeWeight(1);
+
+        // Here, we are hardcoding a series of vertices
+        s.vertex(0, -50);
+        s.vertex(14, -20);
+        s.vertex(47, -15);
+        s.vertex(23, 7);
+        s.vertex(29, 40);
+        s.vertex(0, 25);
+        s.vertex(-29, 40);
+        s.vertex(-23, 7);
+        s.vertex(-47, -15);
+        s.vertex(-14, -20);
+
+        s.endShape(parent.CLOSE);
+
+        return s;
+    }
+
 }

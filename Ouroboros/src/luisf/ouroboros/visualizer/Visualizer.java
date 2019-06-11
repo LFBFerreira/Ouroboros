@@ -33,7 +33,7 @@ public class Visualizer extends PApplet {
     private final String renderer = P3D;
 
     private PShape floor;
-    private final int floorWidth = 600;
+    private final int floorWidth = 500;
     private final int floorDepth = 1100;
 
     private final int[] backgroundColors = new int[]{0xFFD5D8DC, 0xFFACB5C6};

@@ -29,23 +29,23 @@ public class Parse {
 
     public static String getClassName(String code) {
         return patternMatcher(code,
-                anyWord + oneOrMoreWhitespaces + "class" + oneOrMoreWhitespaces + "(\\w+)" + "[\\w\\s,]+" + openBracesGroup);
+                anyWord + oneOrMoreWhitespaces + "class" + oneOrMoreWhitespaces + "(\\w+)" + headerExtensions + openBracesGroup);
     }
 
     public static int getClassStartIndex(String code) {
         return patternMatcherStartIndex(code,
-                anyWord + oneOrMoreWhitespaces + "class" + oneOrMoreWhitespaces + "(\\w+)" + "[\\w\\s,]+" + openBracesGroup,
+                anyWord + oneOrMoreWhitespaces + "class" + oneOrMoreWhitespaces + "(\\w+)" + headerExtensions + openBracesGroup,
                 2);
     }
 
     public static String getInterfaceName(String code) {
         return patternMatcher(code,
-                anyWord + oneOrMoreWhitespaces + "interface" + oneOrMoreWhitespaces + "(\\w+)" + "[\\w\\s,]+" + openBraces);
+                anyWord + oneOrMoreWhitespaces + "interface" + oneOrMoreWhitespaces + "(\\w+)" + headerExtensions + openBraces);
     }
 
     public static String getEnumName(String code) {
         return patternMatcher(code,
-                anyWord + oneOrMoreWhitespaces + "enum" + oneOrMoreWhitespaces + "(\\w+)" + "[\\w\\s,]+" + openBraces);
+                anyWord + oneOrMoreWhitespaces + "enum" + oneOrMoreWhitespaces + "(\\w+)" + headerExtensions + openBraces);
     }
 
 
@@ -222,7 +222,6 @@ public class Parse {
      * @return
      */
     public static String extractClassContent(String code) {
-
         int openBraceIndex = getClassStartIndex(code);
 
         if (openBraceIndex == -1) {

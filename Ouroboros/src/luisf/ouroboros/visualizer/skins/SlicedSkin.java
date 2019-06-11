@@ -16,7 +16,7 @@ public class SlicedSkin extends SkinBase {
     private final float sliceMargin = 20;
     private final float sliceThickness = 20;
     private final float lineThickness = 8;
-    private final float lineMargin = 5;
+    private final float lineMargin = 4;
     private final float lineIncrement = 2;
 
     private List<ClassSlice> slices = new LinkedList<>();

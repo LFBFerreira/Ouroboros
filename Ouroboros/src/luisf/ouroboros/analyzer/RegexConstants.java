@@ -29,4 +29,6 @@ public class RegexConstants {
     public static String methodHeader = modifierKeywordsGroup + typeDeclarationGroup + oneOrMoreWhitespaces + atleastOneWordGroup + anyWhitespaces +
             methodHeaderParameters + anyWhitespaces + "([\\w ,\\n]*)";
 
+    public static String headerExtensions = "[\\w\\s,<>]+";
+
 }

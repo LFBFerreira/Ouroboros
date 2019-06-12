@@ -1,43 +1,42 @@
-package luisf.ouroboros.visualizer.skins;
+package luisf.ouroboros.visualizer.suits.suit01;
 
 import luisf.ouroboros.analyzer.models.MethodModel;
+import luisf.ouroboros.visualizer.DrawableInterface;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PShape;
 
 import java.util.logging.Logger;
 
-public class MethodLine implements DrawableInterface{
+public class MethodLine implements DrawableInterface {
 
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
-    PApplet parent;
+    private PApplet parent;
 
-    private float thickness = 0;
-    private float incrementSize = 0;
+    private float methodWidth = 0;
+    private float methodHeightIncrement = 0;
     private MethodModel method;
 
     private PShape methodBox;
 
     // ================================================================
 
-    public MethodLine(MethodModel method, float incrementSize, float thickness, PApplet parent) {
+    public MethodLine(MethodModel method, float methodHeightIncrement, float methodWidth, PApplet parent) {
         this.parent = parent;
-        this.thickness = thickness;
-        this.incrementSize = incrementSize;
+        this.methodWidth = methodWidth;
+        this.methodHeightIncrement = methodHeightIncrement;
         this.method = method;
 
-
-        methodBox = initializeMethodShape(thickness, getHeight(), thickness);
+        methodBox = initializeMethodShape(methodWidth, getHeight(), methodWidth);
     }
 
     // ================================================================
 
     // Public
 
-    public float getHeight()
-    {
-        return method.metrics.size() * incrementSize;
+    public float getHeight() {
+        return method.metrics.size() * methodHeightIncrement;
     }
 
     // ================================================================
@@ -47,7 +46,7 @@ public class MethodLine implements DrawableInterface{
     @Override
     public void draw(PGraphics g) {
         g.shape(methodBox);
-//        g.box(thickness, getHeight(), thickness);
+//        g.box(methodWidth, getHeight(), methodWidth);
     }
 
     // ================================================================

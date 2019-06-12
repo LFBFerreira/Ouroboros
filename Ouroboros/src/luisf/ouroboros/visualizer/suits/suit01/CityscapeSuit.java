@@ -1,8 +1,10 @@
-package luisf.ouroboros.visualizer.skins;
+package luisf.ouroboros.visualizer.suits.suit01;
 
 
 import luisf.ouroboros.analyzer.models.ClassModel;
 import luisf.ouroboros.common.Handy;
+import luisf.ouroboros.properties.PropertyManager;
+import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
@@ -10,20 +12,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class SlicedSkin extends SkinBase {
+public class CityscapeSuit extends SuitBase {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
-    private final float sliceMargin = 20;
-    private final float sliceThickness = 20;
-    private final float lineThickness = 8;
-    private final float lineMargin = 4;
-    private final float lineIncrement = 2;
+    private final PropertyManager props = PropertyManager.getInstance();
+
+    private float classMargin = 20;
+    private float classThickness = 20;
+    private float methodThickness = 8;
+    private float methodMargin = 4;
+    private float methodLineIncrement = 2;
+    private int classFillColor;
+    private int classLineColor;
 
     private List<ClassSlice> slices = new LinkedList<>();
 
     private int numberSlicesToDraw = 1;
 
-    private Boolean lightsOn = true;
 
     // ================================================================
 
@@ -32,7 +37,7 @@ public class SlicedSkin extends SkinBase {
      * @param graphics
      * @param parent
      */
-    public SlicedSkin(List<ClassModel> models, PGraphics graphics, PApplet parent) {
+    public CityscapeSuit(List<ClassModel> models, PGraphics graphics, PApplet parent) {
         super(models, graphics, parent);
     }
 
@@ -41,16 +46,29 @@ public class SlicedSkin extends SkinBase {
     // Public
 
     public void initialize() {
-        models.forEach(m -> slices.add(new ClassSlice(m,
-                sliceThickness,
-                lineThickness,
-                lineMargin,
-                lineIncrement,
+        loadProperties();
+
+        models.forEach(m -> slices.add(new ClassSlice(
+                m,
+                classThickness,
+                methodThickness,
+                methodMargin,
+                methodLineIncrement,
+                classFillColor,
+                classLineColor,
                 parent)));
 
         numberSlicesToDraw = slices.size();
+    }
 
-        parent.ambientLight(150, 150, 150);
+    private void loadProperties() {
+        classMargin = props.getInt("visualizer.suit01.classMargin");
+        classThickness = props.getInt("visualizer.suit01.classThickness");
+        methodThickness = props.getInt("visualizer.suit01.methodThickness");
+        methodMargin = props.getInt("visualizer.suit01.methodMargin");
+        methodLineIncrement = props.getInt("visualizer.suit01.methodLineIncrement");
+        classFillColor = props.getInt("visualizer.suit01.classFillColor");
+        classLineColor = props.getInt("visualizer.suit01.classLineColor");
     }
 
     // ================================================================
@@ -64,7 +82,7 @@ public class SlicedSkin extends SkinBase {
         graphics.pushMatrix();
 
         // pushes everything back, so the model is centered in the world
-        graphics.translate(0, 0, numberSlicesToDraw / -2f * sliceMargin * 2);
+        graphics.translate(0, 0, numberSlicesToDraw / -2f * classMargin * 2);
 
         drawSlices(slices, numberSlicesToDraw);
 
@@ -90,10 +108,6 @@ public class SlicedSkin extends SkinBase {
                 }
                 log.info(Handy.f("Slices to draw: %d / %d", numberSlicesToDraw, slices.size()));
                 break;
-
-            case 'l':
-                lightsOn = !lightsOn;
-                break;
         }
     }
 
@@ -102,10 +116,6 @@ public class SlicedSkin extends SkinBase {
 
     // Helpers
 
-    private void drawSlices(List<ClassSlice> slicesList) {
-        drawSlices(slicesList, slicesList.size());
-    }
-
     private void drawSlices(List<ClassSlice> slicesList, int slicesToDraw) {
         if (slicesToDraw > slicesList.size() || slicesToDraw < 1) {
             slicesToDraw = slicesList.size();
@@ -113,12 +123,12 @@ public class SlicedSkin extends SkinBase {
         }
 
         int i = 0;
-        float zOffset = sliceThickness + sliceMargin;
+        float zOffset = classThickness + classMargin;
 
         for (ClassSlice slice : slicesList) {
             graphics.pushMatrix();
 
-            graphics.translate(0, -slice.sliceHeight / 2, i * zOffset);
+            graphics.translate(0, -slice.getSliceHeight() / 2, i * zOffset);
 
             //Handy.drawAxes(graphics, false, 20);
             slice.draw(graphics);

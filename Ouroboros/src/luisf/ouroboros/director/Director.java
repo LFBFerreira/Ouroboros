@@ -1,6 +1,5 @@
 package luisf.ouroboros.director;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import luisf.ouroboros.analyzer.CodeAnalyzer;
 import luisf.ouroboros.analyzer.models.ClassModel;
 import luisf.ouroboros.common.Handy;
@@ -17,6 +16,8 @@ import java.util.logging.Logger;
 public class Director {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
+    private final PropertyManager props = PropertyManager.getInstance();
+
     private CodeAnalyzer parser;
     private List<ClassModel> classModels;
 
@@ -26,9 +27,6 @@ public class Director {
     private File graphicsFolder;
     private File modelsFolder;
     private File appConfigFile;
-
-    private PropertyManager props = PropertyManager.getInstance();
-
 
     // ================================================================
 

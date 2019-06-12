@@ -1,10 +1,12 @@
 package luisf.ouroboros.visualizer;
 
 import luisf.ouroboros.analyzer.models.ClassModel;
+import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.common.colortools.ColorTools;
+import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.scene.CameraMan;
-import luisf.ouroboros.visualizer.skins.SkinBase;
-import luisf.ouroboros.visualizer.skins.SlicedSkin;
+import luisf.ouroboros.visualizer.suits.SuitBase;
+import luisf.ouroboros.visualizer.suits.suit01.CityscapeSuit;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PShape;
@@ -19,16 +21,18 @@ import java.util.logging.Logger;
 public class Visualizer extends PApplet {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
+    private final PropertyManager props = PropertyManager.getInstance();
+
     public List<ClassModel> models = new LinkedList<>();
     public File graphicsFolder;
 
-    private SkinBase codeSkin;
-    private PGraphics skinGraphics;
-    private PGraphics background;
+    private SuitBase suit;
+    private PGraphics suitGraphics;
+    private PGraphics backgroundGraphics;
     private CameraMan cameraMan;
 
-    private final int windowHeight = 768;
-    private final int windowWidth = 1024;
+    private int windowHeight = 768;
+    private int windowWidth = 1024;
 
     private final String renderer = P3D;
 
@@ -36,20 +40,11 @@ public class Visualizer extends PApplet {
     private final int floorWidth = 500;
     private final int floorDepth = 1100;
 
-    private final int[] backgroundColors = new int[]{0xFFD5D8DC, 0xFFACB5C6};
+    private int[] backgroundColors = new int[]{0xFFD5D8DC, 0xFFACB5C6};
+
+    private Boolean lightsOn = true;
 
     // ================================================================
-
-    /**
-     * Constructor
-     *
-     * @param graphicsFolder
-     * @param models
-     */
-    public Visualizer(File graphicsFolder, List<ClassModel> models) {
-        this.models = models;
-        this.graphicsFolder = graphicsFolder;
-    }
 
     /**
      * Static Launcher
@@ -66,12 +61,32 @@ public class Visualizer extends PApplet {
     // ================================================================
 
     /**
+     * Constructor
+     *
+     * @param graphicsFolder
+     * @param models
+     */
+    public Visualizer(File graphicsFolder, List<ClassModel> models) {
+        this.models = models;
+        this.graphicsFolder = graphicsFolder;
+
+        loadProperties();
+    }
+
+    private void loadProperties() {
+        backgroundColors = props.getIntArray("visualizer.backgroundColors");
+        windowWidth = props.getInt("visualizer.windowWidth");
+        windowHeight = props.getInt("visualizer.windowHeight");
+    }
+
+    // ================================================================
+
+    /**
      * Settings
      */
     public void settings() {
         size(windowWidth, windowHeight, renderer);
         smooth(8);
-
 //    hint()
     }
 
@@ -81,18 +96,18 @@ public class Visualizer extends PApplet {
     public void setup() {
         frameRate(60);
 
-        skinGraphics = createGraphics(windowWidth, windowHeight, renderer);
-        background = createGraphics(windowWidth, windowHeight, renderer);
+        suitGraphics = createGraphics(windowWidth, windowHeight, renderer);
+        backgroundGraphics = createGraphics(windowWidth, windowHeight, renderer);
 
-        cameraMan = new CameraMan(this, (PGraphics3D) skinGraphics, graphicsFolder);
+        cameraMan = new CameraMan(this, (PGraphics3D) suitGraphics, graphicsFolder);
         cameraMan.initialize();
 
-        codeSkin = new SlicedSkin(models, skinGraphics, this);
-        codeSkin.initialize();
+        suit = new CityscapeSuit(models, suitGraphics, this);
+        suit.initialize();
 
-        floor = initializeFloor();
+        floor = createFloor();
 
-        initializeBackground();
+        createBackground();
     }
 
     /**
@@ -110,30 +125,30 @@ public class Visualizer extends PApplet {
      * Draw
      */
     public void draw() {
-        surface.setTitle(String.format("Ouroboros (%d fps)", (int)frameRate));
+        setWindowTitle();
 
         lights();
 
         // Background
-        //background(100);
-        image(background, 0, 0);
+        //backgroundGraphics(100);
+        image(backgroundGraphics, 0, 0);
 
-        // Camera and Skin
         cameraMan.beginDraw();
 
-        skinGraphics.clear();
+        suitGraphics.clear();
 
-        drawFloor(skinGraphics);
-        codeSkin.draw(skinGraphics);
+        // draw floow
+        drawFloor(suitGraphics);
+
+        // draw suit
+        suit.draw(suitGraphics);
 
         cameraMan.endDraw();
 
         cameraMan.display();
 
-//         must be called after main buffer is updated
         cameraMan.addFrameToVideo(g);
     }
-
 
     // ================================================================
 
@@ -143,8 +158,15 @@ public class Visualizer extends PApplet {
 
     public void keyPressed() {
 
+        switch (key) {
+            case 'l':
+                lightsOn = !lightsOn;
+                log.info(Handy.f("Lights are %s", lightsOn ? "On" : "Off"));
+                break;
+        }
+
         // forward the event
-        codeSkin.keyPressed(key, keyCode);
+        suit.keyPressed(key, keyCode);
         cameraMan.keyPressed(key, keyCode);
     }
 
@@ -152,24 +174,28 @@ public class Visualizer extends PApplet {
 
     // Helpers
 
-    private void initializeBackground() {
-        background.beginDraw();
-
-//        setGradient(0, 0, background.width, background.height, 0xFF000000, 0xFFFFFFFF, true, background);
-
-        ColorTools.fillGradient(backgroundColors,
-                new PVector(background.width * 0.1f, 0),
-                new PVector(background.width * 0.8f, background.height),
-                background,
-                false);
-
-        background.endDraw();
+    private void setWindowTitle() {
+        surface.setTitle(String.format("Ouroboros (%d fps) %s",
+                (int)frameRate,
+                cameraMan.isCapturing() ? "[Recording]" : ""));
     }
 
-    private PShape initializeFloor()
+    private void createBackground() {
+        backgroundGraphics.beginDraw();
+
+        ColorTools.fillGradient(backgroundColors,
+                new PVector(backgroundGraphics.width * 0.1f, 0),
+                new PVector(backgroundGraphics.width * 0.8f, backgroundGraphics.height),
+                backgroundGraphics,
+                false);
+
+        backgroundGraphics.endDraw();
+    }
+
+    private PShape createFloor()
     {
         PShape floor = createShape(BOX, floorWidth, 4, floorDepth);
-        floor.setFill(color(180));
+        floor.setFill(props.getInt("visualizer.floorColor"));
         floor.setStroke(200);
 
         return floor;

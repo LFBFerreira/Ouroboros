@@ -1,4 +1,4 @@
-package luisf.ouroboros.visualizer.skins;
+package luisf.ouroboros.visualizer;
 
 import processing.core.PGraphics;
 

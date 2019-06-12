@@ -2,7 +2,8 @@ package luisf.ouroboros.visualizer.scene;
 
 import com.hamoid.VideoExport;
 import luisf.ouroboros.common.Handy;
-import luisf.ouroboros.visualizer.skins.SkinBase;
+import luisf.ouroboros.properties.PropertyManager;
+import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import remixlab.proscene.Scene;
@@ -17,6 +18,8 @@ import java.util.logging.Logger;
 public class CameraMan extends Scene {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
+    private final PropertyManager props = PropertyManager.getInstance();
+
     private VideoExport videoExport;
 
     private Boolean captureStarted = false;
@@ -24,7 +27,7 @@ public class CameraMan extends Scene {
     private String videoPath = "";
     private File outputFolder;
 
-    private SkinBase skin;
+    private SuitBase skin;
 
     // ================================================================
 
@@ -103,14 +106,9 @@ public class CameraMan extends Scene {
     }
 
     public void addFrameToVideo(PGraphics frame) {
-        if (captureStarted) {
+        if (captureStarted && capturing) {
             videoExport.saveFrame();
         }
-    }
-
-    @Override
-    public void draw() {
-        log.info("Draw");
     }
 
     /**
@@ -149,6 +147,10 @@ public class CameraMan extends Scene {
         }
     }
 
+    public Boolean isCapturing()
+    {
+        return capturing;
+    }
 
     // ================================================================
 
@@ -158,7 +160,6 @@ public class CameraMan extends Scene {
         videoExport.setFrameRate(60);
         videoExport.setDebugging(false);
         //videoExport.setLoadPixels(false); // calls loadpixels
-        videoExport.setQuality(90, 128);
+        videoExport.setQuality(props.getInt("visualizer.capture.quality"), 128);
     }
-
 }

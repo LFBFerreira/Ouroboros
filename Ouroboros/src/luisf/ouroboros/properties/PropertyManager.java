@@ -4,10 +4,12 @@ import luisf.ouroboros.common.Handy;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -75,7 +77,8 @@ public class PropertyManager {
         params = new Parameters();
 
         builder = new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
-                .configure(params.xml().setFile(configurationFile).setValidating(false));
+                .configure(params.xml().setListDelimiterHandler(new DefaultListDelimiterHandler(','))
+                        .setFile(configurationFile).setValidating(false));
 
         // load the configuration file
         try {
@@ -126,15 +129,27 @@ public class PropertyManager {
 
     // region Properties Getters
 
-    public int[] getIntArray(String propertyName) {
-        String[] stringValues = configuration.getStringArray(propertyName);
 
-        int[] intValues = new int[stringValues.length];
-        for (int i = 0; i < stringValues.length; i++) {
-            intValues[i] = Integer.parseInt(stringValues[i]);
-        }
+//    public int[] getIntArray(String propertyName) {
+//        String[] stringValues = configuration.getStringArray(propertyName);
+//
+//        int[] intValues = new int[stringValues.length];
+//        for (int i = 0; i < stringValues.length; i++) {
+//            intValues[i] = Integer.parseInt(stringValues[i]);
+//        }
+//
+//        return intValues;
+//    }
 
-        return intValues;
+
+    public List<Integer> getIntList(String propertyName)
+    {
+        return configuration.getList(Integer.class, propertyName);
+    }
+
+    public int[] getIntArray(String propertyName)
+    {
+        return getIntList(propertyName).stream().mapToInt(Integer::intValue).toArray();
     }
 
     public String getString(String propertyName) {
@@ -169,7 +184,13 @@ public class PropertyManager {
         return configuration.getByte(propertyName);
     }
 
-    // endregion
+    public List<String> getStringList(String propertyName)
+    {
+        return configuration.getList(String.class, propertyName);
+    }
+
+
+    // ---------------------------------------------------------------------------
 
     // region Properties Setters
 
@@ -183,11 +204,10 @@ public class PropertyManager {
         configuration.addProperty(name, value);
     }
 
-    // endregion
 
     // ---------------------------------------------------------------------------
 
     // region Helpers
 
-    // endregion
+
 }

@@ -5,6 +5,7 @@ import luisf.ouroboros.analyzer.CodeAnalyzer;
 import luisf.ouroboros.analyzer.models.ClassModel;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.modelsWriter.ModelsIO;
+import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.Visualizer;
 
 import java.io.File;
@@ -24,20 +25,35 @@ public class Director {
     private File projectFilesFolder;
     private File graphicsFolder;
     private File modelsFolder;
+    private File appConfigFile;
+
+    private PropertyManager props = PropertyManager.getInstance();
 
 
     // ================================================================
 
-    public Director(Boolean parseCode, Boolean generateGraphics, File projectFilesFolder, File graphicsFolder, File modelsFolder) {
+    public Director(Boolean parseCode,
+                    Boolean generateGraphics,
+                    File projectFilesFolder,
+                    File graphicsFolder,
+                    File modelsFolder,
+                    File appConfigFile) {
         this.parseCode = parseCode;
         this.generateGraphics = generateGraphics;
         this.projectFilesFolder = projectFilesFolder;
         this.graphicsFolder = graphicsFolder;
         this.modelsFolder = modelsFolder;
+        this.appConfigFile = appConfigFile;
     }
 
 
     public void start() {
+        // load configuration
+        if (props.loadConfiguration(appConfigFile.getPath()) == false) {
+            log.severe(Handy.f("It was not possible to load the configuration file from %s", appConfigFile.getPath()));
+            System.exit(0);
+        }
+
         if (parseCode) {
             try {
                 log.info(Handy.f("Parsing code from '%s'", projectFilesFolder.getCanonicalPath()));

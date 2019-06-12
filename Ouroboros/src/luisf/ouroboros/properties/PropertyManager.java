@@ -6,7 +6,6 @@ import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
-
 import java.io.File;
 import java.net.URL;
 import java.util.logging.Logger;
@@ -18,17 +17,21 @@ import java.util.logging.Logger;
 public class PropertyManager {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
-    private static File configurationFile;
+    private static PropertyManager instance = null;
 
-    private static XMLConfiguration configuration;
+    private File configurationFile;
 
-    private static FileBasedConfigurationBuilder<XMLConfiguration> builder;
-    private static Parameters params;
+    private XMLConfiguration configuration;
 
-    private static String configFilePath = "";
-    private static URL configFileUrl;
+    private FileBasedConfigurationBuilder<XMLConfiguration> builder;
+    private Parameters params;
 
-    private static Boolean needsSave = false;
+    private String configFilePath = "";
+    private URL configFileUrl;
+
+    private Boolean needsSave = false;
+
+    // ================================================================
 
     /**
      * Hidden constructor
@@ -36,7 +39,14 @@ public class PropertyManager {
     private PropertyManager() {
     }
 
-    // ---------------------------------------------------------------------------
+    public static PropertyManager getInstance() {
+        if (instance == null) {
+            instance = new PropertyManager();
+        }
+        return instance;
+    }
+
+    // ================================================================
 
     // region Public methods
 
@@ -46,7 +56,7 @@ public class PropertyManager {
      * @return
      */
 
-    public static Boolean loadConfiguration(String configurationFilePath) {
+    public Boolean loadConfiguration(String configurationFilePath) {
 
         if (configurationFilePath == null || configurationFilePath.isEmpty()) {
             log.severe("The configuration file path is null or empty");
@@ -56,11 +66,11 @@ public class PropertyManager {
         configurationFile = new File(configurationFilePath);
 
         if (configurationFile == null) {
-            log.severe(Handy.f("Could not load the Configuration file '{}' from Resources", configFilePath));
+            log.severe(Handy.f("Could not load the Configuration file '%s' from Resources", configFilePath));
             return false;
         }
 
-        log.info(Handy.f("Configuration file loaded from '{}'", configurationFile.getAbsolutePath()));
+        log.info(Handy.f("Configuration file loaded from '%s'", configurationFile.getAbsolutePath()));
 
         params = new Parameters();
 
@@ -82,8 +92,8 @@ public class PropertyManager {
     /**
      * Saves the current configuration to a file
      */
-    public static void saveConfiguration() {
-        log.info(Handy.f("Saving configuration to Resources {}", configFilePath));
+    public void saveConfiguration() {
+        log.info(Handy.f("Saving configuration to Resources %s", configFilePath));
 
         // create the file if it doesn't exist already
         if (configurationFile == null) {
@@ -106,7 +116,7 @@ public class PropertyManager {
      *
      * @return
      */
-    public static Boolean needsSave() {
+    public Boolean needsSave() {
         return needsSave;
     }
 
@@ -116,7 +126,7 @@ public class PropertyManager {
 
     // region Properties Getters
 
-    public static int[] getIntArray(String propertyName) {
+    public int[] getIntArray(String propertyName) {
         String[] stringValues = configuration.getStringArray(propertyName);
 
         int[] intValues = new int[stringValues.length];
@@ -127,35 +137,35 @@ public class PropertyManager {
         return intValues;
     }
 
-    public static String getString(String propertyName) {
+    public String getString(String propertyName) {
         return configuration.getString(propertyName);
     }
 
-    public static char getChar(String propertyName) {
+    public char getChar(String propertyName) {
         return configuration.getString(propertyName).charAt(0);
     }
 
-    public static int getInt(String propertyName) {
+    public int getInt(String propertyName) {
         return configuration.getInt(propertyName);
     }
 
-    public static float getFloat(String propertyName) {
+    public float getFloat(String propertyName) {
         return configuration.getFloat(propertyName);
     }
 
-    public static Double getDouble(String propertyName) {
+    public Double getDouble(String propertyName) {
         return configuration.getDouble(propertyName);
     }
 
-    public static Long getLong(String propertyName) {
+    public Long getLong(String propertyName) {
         return configuration.getLong(propertyName);
     }
 
-    public static Boolean getBoolean(String propertyName) {
+    public Boolean getBoolean(String propertyName) {
         return configuration.getBoolean(propertyName);
     }
 
-    public static Byte getByte(String propertyName) {
+    public Byte getByte(String propertyName) {
         return configuration.getByte(propertyName);
     }
 
@@ -163,12 +173,12 @@ public class PropertyManager {
 
     // region Properties Setters
 
-    public static void set(String name, Object value) {
+    public void set(String name, Object value) {
         needsSave = true;
         configuration.setProperty(name, value);
     }
 
-    public static void add(String name, Object value) {
+    public void add(String name, Object value) {
         needsSave = true;
         configuration.addProperty(name, value);
     }

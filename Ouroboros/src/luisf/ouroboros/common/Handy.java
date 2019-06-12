@@ -31,8 +31,8 @@ public class Handy {
      * @return
      */
     public static String f(String message, Object... args) {
-//        return String.format(format, args);
-        return MessageFormat.format(message, args);
+        return String.format(message, args);
+//        return MessageFormat.format(message, args);
     }
 
     /**
@@ -53,42 +53,7 @@ public class Handy {
         return name.substring(lastIndexOf + 1); // doesn't return "." with extension
     }
 
-    /**
-     * Checks if the given path points to an existing folder and converts it to a File
-     *
-     * @param path path to folder
-     * @return
-     */
-    public static File validateFolderPath(String path) {
-        if (Handy.isNullOrEmpty(path)) {
-            return null;
-        }
 
-        File folder = new File(path);
-
-        if (folder.exists() && folder.isDirectory()) {
-            return folder;
-        } else {
-            try {
-                log.severe(Handy.f("The folder '{}' doesn't exist or its not a directory", folder.getCanonicalPath()));
-            } catch (IOException e) {
-                log.severe("An exception occurred while getting the canonical path");
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
-
-    public static String fileToString(File file) {
-        String content = "";
-        try {
-            content = new String(Files.readAllBytes(file.toPath()));
-        } catch (IOException e) {
-            log.severe(Handy.f("Exception occurred while reading the file '%s'", file.toPath()));
-            e.printStackTrace();
-        }
-        return content;
-    }
 
     public static String removeSubString(int startIndex, int endIndex, String content) {
         if (startIndex < 0 || endIndex > content.length()) {
@@ -179,6 +144,75 @@ public class Handy {
         s.endShape(parent.CLOSE);
 
         return s;
+    }
+
+    /**
+     * Checks if the given path points to an existing folder and converts it to a File
+     *
+     * @param path path to folder
+     * @return
+     */
+    public static File validateFolderPath(String path) {
+        if (Handy.isNullOrEmpty(path)) {
+            return null;
+        }
+
+        File folder = new File(path);
+
+        if (folder.exists() && folder.isDirectory()) {
+            return folder;
+        } else {
+            try {
+                log.severe(Handy.f("The folder '%s' doesn't exist or its not a directory", folder.getCanonicalPath()));
+            } catch (IOException e) {
+                log.severe("An exception occurred while getting the canonical path");
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+
+    /**
+     * Checks if the given path points to an existing file and converts it to a File
+     *
+     * @param path
+     * @return
+     */
+    public static File validateFilePath(String path) {
+        if (Handy.isNullOrEmpty(path)) {
+            return null;
+        }
+
+        File file = new File(path);
+
+        if (file.exists() && file.isFile()) {
+            return file;
+        } else {
+            try {
+                log.severe(Handy.f("The file '%s' doesn't exist", file.getCanonicalPath()));
+            } catch (IOException e) {
+                log.severe("An exception occurred while getting the canonical path");
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    /**
+     * Reads a file to a String
+     * @param file
+     * @return
+     */
+    public static String fileToString(File file) {
+        String content = "";
+        try {
+            content = new String(Files.readAllBytes(file.toPath()));
+        } catch (IOException e) {
+            log.severe(Handy.f("Exception occurred while reading the file '%s'", file.toPath()));
+            e.printStackTrace();
+        }
+        return content;
     }
 
 }

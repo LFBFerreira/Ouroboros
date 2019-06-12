@@ -2,18 +2,19 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/src/luisf/ouroboros/modelsWriter/ModelsIO.java" line="129" />
-    <bookmark url="file://$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java" line="156" />
+    <bookmark url="file://$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java" line="121" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="96fdb1cb-9c60-4ecc-94a7-9da8b24eeda5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/org_apache_commons_commons_configuration2_2_5.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/luisf/ouroboros/properties/PropertyManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/commons_beanutils_commons_beanutils_1_9_3.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Ouroboros.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Ouroboros.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_Main.oro" beforeDir="false" afterPath="$PROJECT_DIR$/../models_output/luisf_ouroboros_Main.oro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/properties/PropertyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/properties/PropertyManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/configuration.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/app.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_common_Handy.oro" beforeDir="false" afterPath="$PROJECT_DIR$/../models_output/luisf_ouroboros_common_Handy.oro" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../models_output/luisf_ouroboros_director_Director.oro" beforeDir="false" afterPath="$PROJECT_DIR$/../models_output/luisf_ouroboros_director_Director.oro" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -34,20 +35,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="18" selection-start-line="16" selection-end-line="17" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/properties/PropertyManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="79" column="5" lean-forward="true" selection-start-line="79" selection-start-column="5" selection-end-line="79" selection-end-column="5" />
+            <state relative-caret-position="194">
+              <caret line="55" selection-start-line="55" selection-end-line="55" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -56,10 +45,45 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/properties/PropertyManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="372">
+              <caret line="76" column="12" selection-start-line="76" selection-start-column="12" selection-end-line="76" selection-end-column="12" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#3432#3433#0" expanded="true" />
+                <element signature="e#4027#4028#0" expanded="true" />
+                <element signature="e#4145#4146#0" expanded="true" />
+                <element signature="e#4248#4249#0" expanded="true" />
+                <element signature="e#4357#4358#0" expanded="true" />
+                <element signature="e#4469#4470#0" expanded="true" />
+                <element signature="e#4575#4576#0" expanded="true" />
+                <element signature="e#4690#4691#0" expanded="true" />
+                <element signature="e#4796#4797#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/CodeAnalyzer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="93">
+              <caret line="31" column="71" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="71" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#1787#1788#0" expanded="true" />
+                <element signature="e#1821#1822#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="602">
-              <caret line="85" column="33" lean-forward="true" selection-start-line="85" selection-start-column="33" selection-end-line="85" selection-end-column="33" />
+            <state relative-caret-position="411">
+              <caret line="196" selection-start-line="196" selection-end-line="196" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -70,8 +94,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="904">
-              <caret line="161" selection-start-line="161" selection-end-line="161" />
+            <state relative-caret-position="345">
+              <caret line="105" column="16" selection-start-line="105" selection-start-column="16" selection-end-line="105" selection-end-column="16" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -79,11 +103,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/resources/configuration.xml">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/resources/app.config">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="7" selection-start-column="7" selection-end-column="7" />
+            <state relative-caret-position="34">
+              <caret line="2" column="13" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -101,12 +125,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>staticblock</find>
-      <find>static</find>
-      <find>modifierKeywordsGroup</find>
-      <find>methodHeader</find>
-      <find>Class has no declarations</find>
-      <find>saveModels</find>
       <find>void runSketch(</find>
       <find>private</find>
       <find>extends</find>
@@ -131,11 +149,18 @@
       <find>log.error</find>
       <find>handy</find>
       <find>%s</find>
+      <find>static</find>
+      <find>classModels</find>
+      <find>configuration file</find>
+      <find>configuration file loaded</find>
+      <find>{}</find>
+      <find>Error when creating PropertyDescriptor</find>
     </findStrings>
     <replaceStrings>
       <replace>ClassModel</replace>
       <replace>{}</replace>
       <replace>log.severe</replace>
+      <replace>%s</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -144,8 +169,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/analyzer/VisibilityEnum.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/analyzer/ModifierEnum.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/DeclarationModel.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/ClassModelInterface.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/ClassModel.java" />
@@ -191,10 +214,12 @@
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/analyzer/Parse.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/skins/SlicedSkin.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/Main.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/common/Singleton.java" />
+        <option value="$PROJECT_DIR$/src/resources/app.config" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/properties/PropertyManager.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/Main.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java" />
       </list>
     </option>
   </component>
@@ -240,7 +265,20 @@
               <item name="Ouroboros" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="ouroboros" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ouroboros" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ouroboros" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="ouroboros" type="462c0819:PsiDirectoryNode" />
               <item name="director" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ouroboros" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ouroboros" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -251,7 +289,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="Downloaded.Files.Path" value="C:\Users\LuisFerreira\Documents\Projects\Ouroboros\Ouroboros\libraries\commons-configuration2-2.5" />
+    <property name="Downloaded.Files.Path" value="C:\Users\LuisFerreira\Documents\Projects\Ouroboros\Ouroboros\libraries\commons-beanutils-1.9" />
     <property name="Downloaded.Files.Path.Enabled" value="true" />
     <property name="Repository.Attach.Annotations" value="false" />
     <property name="Repository.Attach.JavaDocs" value="true" />
@@ -368,7 +406,7 @@
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.5347871" visible="true" weight="0.22657111" />
-      <window_info active="true" id="Structure" order="1" sideWeight="0.46521288" side_tool="true" visible="true" weight="0.22657111" />
+      <window_info id="Structure" order="1" sideWeight="0.46521288" side_tool="true" visible="true" weight="0.22657111" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -376,8 +414,8 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.31152648" />
-      <window_info anchor="bottom" x="-3072" y="-560" width="768" height="835" id="Run" order="2" type="WINDOWED" visible="true" weight="0.32917964" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49889746" weight="0.40706128" />
+      <window_info active="true" anchor="bottom" x="-3382" y="-560" width="1078" height="835" id="Run" order="2" type="WINDOWED" visible="true" weight="0.32917964" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49889746" weight="0.37383178" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -387,7 +425,7 @@
       <window_info anchor="bottom" id="Messages" order="10" weight="0.32917964" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.1973466" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.19680265" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Maven" order="4" weight="0.32946378" />
       <window_info anchor="right" id="Theme Preview" order="5" />
@@ -395,6 +433,9 @@
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Coverage" order="8" side_tool="true" weight="0.3296582" />
     </layout>
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.config" />
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
@@ -412,6 +453,36 @@
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
       <expression>
+        <expression-string>argumentsMapping.get(appPropertiesFileArgument)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>commandLineArguments</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>propertiesFile</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>argumentsMapping</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>argumentsMapping.containsKey(appPropertiesFileArgument)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>appPropertiesFileArgument</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
         <expression-string>code</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
@@ -428,53 +499,9 @@
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>startCapture(Paths.get(outputFolder.getCanonicalPath(),
-                                &quot;capture &quot; + now.format(formatter)).toString())</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>Paths.get(outputFolder.getCanonicalPath(),
-                                &quot;capture &quot; + now.format(formatter)).toString()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>(lineThickness + lineMargin * 2)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>i * (sliceThickness + sliceMargin)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>-slice.sliceWidth / 2, 0, i * (sliceThickness + sliceMargin)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>model</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_201/src.zip!/java/lang/StringBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="224" column="40" selection-start-line="224" selection-start-column="40" selection-end-line="224" selection-end-column="40" />
-          <folding>
-            <element signature="e#2871#2872#0" expanded="true" />
-            <element signature="e#2896#2897#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/FallbackMetric.java" />
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/BraceOpenMetric.java" />
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/metrics/ReturnMetric.java" />
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/models/DeclarationModel.java">
@@ -735,16 +762,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/CodeAnalyzer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="127" column="39" selection-start-line="127" selection-start-column="39" selection-end-line="127" selection-end-column="39" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/RegexConstants.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
@@ -798,17 +815,55 @@
         <state relative-caret-position="-187" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/resources/configuration.xml">
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/analyzer/CodeAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="7" selection-start-column="7" selection-end-column="7" />
+        <state relative-caret-position="93">
+          <caret line="31" column="71" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="71" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1787#1788#0" expanded="true" />
+            <element signature="e#1821#1822#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java">
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/common/Singleton.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="18" selection-start-line="16" selection-end-line="17" />
+        <state relative-caret-position="51">
+          <caret line="3" column="40" selection-start-line="3" selection-start-column="40" selection-end-line="3" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/properties/PropertyManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="372">
+          <caret line="76" column="12" selection-start-line="76" selection-start-column="12" selection-end-line="76" selection-end-column="12" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3432#3433#0" expanded="true" />
+            <element signature="e#4027#4028#0" expanded="true" />
+            <element signature="e#4145#4146#0" expanded="true" />
+            <element signature="e#4248#4249#0" expanded="true" />
+            <element signature="e#4357#4358#0" expanded="true" />
+            <element signature="e#4469#4470#0" expanded="true" />
+            <element signature="e#4575#4576#0" expanded="true" />
+            <element signature="e#4690#4691#0" expanded="true" />
+            <element signature="e#4796#4797#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libraries/commons-cli-1.4/commons-cli-1.4-sources.jar!/org/apache/commons/cli/Options.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="311">
+          <caret line="42" column="13" selection-start-line="42" selection-start-column="13" selection-end-line="42" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="411">
+          <caret line="196" selection-start-line="196" selection-end-line="196" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -817,31 +872,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="904">
-          <caret line="161" selection-start-line="161" selection-end-line="161" />
+        <state relative-caret-position="345">
+          <caret line="105" column="16" selection-start-line="105" selection-start-column="16" selection-end-line="105" selection-end-column="16" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/common/Handy.java">
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/director/Director.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="602">
-          <caret line="85" column="33" lean-forward="true" selection-start-line="85" selection-start-column="33" selection-end-line="85" selection-end-column="33" />
+        <state relative-caret-position="194">
+          <caret line="55" selection-start-line="55" selection-end-line="55" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/properties/PropertyManager.java">
+    <entry file="file://$PROJECT_DIR$/src/resources/app.config">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="79" column="5" lean-forward="true" selection-start-line="79" selection-start-column="5" selection-end-line="79" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="34">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -900,7 +952,6 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>
@@ -908,7 +959,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>Commons CLI</last-edited>
+          <last-edited>commons-beanutils:commons-beanutils:1.9.3</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

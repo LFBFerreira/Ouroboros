@@ -17,7 +17,7 @@ public class Main {
 
     // logger configuration
     static {
-        String fileName = "logging.properties";
+        String logConfigurationfileName = "logging.properties";
 
         //method 1
 //        URL configFileUrl = Main.class.getResource("/logging.properties");
@@ -28,16 +28,16 @@ public class Main {
 //        System.setProperty("java.util.logging.config.file", path);
 
         //method 3
-        InputStream stream = Main.class.getClassLoader().getResourceAsStream(fileName);
+        InputStream stream = Main.class.getClassLoader().getResourceAsStream(logConfigurationfileName);
 
         if (stream == null) {
-            System.err.println("Could not find the resource'" + fileName + "'");
+            System.err.println("Could not find the resource'" + logConfigurationfileName + "'");
         }
 
         try {
             LogManager.getLogManager().readConfiguration(stream);
         } catch (IOException e) {
-            System.err.println("Could not load the logging configuration from '" + fileName + "'");
+            System.err.println("Could not load the logging configuration from '" + logConfigurationfileName + "'");
             e.printStackTrace();
         }
     }
@@ -46,12 +46,15 @@ public class Main {
 
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
+    private static final String defaultAppConfigFileName = "app.config";
+
     private static final String helpArgument = "h";
     private static final String parseCodeArgument = "p";
     private static final String generateGraphicsArgument = "g";
     private static final String codeFolderArgument = "c";
     private static final String modelsOutputFolderArgument = "m";
     private static final String visualsOutputFolderArgument = "v";
+    private static final String appPropertiesFileArgument = "a";
 
     // ================================================================
 
@@ -88,11 +91,29 @@ public class Main {
             }
         }
 
+        File propertiesFile = Handy.validateFilePath(argumentsMapping.get(appPropertiesFileArgument));
+        if (propertiesFile == null) {
+            if (!Handy.isNullOrEmpty(argumentsMapping.get(appPropertiesFileArgument))) {
+                log.severe(Handy.f("It was not possible to load the app configuration file from %s",
+                        argumentsMapping.get(appPropertiesFileArgument)));
+            }
+
+            String configFile = Main.class.getClassLoader().getResource(defaultAppConfigFileName).getFile();
+            log.info(Handy.f("Loading default app configuration file from %s", configFile));
+            propertiesFile = Handy.validateFilePath(configFile);
+
+            if (propertiesFile == null) {
+                log.severe(Handy.f("Could not load the default app configuration file from %s", configFile));
+                System.exit(0);
+            }
+        }
+
         Director director = new Director(argumentsMapping.containsKey(parseCodeArgument),
                 argumentsMapping.containsKey(generateGraphicsArgument),
                 projectFilesFolder,
                 visualsOutputFolder,
-                modelsOutputFolder);
+                modelsOutputFolder,
+                propertiesFile);
 
         log.info("Starting Ouroboros");
 
@@ -119,11 +140,15 @@ public class Main {
         argumentOptions.addOption(codeFolderArgument, true, "code folder path");
         argumentOptions.addOption(visualsOutputFolderArgument, true, "graphics output folder path");
         argumentOptions.addOption(modelsOutputFolderArgument, true, "models output folder path");
+        argumentOptions.addOption(appPropertiesFileArgument, true, "app configuration file path");
 
         CommandLine commandLineArguments = null;
 
         try {
             commandLineArguments = parser.parse(argumentOptions, args);
+        } catch (UnrecognizedOptionException e) {
+            log.severe("There was an unrecognized input parameter");
+            e.printStackTrace();
         } catch (ParseException e) {
             System.err.println("An exception occurred while parsing the command line arguments");
             e.printStackTrace();
@@ -155,6 +180,10 @@ public class Main {
             argumentsMapping.put(modelsOutputFolderArgument, commandLineArguments.getOptionValue(modelsOutputFolderArgument));
         }
 
+        if (commandLineArguments.hasOption(appPropertiesFileArgument)) {
+            argumentsMapping.put(appPropertiesFileArgument, commandLineArguments.getOptionValue(appPropertiesFileArgument));
+        }
+
         return argumentsMapping;
     }
 
@@ -163,7 +192,7 @@ public class Main {
 //        System.out.println(analyzer);
 //
 //        ClassLoader classLoader = new Main().getClass().getClassLoader();
-//        File file = analyzer.getFileFromResources("configuration.xml");
+//        File file = analyzer.getFileFromResources("app.config");
 //
 //        if (file != null) {
 //            System.out.println("Got it!");
@@ -172,7 +201,7 @@ public class Main {
 //        }
 
 //        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-//        InputStream is = classloader.getResourceAsStream("configuration.xml");
+//        InputStream is = classloader.getResourceAsStream("app.config");
 //
 //        if (is != null) {
 //            System.out.println("Got the stream!");

@@ -13,5 +13,6 @@
     <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
     <orderEntry type="library" name="Proscene" level="project" />
     <orderEntry type="library" name="video_export_processing-0.2" level="project" />
+    <orderEntry type="library" name="org.apache.commons:commons-configuration2:2.5" level="project" />
   </component>
 </module>

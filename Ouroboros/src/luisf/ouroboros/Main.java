@@ -3,6 +3,7 @@ package luisf.ouroboros;
 
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.director.Director;
+import org.apache.commons.cli.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-
-import org.apache.commons.cli.*;
 
 public class Main {
 
@@ -43,6 +42,8 @@ public class Main {
         }
     }
 
+    // ================================================================
+
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     private static final String helpArgument = "h";
@@ -52,23 +53,32 @@ public class Main {
     private static final String modelsOutputFolderArgument = "m";
     private static final String visualsOutputFolderArgument = "v";
 
+    // ================================================================
+
+    /**
+     * Main
+     *
+     * @param args
+     */
     public static void main(String[] args) {
 
         Map<String, String> argumentsMapping = getArguments(args);
 
-        // parse project files folder
+        // validate project files folder
         File projectFilesFolder = Handy.validateFolderPath(argumentsMapping.get(codeFolderArgument));
         if (projectFilesFolder == null) {
             log.severe(Handy.f("The code folder is invalid"));
             System.exit(0);
         }
 
+        // validate models output folder
         File modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsOutputFolderArgument));
         if (modelsOutputFolder == null) {
             log.severe(Handy.f("The models output folder is invalid"));
             System.exit(0);
         }
 
+        // validate visuals output folder
         File visualsOutputFolder = null;
         if (argumentsMapping.containsKey(generateGraphicsArgument)) {
             visualsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(visualsOutputFolderArgument));
@@ -78,11 +88,15 @@ public class Main {
             }
         }
 
+        Director director = new Director(argumentsMapping.containsKey(parseCodeArgument),
+                argumentsMapping.containsKey(generateGraphicsArgument),
+                projectFilesFolder,
+                visualsOutputFolder,
+                modelsOutputFolder);
+
         log.info("Starting Ouroboros");
 
-        Director director = new Director(argumentsMapping.containsKey(parseCodeArgument), projectFilesFolder,
-                argumentsMapping.containsKey(generateGraphicsArgument), visualsOutputFolder,
-                modelsOutputFolder);
+        director.start();
     }
 
     // ================================================================
@@ -90,7 +104,8 @@ public class Main {
     // Helpers
 
     /**
-     * Converts the arguments from an array of strings to map of argument and value if any
+     * Converts the arguments from an array of strings to a map of arguments and values
+     *
      * @param args
      * @return
      */
@@ -143,7 +158,7 @@ public class Main {
         return argumentsMapping;
     }
 
-    private static void testResources() {
+//    private static void testResources() {
 //        CodeAnalyzer analyzer = new CodeAnalyzer();
 //        System.out.println(analyzer);
 //
@@ -156,13 +171,13 @@ public class Main {
 //            System.out.println("Failed file");
 //        }
 
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("configuration.xml");
-
-        if (is != null) {
-            System.out.println("Got the stream!");
-        } else {
-            System.out.println("Failed stream");
-        }
-    }
+//        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+//        InputStream is = classloader.getResourceAsStream("configuration.xml");
+//
+//        if (is != null) {
+//            System.out.println("Got the stream!");
+//        } else {
+//            System.out.println("Failed stream");
+//        }
+//    }
 }

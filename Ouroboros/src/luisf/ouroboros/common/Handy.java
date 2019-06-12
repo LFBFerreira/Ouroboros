@@ -7,6 +7,7 @@ import processing.core.PShape;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.MessageFormat;
 import java.util.logging.Logger;
 
 public class Handy {
@@ -25,12 +26,13 @@ public class Handy {
     /**
      * Mimics the String.format method with a smaller name
      *
-     * @param format
+     * @param message
      * @param args
      * @return
      */
-    public static String f(String format, Object... args) {
-        return String.format(format, args);
+    public static String f(String message, Object... args) {
+//        return String.format(format, args);
+        return MessageFormat.format(message, args);
     }
 
     /**
@@ -68,7 +70,7 @@ public class Handy {
             return folder;
         } else {
             try {
-                log.severe(Handy.f("The folder '%s' doesn't exist or its not a directory", folder.getCanonicalPath()));
+                log.severe(Handy.f("The folder '{}' doesn't exist or its not a directory", folder.getCanonicalPath()));
             } catch (IOException e) {
                 log.severe("An exception occurred while getting the canonical path");
                 e.printStackTrace();

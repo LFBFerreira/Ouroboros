@@ -1,10 +1,11 @@
 package luisf.ouroboros.director;
 
-import luisf.ouroboros.common.Handy;
-import luisf.ouroboros.visualizer.Visualizer;
-import luisf.ouroboros.analyzer.models.ClassModel;
-import luisf.ouroboros.modelsWriter.ModelsIO;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import luisf.ouroboros.analyzer.CodeAnalyzer;
+import luisf.ouroboros.analyzer.models.ClassModel;
+import luisf.ouroboros.common.Handy;
+import luisf.ouroboros.modelsWriter.ModelsIO;
+import luisf.ouroboros.visualizer.Visualizer;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,10 +19,25 @@ public class Director {
     private CodeAnalyzer parser;
     private List<ClassModel> classModels;
 
+    private Boolean parseCode;
+    private Boolean generateGraphics;
+    private File projectFilesFolder;
+    private File graphicsFolder;
+    private File modelsFolder;
+
+
     // ================================================================
 
-    public Director(boolean parseCode, File projectFilesFolder, boolean generateGraphics, File graphicsFolder, File modelsFolder) {
+    public Director(Boolean parseCode, Boolean generateGraphics, File projectFilesFolder, File graphicsFolder, File modelsFolder) {
+        this.parseCode = parseCode;
+        this.generateGraphics = generateGraphics;
+        this.projectFilesFolder = projectFilesFolder;
+        this.graphicsFolder = graphicsFolder;
+        this.modelsFolder = modelsFolder;
+    }
 
+
+    public void start() {
         if (parseCode) {
             try {
                 log.info(Handy.f("Parsing code from '%s'", projectFilesFolder.getCanonicalPath()));

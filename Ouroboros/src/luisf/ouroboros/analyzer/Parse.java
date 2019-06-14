@@ -1,9 +1,9 @@
 package luisf.ouroboros.analyzer;
 
-import luisf.ouroboros.analyzer.models.CodeModel;
-import luisf.ouroboros.analyzer.models.DeclarationModel;
-import luisf.ouroboros.analyzer.models.MethodModel;
-import luisf.ouroboros.analyzer.models.metrics.*;
+import luisf.ouroboros.models.CodeModel;
+import luisf.ouroboros.models.DeclarationModel;
+import luisf.ouroboros.models.MethodModel;
+import luisf.ouroboros.models.metrics.*;
 import luisf.ouroboros.common.Handy;
 
 import java.io.File;

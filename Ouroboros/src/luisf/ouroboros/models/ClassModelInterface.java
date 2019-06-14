@@ -1,7 +1,6 @@
-package luisf.ouroboros.analyzer.models;
+package luisf.ouroboros.models;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ClassModelInterface {
     void setPackageName(String name);

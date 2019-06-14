@@ -1,7 +1,7 @@
 package luisf.ouroboros.director;
 
 import luisf.ouroboros.analyzer.CodeAnalyzer;
-import luisf.ouroboros.analyzer.models.ClassModel;
+import luisf.ouroboros.models.ClassModel;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.modelsWriter.ModelsIO;
 import luisf.ouroboros.properties.PropertyManager;

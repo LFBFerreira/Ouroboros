@@ -1,8 +1,7 @@
-package luisf.ouroboros.analyzer.models.metrics;
+package luisf.ouroboros.models.metrics;
 
 import java.io.Serializable;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 public class Metric implements Serializable {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());

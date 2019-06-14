@@ -2,6 +2,8 @@ package luisf.ouroboros.visualizer.scene;
 
 import com.hamoid.VideoExport;
 import luisf.ouroboros.common.Handy;
+import luisf.ouroboros.hmi.InputEvent;
+import luisf.ouroboros.hmi.InputListennerInterface;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
@@ -15,7 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
-public class CameraMan extends Scene {
+public class CameraMan extends Scene implements InputListennerInterface {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     private final PropertyManager props = PropertyManager.getInstance();
@@ -154,6 +156,15 @@ public class CameraMan extends Scene {
 
     // ================================================================
 
+    // InputListennerInterface
+
+    @Override
+    public void reactToInput(InputEvent input) {
+        log.info("Camera man input: " + input.getFloatValue());
+    }
+
+    // ================================================================
+
     // Helpers
 
     private void configureVideo(VideoExport video) {
@@ -162,4 +173,6 @@ public class CameraMan extends Scene {
         //videoExport.setLoadPixels(false); // calls loadpixels
         videoExport.setQuality(props.getInt("visualizer.capture.quality"), 128);
     }
+
+
 }

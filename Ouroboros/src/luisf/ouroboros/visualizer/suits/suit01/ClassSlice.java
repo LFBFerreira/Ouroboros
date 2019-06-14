@@ -1,7 +1,7 @@
 package luisf.ouroboros.visualizer.suits.suit01;
 
-import luisf.ouroboros.analyzer.models.ClassModel;
-import luisf.ouroboros.analyzer.models.MethodModel;
+import luisf.ouroboros.models.ClassModel;
+import luisf.ouroboros.models.MethodModel;
 import luisf.ouroboros.visualizer.DrawableInterface;
 import processing.core.PApplet;
 import processing.core.PGraphics;

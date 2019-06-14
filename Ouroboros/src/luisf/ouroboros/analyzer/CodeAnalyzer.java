@@ -1,10 +1,10 @@
 package luisf.ouroboros.analyzer;
 
-import luisf.ouroboros.analyzer.models.DeclarationModel;
-import luisf.ouroboros.analyzer.models.MethodModel;
+import luisf.ouroboros.models.DeclarationModel;
+import luisf.ouroboros.models.MethodModel;
 import luisf.ouroboros.common.Handy;
-import luisf.ouroboros.analyzer.models.ClassModel;
-import luisf.ouroboros.analyzer.models.ClassModelInterface;
+import luisf.ouroboros.models.ClassModel;
+import luisf.ouroboros.models.ClassModelInterface;
 
 import java.io.File;
 import java.util.*;

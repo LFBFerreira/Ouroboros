@@ -1,6 +1,6 @@
-package luisf.ouroboros.analyzer.models;
+package luisf.ouroboros.models;
 
-import luisf.ouroboros.analyzer.models.metrics.CodeMetricEnum;
+import luisf.ouroboros.models.metrics.CodeMetricEnum;
 
 import java.io.Serializable;
 

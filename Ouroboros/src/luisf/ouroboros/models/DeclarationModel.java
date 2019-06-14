@@ -1,4 +1,4 @@
-package luisf.ouroboros.analyzer.models;
+package luisf.ouroboros.models;
 
 import luisf.ouroboros.analyzer.ModifierEnum;
 

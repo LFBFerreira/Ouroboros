@@ -1,15 +1,9 @@
-package luisf.ouroboros.analyzer.models;
-
-import luisf.ouroboros.common.Handy;
+package luisf.ouroboros.models;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 
 
 public class ClassModel implements ClassModelInterface, Serializable {

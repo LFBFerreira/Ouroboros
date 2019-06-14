@@ -1,4 +1,4 @@
-package luisf.ouroboros.analyzer.models.metrics;
+package luisf.ouroboros.models.metrics;
 
 public enum CodeMetricEnum {
     BRACE_OPEN,

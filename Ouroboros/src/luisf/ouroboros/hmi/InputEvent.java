@@ -44,7 +44,7 @@ public class InputEvent {
 
     // Public
 
-    public float getFloatValue() {
+    public float getAsFloat() {
         if (values.isEmpty())
         {
             log.severe("There are no values for this input");
@@ -54,7 +54,7 @@ public class InputEvent {
         return values.get(0).floatValue();
     }
 
-    public Boolean getBooleanValue() {
+    public Boolean getAsBoolean() {
         if (values.isEmpty())
         {
             log.severe("There are no values for this input");
@@ -64,7 +64,7 @@ public class InputEvent {
         return values.get(0) == 1;
     }
 
-    public PVector getXYValue() {
+    public PVector getAsXY() {
         if (values.size() < 2)
         {
             log.severe("There are not enough values for this input");
@@ -73,6 +73,7 @@ public class InputEvent {
 
         return new PVector(values.get(0).floatValue(), values.get(1).floatValue());
     }
+
 
     // ================================================================
 

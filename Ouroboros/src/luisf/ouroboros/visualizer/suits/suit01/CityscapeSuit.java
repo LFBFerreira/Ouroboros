@@ -3,6 +3,7 @@ package luisf.ouroboros.visualizer.suits.suit01;
 
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.hmi.InputEvent;
+import luisf.ouroboros.hmi.OscStringBuilder;
 import luisf.ouroboros.models.ClassModel;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
@@ -29,6 +30,8 @@ public class CityscapeSuit extends SuitBase {
     private List<ClassSlice> slices = new LinkedList<>();
 
     private int numberSlicesToDraw = 1;
+
+    OscStringBuilder oscBuilder = new OscStringBuilder();
 
 
     // ================================================================

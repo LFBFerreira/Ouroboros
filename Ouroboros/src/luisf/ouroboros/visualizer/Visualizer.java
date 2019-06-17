@@ -152,6 +152,11 @@ public class Visualizer extends PApplet implements InputListennerInterface {
         // draw suit
         suit.draw(suitGraphics);
 
+        if (lightsOn)
+        {
+            suitGraphics.lights();
+        }
+
         cameraMan.endDraw();
 
         cameraMan.display();

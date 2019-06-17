@@ -4,6 +4,7 @@ import com.hamoid.VideoExport;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.hmi.InputEvent;
 import luisf.ouroboros.hmi.InputListennerInterface;
+import luisf.ouroboros.hmi.OscStringBuilder;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
@@ -160,7 +161,10 @@ public class CameraMan extends Scene implements InputListennerInterface {
 
     @Override
     public void reactToInput(InputEvent input) {
-        log.info("Camera man input: " + input.getFloatValue());
+        if (input.id.equals(OscStringBuilder.build(3, "xy")))
+        {
+            log.info(Handy.f("XY: %.2f, %.2f", input.getAsXY().x, input.getAsXY().y));
+        }
     }
 
     // ================================================================
@@ -173,6 +177,4 @@ public class CameraMan extends Scene implements InputListennerInterface {
         //videoExport.setLoadPixels(false); // calls loadpixels
         videoExport.setQuality(props.getInt("visualizer.capture.quality"), 128);
     }
-
-
 }

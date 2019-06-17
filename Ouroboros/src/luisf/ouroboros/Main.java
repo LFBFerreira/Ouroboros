@@ -71,14 +71,14 @@ public class Main {
         File projectFilesFolder = Handy.validateFolderPath(argumentsMapping.get(codeFolderArgument));
         if (projectFilesFolder == null) {
             log.severe(Handy.f("The code folder is invalid"));
-            System.exit(0);
+            //System.exit(0);
         }
 
         // validate models output folder
         File modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsOutputFolderArgument));
         if (modelsOutputFolder == null) {
             log.severe(Handy.f("The models output folder is invalid"));
-            System.exit(0);
+            //System.exit(0);
         }
 
         // validate visuals output folder

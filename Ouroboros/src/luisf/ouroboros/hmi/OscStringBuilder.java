@@ -10,4 +10,9 @@ public class OscStringBuilder {
     {
         return separator + String.valueOf(page) + separator + control;
     }
+
+    public static String build(int page, String control, int group)
+    {
+        return separator + String.valueOf(page) + separator + control + separator + String.valueOf(group);
+    }
 }

@@ -6,7 +6,9 @@
     <JAVADOC>
       <root url="file://$PROJECT_DIR$/libraries/proscene-3.0.0/reference" />
     </JAVADOC>
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../../Processing/libraries/proscene/src" />
+    </SOURCES>
     <jarDirectory url="file://$PROJECT_DIR$/libraries/proscene-3.0.0/library" recursive="false" />
   </library>
 </component>

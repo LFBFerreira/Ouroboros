@@ -8,6 +8,7 @@ import luisf.ouroboros.hmi.OscStringBuilder;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import remixlab.proscene.Scene;
 
@@ -150,8 +151,7 @@ public class CameraMan extends Scene implements InputListennerInterface {
         }
     }
 
-    public Boolean isCapturing()
-    {
+    public Boolean isCapturing() {
         return capturing;
     }
 
@@ -159,12 +159,18 @@ public class CameraMan extends Scene implements InputListennerInterface {
 
     // InputListennerInterface
 
+    private float angleSensitityY = 10;
+
     @Override
     public void reactToInput(InputEvent input) {
-        if (input.id.equals(OscStringBuilder.build(3, "xy")))
-        {
+        if (input.id.equals(OscStringBuilder.build(1, "multixy1", 1))) {
             log.info(Handy.f("XY: %.2f, %.2f", input.getAsXY().x, input.getAsXY().y));
+
+        }else if (input.id.equals(OscStringBuilder.build(1, "push1"))) {
+            log.info("Fit scene");
+            interpolateToFitScene();
         }
+
     }
 
     // ================================================================

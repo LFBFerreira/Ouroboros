@@ -6,9 +6,11 @@ import luisf.ouroboros.hmi.InputEvent;
 import luisf.ouroboros.hmi.OscStringBuilder;
 import luisf.ouroboros.models.ClassModel;
 import luisf.ouroboros.properties.PropertyManager;
+import luisf.ouroboros.visualizer.suits.Illuminati;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.core.PShape;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,19 +22,21 @@ public class CityscapeSuit extends SuitBase {
     private final PropertyManager props = PropertyManager.getInstance();
 
     private float classMargin = 20;
-    private float classThickness = 20;
-    private float methodThickness = 8;
-    private float methodMargin = 4;
-    private float methodLineIncrement = 2;
-    private int classFillColor;
-    private int classLineColor;
 
     private List<ClassSlice> slices = new LinkedList<>();
 
     private int numberSlicesToDraw = 1;
+    private int floorColor = 0xFFFFFFFF;
 
-    OscStringBuilder oscBuilder = new OscStringBuilder();
+    private Boolean lightsOn = true;
 
+    private OscStringBuilder oscBuilder = new OscStringBuilder();
+
+    private Illuminati illuminati;
+
+    private PShape floor;
+    private final int floorWidth = 500;
+    private final int floorDepth = 1100;
 
     // ================================================================
 
@@ -43,6 +47,8 @@ public class CityscapeSuit extends SuitBase {
      */
     public CityscapeSuit(List<ClassModel> models, PGraphics graphics, PApplet parent) {
         super(models, graphics, parent);
+
+        illuminati = new Illuminati(graphics, parent);
     }
 
     // ================================================================
@@ -52,27 +58,21 @@ public class CityscapeSuit extends SuitBase {
     public void initialize() {
         loadProperties();
 
-        models.forEach(m -> slices.add(new ClassSlice(
-                m,
-                classThickness,
-                methodThickness,
-                methodMargin,
-                methodLineIncrement,
-                classFillColor,
-                classLineColor,
-                parent)));
+        // create and initialize a ClassSlice for each class model
+        models.forEach(m -> {
+            ClassSlice slice = new ClassSlice(m, parent);
+            slice.initialize();
+            slices.add(slice);
+        });
 
         numberSlicesToDraw = slices.size();
+
+        floor = createFloor();
     }
 
     private void loadProperties() {
         classMargin = props.getInt("visualizer.suit01.classMargin");
-        classThickness = props.getInt("visualizer.suit01.classThickness");
-        methodThickness = props.getInt("visualizer.suit01.methodThickness");
-        methodMargin = props.getInt("visualizer.suit01.methodMargin");
-        methodLineIncrement = props.getInt("visualizer.suit01.methodLineIncrement");
-        classFillColor = props.getInt("visualizer.suit01.classFillColor");
-        classLineColor = props.getInt("visualizer.suit01.classLineColor");
+        floorColor = props.getInt("visualizer.floorColor");
     }
 
     // ================================================================
@@ -84,6 +84,16 @@ public class CityscapeSuit extends SuitBase {
         graphics.beginDraw();
 
         graphics.pushMatrix();
+
+        illuminati.turnLights(lightsOn, true);
+
+        drawFloor();
+
+        // debug sphere
+//        graphics.pushStyle();
+//        graphics.noStroke();
+//        graphics.sphere(100);
+//        graphics.popStyle();
 
         // pushes everything back, so the model is centered in the world
         graphics.translate(0, 0, numberSlicesToDraw / -2f * classMargin * 2);
@@ -112,6 +122,12 @@ public class CityscapeSuit extends SuitBase {
                 }
                 log.info(Handy.f("Slices to draw: %d / %d", numberSlicesToDraw, slices.size()));
                 break;
+
+            case 'l':
+                lightsOn = !lightsOn;
+                log.info(Handy.f("Lights are %s", lightsOn ? "On" : "Off"));
+                break;
+
         }
     }
 
@@ -128,6 +144,24 @@ public class CityscapeSuit extends SuitBase {
 
     // Helpers
 
+    private void drawFloor() {
+        graphics.pushMatrix();
+
+        // lower the floor so that the surface matches y = 0
+        graphics.translate(0, 5, 0);
+
+        graphics.shape(floor);
+
+        graphics.popMatrix();
+    }
+
+    private PShape createFloor() {
+        PShape floor = Shaper.createBox(floorWidth, 4, floorDepth, parent);
+        floor.setFill(floorColor);
+        floor.setStroke(200);
+        return floor;
+    }
+
     private void drawSlices(List<ClassSlice> slicesList, int slicesToDraw) {
         if (slicesToDraw > slicesList.size() || slicesToDraw < 1) {
             slicesToDraw = slicesList.size();
@@ -135,7 +169,8 @@ public class CityscapeSuit extends SuitBase {
         }
 
         int i = 0;
-        float zOffset = classThickness + classMargin;
+        // class depth is the same for all instances
+        float zOffset = slices.get(0).getClassDepth() + classMargin;
 
         for (ClassSlice slice : slicesList) {
             graphics.pushMatrix();

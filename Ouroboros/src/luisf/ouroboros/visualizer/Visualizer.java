@@ -40,13 +40,8 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
     private final String renderer = P3D;
 
-    private PShape floor;
-    private final int floorWidth = 500;
-    private final int floorDepth = 1100;
 
     private int[] backgroundColors = new int[]{0xFFD5D8DC, 0xFFACB5C6};
-
-    private Boolean lightsOn = true;
 
     private HumanMachineInput hmi;
 
@@ -111,8 +106,6 @@ public class Visualizer extends PApplet implements InputListennerInterface {
         suit = new CityscapeSuit(models, suitGraphics, this);
         suit.initialize();
 
-        floor = createFloor();
-
         hmi = new HumanMachineInput(props.getInt("hmi.oscPort"), this);
         hmi.registerListeners(new InputListennerInterface[]{this, cameraMan, suit});
 
@@ -136,8 +129,6 @@ public class Visualizer extends PApplet implements InputListennerInterface {
     public void draw() {
         setWindowTitle();
 
-        lights();
-
         // Background
         //backgroundGraphics(100);
         image(backgroundGraphics, 0, 0);
@@ -146,16 +137,8 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
         suitGraphics.clear();
 
-        // draw floow
-        drawFloor(suitGraphics);
-
         // draw suit
         suit.draw(suitGraphics);
-
-        if (lightsOn)
-        {
-            suitGraphics.lights();
-        }
 
         cameraMan.endDraw();
 
@@ -171,13 +154,6 @@ public class Visualizer extends PApplet implements InputListennerInterface {
      */
 
     public void keyPressed() {
-
-        switch (key) {
-            case 'l':
-                lightsOn = !lightsOn;
-                log.info(Handy.f("Lights are %s", lightsOn ? "On" : "Off"));
-                break;
-        }
 
         // forward the event
         suit.keyPressed(key, keyCode);
@@ -215,25 +191,9 @@ public class Visualizer extends PApplet implements InputListennerInterface {
         backgroundGraphics.endDraw();
     }
 
-    private PShape createFloor()
-    {
-        PShape floor = createShape(BOX, floorWidth, 4, floorDepth);
-        floor.setFill(props.getInt("visualizer.floorColor"));
-        floor.setStroke(200);
 
-        return floor;
-    }
 
-    private void drawFloor(PGraphics graphics) {
-        graphics.pushMatrix();
 
-        // lower the floor so that the surface matches y = 0
-        graphics.translate(0, 5, 0);
-
-        graphics.shape(floor);
-
-        graphics.popMatrix();
-    }
 
     private void oscEvent(OscMessage theOscMessage) {
         String addr = theOscMessage.addrPattern();

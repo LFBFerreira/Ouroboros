@@ -63,7 +63,7 @@ public class CameraMan extends Scene implements InputListennerInterface {
     // Public
 
     public void initialize() {
-        setRadius(700);
+        setRadius(900);
 
         setGridVisualHint(false);
         setAxesVisualHint(false);

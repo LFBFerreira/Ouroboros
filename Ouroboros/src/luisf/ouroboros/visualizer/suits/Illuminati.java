@@ -14,10 +14,11 @@ public class Illuminati extends GraphicsResource {
     private final PropertyManager props = PropertyManager.getInstance();
 
     private PVector center = new PVector();
-    private float angleStep = PConstants.PI * 0.005f;
+    private float angleStep = PConstants.PI * 0.003f;
     private float currentAngle = 0;
-    private float radius = 400;
-    private float height = 300;
+    private float rotationRadius = 900;
+    private float indicatorRadius = 15;
+    private float height = 200;
 
     // ================================================================
 
@@ -37,8 +38,8 @@ public class Illuminati extends GraphicsResource {
             graphics.ambientLight(150, 150, 150);
             graphics.directionalLight(128, 128, 128, 0, 0, -1);
 
-            float xCoord = center.x + radius * parent.cos(currentAngle);
-            float yCoord = center.y + radius * parent.sin(currentAngle);
+            float xCoord = center.x + rotationRadius * parent.cos(currentAngle);
+            float yCoord = center.y + rotationRadius * parent.sin(currentAngle);
             currentAngle += angleStep;
 
 //            graphics.spotLight(200, 50, 50,
@@ -52,8 +53,8 @@ public class Illuminati extends GraphicsResource {
             if (showIndicator) {
                 // draw direction line
                 graphics.pushStyle();
-                graphics.strokeWeight(2);
-                graphics.stroke(0, 0, 255);
+                graphics.strokeWeight(0.5f);
+                graphics.stroke(50, 50, 255);
                 graphics.line(xCoord, -height, yCoord, 0, 0, 0);
                 graphics.popStyle();
 
@@ -62,9 +63,9 @@ public class Illuminati extends GraphicsResource {
                 graphics.rotateX(PConstants.HALF_PI);
                 graphics.translate(xCoord, yCoord, height);
                 graphics.pushStyle();
-                graphics.fill(255);
+                graphics.fill(200);
                 graphics.noStroke();
-                graphics.sphere(30);
+                graphics.sphere(indicatorRadius);
                 graphics.popStyle();
                 graphics.popMatrix();
             }

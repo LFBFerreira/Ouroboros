@@ -35,8 +35,8 @@ public class CityscapeSuit extends SuitBase {
     private Illuminati illuminati;
 
     private PShape floor;
-    private final int floorWidth = 500;
-    private final int floorDepth = 1100;
+    private final int floorWidth = 800;
+    private final int floorDepth = 1600;
 
     // ================================================================
 

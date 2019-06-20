@@ -1,11 +1,10 @@
 package luisf.ouroboros.visualizer;
 
+import luisf.ouroboros.common.colortools.ColorTools;
 import luisf.ouroboros.hmi.HumanMachineInput;
 import luisf.ouroboros.hmi.InputEvent;
 import luisf.ouroboros.hmi.InputListennerInterface;
 import luisf.ouroboros.models.ClassModel;
-import luisf.ouroboros.common.Handy;
-import luisf.ouroboros.common.colortools.ColorTools;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.scene.CameraMan;
 import luisf.ouroboros.visualizer.suits.SuitBase;
@@ -13,7 +12,6 @@ import luisf.ouroboros.visualizer.suits.suit01.CityscapeSuit;
 import oscP5.OscMessage;
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.core.PShape;
 import processing.core.PVector;
 import processing.opengl.PGraphics3D;
 
@@ -49,14 +47,22 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
     /**
      * Static Launcher
+     * available arguments at: https://github.com/processing/processing/blob/master/core/src/processing/core/PApplet.java
      *
      * @param graphicsFolder
      * @param models
      */
     public static void launchGenerator(File graphicsFolder, List<ClassModel> models) {
+        PropertyManager props = PropertyManager.getInstance();
+
         Visualizer visualizer = new Visualizer(graphicsFolder, models);
 
-        runSketch(new String[]{""}, visualizer);
+        int screenIndex = props.getInt("visualizer.displayScreen");
+        log.info("Displaying on Screen " + screenIndex);
+
+        String[] args = new String[]{"--display=" + screenIndex, visualizer.getClass().getSimpleName()};
+
+        runSketch(args, visualizer);
     }
 
     // ================================================================
@@ -175,7 +181,7 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
     private void setWindowTitle() {
         surface.setTitle(String.format("Ouroboros (%d fps) %s",
-                (int)frameRate,
+                (int) frameRate,
                 cameraMan.isCapturing() ? "[Recording]" : ""));
     }
 
@@ -190,9 +196,6 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
         backgroundGraphics.endDraw();
     }
-
-
-
 
 
     private void oscEvent(OscMessage theOscMessage) {

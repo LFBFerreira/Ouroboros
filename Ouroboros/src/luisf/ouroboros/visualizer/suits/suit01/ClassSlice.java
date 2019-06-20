@@ -19,7 +19,6 @@ public class ClassSlice implements DrawableInterface {
     private float methodDepth = 0;
     private float methodMargin = 0;
     private float methodHeightIncrement = 0;
-    private float methodThickness = 8;
 
     private float classDepth = 0;
     private float sliceWidth = 0;
@@ -64,27 +63,22 @@ public class ClassSlice implements DrawableInterface {
             }
         }
 
-        sliceWidth = classModel.getMethods().size() * (methodThickness + methodMargin * 2);
+        sliceWidth = classModel.getMethods().size() * (methodDepth + methodMargin * 2);
 
         classSlice = Shaper.createBox(sliceWidth > 0 ? sliceWidth : zeroWidth, sliceHeight + floorOffset * 2, classDepth, parent);
         classSlice.setFill(classFillColor);
         classSlice.setStroke(classLineColor);
     }
 
-    private void loadProperties() {
-        classFillColor = props.getInt("visualizer.suit01.classFillColor");
-        classLineColor = props.getInt("visualizer.suit01.classLineColor");
-        methodThickness = props.getInt("visualizer.suit01.methodThickness");
-        methodMargin = props.getInt("visualizer.suit01.methodMargin");
-        classDepth = props.getInt("visualizer.suit01.classThickness");
-        methodHeightIncrement = props.getInt("visualizer.suit01.methodLineIncrement");
-
-    }
-
-    public float getClassDepth()
-    {
+    public float getClassDepth() {
         return classDepth;
     }
+
+    public float getSliceHeight() {
+        return sliceHeight;
+    }
+
+
     // ================================================================
 
     // DrawableInterface
@@ -93,12 +87,8 @@ public class ClassSlice implements DrawableInterface {
     public void draw(PGraphics graphics) {
 
         // draw class slice
-//        graphics.pushStyle();
-//        graphics.fill(50, 50, 255);
-//        graphics.noStroke();
-        graphics.shape(classSlice);
-//        graphics.box(sliceWidth > 0 ? sliceWidth : zeroWidth, sliceHeight + floorOffset * 2, classDepth);
-//        graphics.popStyle();
+        //graphics.shape(classSlice);
+//        classSlice.setShininess();
 
         // one time offset, so the "methods" are drawn from the corner and not the center of the box
         graphics.translate(-sliceWidth / 2 + methodMargin + methodDepth / 2, 0, 0);
@@ -122,16 +112,16 @@ public class ClassSlice implements DrawableInterface {
 
     // ================================================================
 
-
-    // Public
-
-    public float getSliceHeight() {
-        return sliceHeight;
-    }
-
-    // ================================================================
-
     // Helpers
 
+    private void loadProperties() {
+        classFillColor = props.getInt("visualizer.suit01.classFillColor");
+        classLineColor = props.getInt("visualizer.suit01.classLineColor");
+        methodDepth = props.getInt("visualizer.suit01.methodThickness");
+        methodMargin = props.getInt("visualizer.suit01.methodMargin");
+        classDepth = props.getInt("visualizer.suit01.classThickness");
+        methodHeightIncrement = props.getInt("visualizer.suit01.methodLineIncrement");
+
+    }
 
 }

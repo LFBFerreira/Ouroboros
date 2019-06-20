@@ -81,7 +81,7 @@ public class CityscapeSuit extends SuitBase {
 
     @Override
     public void draw(PGraphics g) {
-        graphics.beginDraw();
+        //graphics.beginDraw();
 
         graphics.pushMatrix();
 
@@ -104,7 +104,7 @@ public class CityscapeSuit extends SuitBase {
 
         graphics.popMatrix();
 
-        graphics.endDraw();
+        //graphics.endDraw();
     }
 
     @Override

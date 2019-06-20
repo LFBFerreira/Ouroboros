@@ -6,6 +6,7 @@ import luisf.ouroboros.hmi.InputEvent;
 import luisf.ouroboros.hmi.InputListennerInterface;
 import luisf.ouroboros.models.ClassModel;
 import luisf.ouroboros.properties.PropertyManager;
+import luisf.ouroboros.visualizer.scene.CameraControlAgent;
 import luisf.ouroboros.visualizer.scene.CameraMan;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import luisf.ouroboros.visualizer.suits.suit01.CityscapeSuit;
@@ -14,6 +15,7 @@ import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 import processing.opengl.PGraphics3D;
+import remixlab.proscene.MouseAgent;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -42,6 +44,8 @@ public class Visualizer extends PApplet implements InputListennerInterface {
     private int[] backgroundColors = new int[]{0xFFD5D8DC, 0xFFACB5C6};
 
     private HumanMachineInput hmi;
+
+    private CameraControlAgent oscControl ;
 
     // ================================================================
 
@@ -106,14 +110,27 @@ public class Visualizer extends PApplet implements InputListennerInterface {
         suitGraphics = createGraphics(windowWidth, windowHeight, renderer);
         backgroundGraphics = createGraphics(windowWidth, windowHeight, renderer);
 
-        cameraMan = new CameraMan(this, (PGraphics3D) suitGraphics, graphicsFolder);
+        cameraMan = new CameraMan(this, suitGraphics, graphicsFolder);
         cameraMan.initialize();
+
+        oscControl = new CameraControlAgent(cameraMan);
+        registerMethod("mouseEvent", oscControl);
+
+        //cameraMan.inputHandler().unregisterAgent(cameraMan.mouseAgent());
+        //cameraMan.inputHandler().registerAgent(oscControl);
+        //cameraMan.setAgent(oscControl);
+
+//        if(cameraMan.mouseAgent() != oscControl)
+//        {
+//            log.severe("Not registered!");
+//        }
+        //cameraMan.eyeFrame().setMotionBinding(MouseAgent.NO_BUTTON, "lookAround");
 
         suit = new CityscapeSuit(models, suitGraphics, this);
         suit.initialize();
 
         hmi = new HumanMachineInput(props.getInt("hmi.oscPort"), this);
-        hmi.registerListeners(new InputListennerInterface[]{this, cameraMan, suit});
+        hmi.registerListeners(new InputListennerInterface[]{this, cameraMan, suit, oscControl});
 
         createBackground();
     }
@@ -140,11 +157,17 @@ public class Visualizer extends PApplet implements InputListennerInterface {
         image(backgroundGraphics, 0, 0);
 
         cameraMan.beginDraw();
+        //cameraMan.changeLook();
 
         suitGraphics.clear();
 
+        suitGraphics.beginDraw();
+//        suitGraphics.translate(500, 0, 0);
+
         // draw suit
         suit.draw(suitGraphics);
+
+        suitGraphics.endDraw();
 
         cameraMan.endDraw();
 
@@ -197,22 +220,4 @@ public class Visualizer extends PApplet implements InputListennerInterface {
         backgroundGraphics.endDraw();
     }
 
-
-    private void oscEvent(OscMessage theOscMessage) {
-        String addr = theOscMessage.addrPattern();
-
-        /* print the address pattern and the typetag of the received OscMessage */
-        log.info("Viz event addrpattern: " + theOscMessage.addrPattern() + " typetag: " + theOscMessage.typetag());
-
-//        if (addr.equals("/3/fader1")) {
-//            log.info("FADER 1");
-//        } else if (addr.equals("/1/fader2")) {
-//            log.info("FADER 2");
-//        } else if (addr.equals("/1/fader3")) {
-//            log.info("CROSSFADE");
-//        } else if (addr.equals("/1/rotary1")) {
-//            log.info("ROTARY INPUT 1");
-//        } else if (addr.equals("/3/xy")) {
-//        }
-    }
 }

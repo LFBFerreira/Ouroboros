@@ -45,8 +45,7 @@ public class InputEvent {
     // Public
 
     public float getAsFloat() {
-        if (values.isEmpty())
-        {
+        if (values.isEmpty()) {
             log.severe("There are no values for this input");
             return 0;
         }
@@ -55,8 +54,7 @@ public class InputEvent {
     }
 
     public Boolean getAsBoolean() {
-        if (values.isEmpty())
-        {
+        if (values.isEmpty()) {
             log.severe("There are no values for this input");
             return false;
         }
@@ -65,8 +63,7 @@ public class InputEvent {
     }
 
     public PVector getAsXY() {
-        if (values.size() < 2)
-        {
+        if (values.size() < 2) {
             log.severe("There are not enough values for this input");
             return new PVector();
         }
@@ -84,10 +81,17 @@ public class InputEvent {
 
         String types = message.typetag();
 
+        float value = 0;
         for (int i = 0; i < types.length(); i++) {
             switch (types.charAt(i)) {
                 case 'f':
-                    values.add(message.get(i).floatValue());
+                    try {
+                        value = message.get(i).floatValue();
+                    } catch (NumberFormatException e) {
+                        log.severe("EXCEPTION!");
+                        e.printStackTrace();
+                    }
+                    values.add(value);
                     break;
 
                 default:
@@ -95,6 +99,6 @@ public class InputEvent {
             }
         }
 
-        return  values;
+        return values;
     }
 }

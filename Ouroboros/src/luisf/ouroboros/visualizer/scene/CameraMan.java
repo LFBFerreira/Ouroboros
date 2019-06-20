@@ -4,12 +4,11 @@ import com.hamoid.VideoExport;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.hmi.InputEvent;
 import luisf.ouroboros.hmi.InputListennerInterface;
-import luisf.ouroboros.hmi.OscStringBuilder;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PGraphics;
+import remixlab.dandelion.geom.Vec;
 import remixlab.proscene.Scene;
 
 import java.io.File;
@@ -46,6 +45,9 @@ public class CameraMan extends Scene implements InputListennerInterface {
         this.outputFolder = outputFolder;
     }
 
+    public void setAgent(CameraControlAgent agent) {
+        defMotionAgent = agent;
+    }
     // ================================================================
 
     /**
@@ -121,6 +123,16 @@ public class CameraMan extends Scene implements InputListennerInterface {
      */
     @Override
     public void proscenium() {
+
+    }
+
+    private Vec lastlook = new Vec(0, 0);
+
+    public void changeLook()
+    {
+        lastlook = eye.position();
+        lastlook.add(0, 10, 0);
+        eye().lookAt(lastlook);
     }
 
     public void keyPressed(int key, int keyCode) {
@@ -140,14 +152,46 @@ public class CameraMan extends Scene implements InputListennerInterface {
                 case 98: // F2
                     endCapture();
                     break;
+
+                case 'w':
+                    lastlook = eye.position();
+                    lastlook.add(0, 10, 0);
+                    eye().setPosition(lastlook);
+                    break;
+
+                case 's':
+                    lastlook = eye.position();
+                    lastlook.add(0, -10, 0);
+                    eye().setPosition(lastlook);
+                    break;
+
+                case 'c':
+//                    eye().sceneCenter();
+                    eye().interpolateToFitScene();
+                    break;
             }
         }
+        else
+        {
+            // normal key captures
+            switch (key) {
+                case 'w':
+                    lastlook = eye.viewDirection();
+                    lastlook.add(0, 10, 0);
+                    eye().lookAt(lastlook);
+                    break;
 
-        // normal key captures
-        switch (key) {
-            case '+':
+                case 's':
+                    lastlook = eye.viewDirection();
+                    lastlook.add(0, -10, 0);
+                    eye().lookAt(lastlook);
+                    break;
 
-                break;
+                case 'c':
+//                    eye().sceneCenter();
+                    eye().interpolateToFitScene();
+                    break;
+            }
         }
     }
 
@@ -163,13 +207,13 @@ public class CameraMan extends Scene implements InputListennerInterface {
 
     @Override
     public void reactToInput(InputEvent input) {
-        if (input.id.equals(OscStringBuilder.build(1, "multixy1", 1))) {
-            log.info(Handy.f("XY: %.2f, %.2f", input.getAsXY().x, input.getAsXY().y));
-
-        }else if (input.id.equals(OscStringBuilder.build(1, "push1"))) {
-            log.info("Fit scene");
-            interpolateToFitScene();
-        }
+//        if (input.id.equals(OscStringBuilder.build(1, "multixy1", 1))) {
+//            log.info(Handy.f("XY: %.2f, %.2f", input.getAsXY().x, input.getAsXY().y));
+//
+//        }else if (input.id.equals(OscStringBuilder.build(1, "push1"))) {
+//            log.info("Fit scene");
+//            interpolateToFitScene();
+//        }
 
     }
 

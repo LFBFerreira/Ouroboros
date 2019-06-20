@@ -8,7 +8,6 @@ import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -29,7 +28,6 @@ public class PropertyManager {
     private Parameters params;
 
     private String configFilePath = "";
-    private URL configFileUrl;
 
     private Boolean needsSave = false;
 
@@ -100,7 +98,7 @@ public class PropertyManager {
 
         // create the file if it doesn't exist already
         if (configurationFile == null) {
-            configurationFile = new File(configFileUrl.getFile());
+            configurationFile = new File(configFilePath);
         }
 
         // try save

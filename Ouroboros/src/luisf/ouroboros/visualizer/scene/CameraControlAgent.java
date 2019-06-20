@@ -3,112 +3,135 @@ package luisf.ouroboros.visualizer.scene;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.hmi.InputEvent;
 import luisf.ouroboros.hmi.InputListennerInterface;
+import luisf.ouroboros.hmi.OscStringBuilder;
 import processing.core.PApplet;
-import processing.event.MouseEvent;
-import remixlab.bias.Agent;
-import remixlab.bias.BogusEvent;
-import remixlab.bias.event.*;
-import remixlab.proscene.MouseAgent;
+import processing.core.PConstants;
+import remixlab.dandelion.core.Eye;
+import remixlab.dandelion.geom.Rotation;
+import remixlab.dandelion.geom.Vec;
 import remixlab.proscene.Scene;
 
 import java.util.logging.Logger;
 
-public class CameraControlAgent extends MouseAgent implements InputListennerInterface {
+public class CameraControlAgent implements InputListennerInterface {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
+    private PApplet parent;
+    private Scene scene;
+    private Eye eye;
+
     public CameraControlAgent(Scene scene) {
-        super(scene);
+        parent = scene.pApplet();
+        this.scene = scene;
+        this.eye = scene.eye();
     }
 
-    public void setPickingMode(MouseAgent.PickingMode mode) {
-        pMode = mode;
-    }
-
-    public MouseAgent.PickingMode pickingMode() {
-        return pMode;
-    }
 
     // ================================================================
 
 
+//    private void theRest(int x, int y, int action, int button, int modifiers, int count) {
+//        move = action == processing.event.MouseEvent.MOVE;
+//        press = action == processing.event.MouseEvent.PRESS;
+//        drag = action == processing.event.MouseEvent.DRAG;
+//        release = action == processing.event.MouseEvent.RELEASE;
+//
+//        if (move || press || drag || release) {
+//            log.info(Handy.f("%s \t%s\t%s\t%s\t%s\t%s", x, y, action, button, modifiers, count));
+//
+//            currentEvent = new DOF2Event(prevEvent, x - scene.originCorner().x(), y - scene.originCorner().y(),
+//                    modifiers, move ? BogusEvent.NO_ID : button);
+//
+//            if (move && (pickingMode() == MouseAgent.PickingMode.MOVE)) {
+//                updateTrackedGrabber(currentEvent);
+//            }
+//
+//            handle(press ? currentEvent.fire() : release ? currentEvent.flush() : currentEvent);
+//            prevEvent = currentEvent.get();
+//            return;
+//        }
+//
+//        if (action == processing.event.MouseEvent.WHEEL) {
+//            log.info(Handy.f("second IF"));
+//            handle(new DOF1Event(count, modifiers, WHEEL_ID));
+//            return;
+//        }
+//
+//        if (action == processing.event.MouseEvent.CLICK) {
+//            log.info(Handy.f("third If"));
+//            ClickEvent bogusClickEvent = new ClickEvent(x - scene.originCorner().x(), y - scene.originCorner().y(),
+//                    modifiers, button, count);
+//
+//            if (pickingMode() == MouseAgent.PickingMode.CLICK) {
+//                updateTrackedGrabber(bogusClickEvent);
+//            }
+//
+//            handle(bogusClickEvent);
+//            return;
+//        }
+//    }
 
-    private void theRest(int x, int y, int action, int button, int modifiers, int count) {
-        move = action == processing.event.MouseEvent.MOVE;
-        press = action == processing.event.MouseEvent.PRESS;
-        drag = action == processing.event.MouseEvent.DRAG;
-        release = action == processing.event.MouseEvent.RELEASE;
-
-        if (move || press || drag || release) {
-            log.info(Handy.f("%s \t%s\t%s\t%s\t%s\t%s", x, y, action, button, modifiers, count));
-
-            currentEvent = new DOF2Event(prevEvent, x - scene.originCorner().x(), y - scene.originCorner().y(),
-                    modifiers, move ? BogusEvent.NO_ID : button);
-
-            if (move && (pickingMode() == MouseAgent.PickingMode.MOVE)) {
-                updateTrackedGrabber(currentEvent);
-            }
-
-            handle(press ? currentEvent.fire() : release ? currentEvent.flush() : currentEvent);
-            prevEvent = currentEvent.get();
-            return;
-        }
-
-        if (action == processing.event.MouseEvent.WHEEL) {
-            log.info(Handy.f("second IF"));
-            handle(new DOF1Event(count, modifiers, WHEEL_ID));
-            return;
-        }
-
-        if (action == processing.event.MouseEvent.CLICK) {
-            log.info(Handy.f("third If"));
-            ClickEvent bogusClickEvent = new ClickEvent(x - scene.originCorner().x(), y - scene.originCorner().y(),
-                    modifiers, button, count);
-
-            if (pickingMode() == MouseAgent.PickingMode.CLICK) {
-                updateTrackedGrabber(bogusClickEvent);
-            }
-
-            handle(bogusClickEvent);
-            return;
-        }
-    }
-
-    public void mouseEvent(MouseEvent e) {
-//        theRest(e.getX(), e.getY(), e.getAction(), e.getButton(), e.getModifiers(), e.getCount());
-        //scene.mouseAgent().mouseEvent(e);
-    }
 
     // ================================================================
 
-    Boolean started = false;
 
     @Override
     public void reactToInput(InputEvent input) {
-        if (!started)
-        {
-            click(input.getAsXY().x, input.getAsXY().y);
-            started = true;
+        if (input.id.equals(OscStringBuilder.build(2, "positionXY", 1))) {
+            drag(input.getAsXY().x, input.getAsXY().y);
+        } else if (input.id.equals(OscStringBuilder.build(2, "orientationXY", 1))) {
+            orient(input.getAsXY().y, input.getAsXY().x);
+        } else if (input.id.equals(OscStringBuilder.build(2, "centerPush"))) {
+            if (input.getAsBoolean() == true) {
+                center();
+            }
         }
-
-        drag(input.getAsXY().x, input.getAsXY().y);
     }
 
-    private void click(float normalizedX, float normalizedY) {
-        PApplet parent = scene.pApplet();
 
-        int windowX = (int)parent.map(normalizedX, 0, 1, 0, parent.width);
-        int windowY = (int)parent.map(normalizedY, 0, 1, 0, parent.height);
-
-        theRest(windowX, windowY, MouseEvent.MOVE, 0, 0, 0);
-    }
+    float dragSensitivity = 10;
 
     private void drag(float normalizedX, float normalizedY) {
-        PApplet parent = scene.pApplet();
+        log.info(Handy.f("%.2f, %.2f", normalizedX, normalizedY));
 
-        int windowX = (int)parent.map(normalizedX, 0, 1, 0, parent.width);
-        int windowY = (int)parent.map(normalizedY, 0, 1, 0, parent.height);
+        Vec newPosition = scene.eye().position();
+        newPosition.add(-normalizedX * dragSensitivity, normalizedY * dragSensitivity, 0);
 
-        theRest(windowX, windowY, processing.event.MouseEvent.DRAG, 37, 0, 1);
+        scene.eye().setPosition(newPosition);
     }
 
+    float rotationSensitivity = PConstants.PI;
+
+    private void orient(float normalizedX, float normalizedY) {
+        log.info(Handy.f("%.2f, %.2f", normalizedX, normalizedY));
+
+        Rotation orientation = eye.orientation();
+
+        Vec newDirection = eye.viewDirection();
+        newDirection.add(-normalizedX * rotationSensitivity, normalizedY * rotationSensitivity, 0);
+
+        orientation.fromTo(eye.viewDirection(), newDirection);
+
+        eye.setOrientation(orientation);
+
+        // -------------------------------------------
+
+        eye
+        //        Rotation rotation =
+//        Vec rotatedVector = orientation.rotate(new Vec(normalizedX * rotationSensitivity, normalizedY * rotationSensitivity));
+//
+//        orientation.fromTo(scene.eye().orientation(), rotatedVector);
+
+        // -------------------------------------------
+
+        // NOT relative
+//        Vec direction = eye.viewDirection();
+//        direction.add(-normalizedX * rotationSensitivity, normalizedY * rotationSensitivity, 0);
+//        eye.lookAt(direction);
+    }
+
+
+    private void center() {
+        eye.interpolateToFitScene();
+    }
 }

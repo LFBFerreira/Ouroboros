@@ -45,9 +45,6 @@ public class CameraMan extends Scene implements InputListennerInterface {
         this.outputFolder = outputFolder;
     }
 
-    public void setAgent(CameraControlAgent agent) {
-        defMotionAgent = agent;
-    }
     // ================================================================
 
     /**

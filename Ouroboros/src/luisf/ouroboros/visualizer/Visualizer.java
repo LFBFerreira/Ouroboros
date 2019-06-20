@@ -114,7 +114,6 @@ public class Visualizer extends PApplet implements InputListennerInterface {
         cameraMan.initialize();
 
         oscControl = new CameraControlAgent(cameraMan);
-        registerMethod("mouseEvent", oscControl);
 
         //cameraMan.inputHandler().unregisterAgent(cameraMan.mouseAgent());
         //cameraMan.inputHandler().registerAgent(oscControl);

@@ -44,23 +44,6 @@ public class HumanMachineInput {
     // Helpers
     private void oscEvent(OscMessage theOscMessage) {
         announceEvent(new InputEvent(theOscMessage));
-
-        /* print the address pattern and the typetag of the received OscMessage */
-//        log.info(Handy.f("Add: %s,\tValue: %s (%s)",
-//                theOscMessage.addrPattern(),
-//                theOscMessage.get(0).floatValue(),
-//                theOscMessage.typetag()));
-
-//        if (addr.equals("/3/fader1")) {
-//            log.info("FADER 1");
-//        } else if (addr.equals("/1/fader2")) {
-//            log.info("FADER 2");
-//        } else if (addr.equals("/1/fader3")) {
-//            log.info("CROSSFADE");
-//        } else if (addr.equals("/1/rotary1")) {
-//            log.info("ROTARY INPUT 1");
-//        } else if (addr.equals("/3/xy")) {
-//        }
     }
 
 
@@ -78,7 +61,7 @@ public class HumanMachineInput {
             return;
         }
 
-        //log.info(Handy.f("Event %s: %s - %f", event.inputMethod, event.id, event.getAsFloat()));
+        log.info(Handy.f("Event %s: %s - %f", event.inputMethod, event.id, event.getAsFloat()));
 
         listeners.forEach(l -> l.reactToInput(event));
     }

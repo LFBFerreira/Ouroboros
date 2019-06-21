@@ -6,9 +6,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="96fdb1cb-9c60-4ecc-94a7-9da8b24eeda5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/hmi/HumanMachineInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/hmi/HumanMachineInput.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraControlAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraControlAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraMan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraMan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/app.config" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/app.config" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,51 +41,33 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraControlAgent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="95" lean-forward="true" selection-start-line="95" selection-end-line="95" />
+            <state relative-caret-position="603">
+              <caret line="133" column="61" selection-start-line="133" selection-start-column="61" selection-end-line="133" selection-end-column="61" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#4752#4753#0" expanded="true" />
+                <element signature="e#5452#5453#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../Processing/libraries/proscene/src/remixlab/dandelion/geom/Vec.java">
+        <entry file="file://$PROJECT_DIR$/src/resources/app.config">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
-              <caret line="346" column="10" lean-forward="true" selection-start-line="346" selection-start-column="10" selection-end-line="346" selection-end-column="10" />
+            <state relative-caret-position="255">
+              <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../Processing/libraries/proscene/src/remixlab/dandelion/core/Eye.java">
+        <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/hmi/InputEvent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="634" column="3" lean-forward="true" selection-start-line="634" selection-start-column="3" selection-end-line="634" selection-end-column="3" />
+            <state relative-caret-position="302">
+              <caret line="70" selection-start-line="70" selection-end-line="70" />
               <folding>
-                <element signature="e#11933#11934#0" expanded="true" />
-                <element signature="e#11971#11972#0" expanded="true" />
-                <element signature="e#12724#12725#0" expanded="true" />
-                <element signature="e#12747#12748#0" expanded="true" />
-                <element signature="e#34417#34418#0" expanded="true" />
-                <element signature="e#34460#34461#0" expanded="true" />
-                <element signature="e#35756#35757#0" expanded="true" />
-                <element signature="e#35787#35788#0" expanded="true" />
-                <element signature="e#72744#72745#0" expanded="true" />
-                <element signature="e#72807#72808#0" expanded="true" />
+                <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../Processing/libraries/proscene/src/remixlab/dandelion/geom/Rotation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="47" column="13" selection-start-line="47" selection-start-column="13" selection-end-line="47" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -141,7 +124,6 @@
       <find>parent</find>
       <find>lightsOn</find>
       <find>oscevent</find>
-      <find>oscEvent</find>
       <find>registerlis</find>
       <find>test</find>
       <find>defMotionAgent</find>
@@ -153,6 +135,7 @@
       <find>GrabberFrame</find>
       <find>setorie</find>
       <find>setOrientation</find>
+      <find>oscEvent</find>
     </findStrings>
     <replaceStrings>
       <replace>ClassModel</replace>
@@ -216,11 +199,11 @@
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/suits/suit01/ClassSlice.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/properties/PropertyManager.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/suits/suit01/CityscapeSuit.java" />
-        <option value="$PROJECT_DIR$/src/resources/app.config" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/hmi/InputEvent.java" />
-        <option value="$PROJECT_DIR$/src/luisf/ouroboros/hmi/HumanMachineInput.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/Visualizer.java" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraMan.java" />
+        <option value="$PROJECT_DIR$/src/luisf/ouroboros/hmi/HumanMachineInput.java" />
+        <option value="$PROJECT_DIR$/src/resources/app.config" />
         <option value="$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraControlAgent.java" />
       </list>
     </option>
@@ -232,10 +215,10 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="54" />
-    <option name="y" value="-8" />
-    <option name="width" value="1874" />
-    <option name="height" value="1096" />
+    <option name="x" value="-16" />
+    <option name="y" value="-16" />
+    <option name="width" value="1549" />
+    <option name="height" value="877" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -453,11 +436,11 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="54" y="-8" width="1874" height="1096" extended-state="6" />
+    <frame x="66" y="-8" width="1862" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.5046729" visible="true" weight="0.19294377" />
-      <window_info id="Structure" order="1" sideWeight="0.49532712" side_tool="true" visible="true" weight="0.19294377" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.5046729" visible="true" weight="0.19422863" />
+      <window_info id="Structure" order="1" sideWeight="0.49532712" side_tool="true" visible="true" weight="0.19422863" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -507,12 +490,6 @@
           <line>165</line>
           <properties />
           <option name="timeStamp" value="73" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraControlAgent.java</url>
-          <line>120</line>
-          <properties />
-          <option name="timeStamp" value="85" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -776,13 +753,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/resources/app.config">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_201/src.zip!/java/lang/Float.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="800">
@@ -812,16 +782,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/hmi/InputEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="302">
-          <caret line="70" selection-start-line="70" selection-end-line="70" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -868,16 +828,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="169">
           <caret line="163" column="17" selection-start-line="163" selection-start-column="17" selection-end-line="163" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/hmi/HumanMachineInput.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="57" column="48" lean-forward="true" selection-start-line="57" selection-start-column="48" selection-end-line="57" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1020,13 +970,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../../Processing/libraries/proscene/src/remixlab/dandelion/geom/Vec.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="346" column="10" lean-forward="true" selection-start-line="346" selection-start-column="10" selection-end-line="346" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../Processing/libraries/proscene/src/remixlab/dandelion/core/Eye.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="281">
@@ -1046,13 +989,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraControlAgent.java">
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/hmi/HumanMachineInput.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="95" lean-forward="true" selection-start-line="95" selection-end-line="95" />
+        <state relative-caret-position="506">
+          <caret line="49" column="48" lean-forward="true" selection-start-line="49" selection-start-column="48" selection-end-line="49" selection-end-column="48" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4752#4753#0" expanded="true" />
+            <element signature="e#1222#1223#0" expanded="true" />
+            <element signature="e#1282#1283#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../Processing/libraries/proscene/src/remixlab/dandelion/geom/Vec.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="346" column="10" lean-forward="true" selection-start-line="346" selection-start-column="10" selection-end-line="346" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/hmi/InputEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="302">
+          <caret line="70" selection-start-line="70" selection-end-line="70" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/resources/app.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/luisf/ouroboros/visualizer/scene/CameraControlAgent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="603">
+          <caret line="133" column="61" selection-start-line="133" selection-start-column="61" selection-end-line="133" selection-end-column="61" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5452#5453#0" expanded="true" />
           </folding>
         </state>
       </provider>

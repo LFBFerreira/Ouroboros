@@ -33,10 +33,10 @@ public class CameraControlAgent implements InputListennerInterface {
 //    private void theRest(int x, int y, int action, int button, int modifiers, int count) {
 //        move = action == processing.event.MouseEvent.MOVE;
 //        press = action == processing.event.MouseEvent.PRESS;
-//        drag = action == processing.event.MouseEvent.DRAG;
+//        moveHorizontal = action == processing.event.MouseEvent.DRAG;
 //        release = action == processing.event.MouseEvent.RELEASE;
 //
-//        if (move || press || drag || release) {
+//        if (move || press || moveHorizontal || release) {
 //            log.info(Handy.f("%s \t%s\t%s\t%s\t%s\t%s", x, y, action, button, modifiers, count));
 //
 //            currentEvent = new DOF2Event(prevEvent, x - scene.originCorner().x(), y - scene.originCorner().y(),
@@ -77,11 +77,13 @@ public class CameraControlAgent implements InputListennerInterface {
 
     @Override
     public void reactToInput(InputEvent input) {
-        if (input.id.equals(OscStringBuilder.build(2, "positionXY", 1))) {
-            drag(input.getAsXY().x, input.getAsXY().y);
-        } else if (input.id.equals(OscStringBuilder.build(2, "orientationXY", 1))) {
+        if (input.id.equals(OscStringBuilder.build(1, "moveXY", 1))) {
+            moveHorizontal(input.getAsXY().x, input.getAsXY().y);
+        } else if (input.id.equals(OscStringBuilder.build(1, "lookXY", 1))) {
             orient(input.getAsXY().y, input.getAsXY().x);
-        } else if (input.id.equals(OscStringBuilder.build(2, "centerPush"))) {
+        } else if (input.id.equals(OscStringBuilder.build(1, "heightXY", 1))) {
+            moveVertical(input.getAsXY().y);
+        } else if (input.id.equals(OscStringBuilder.build(1, "centerPush"))) {
             if (input.getAsBoolean() == true) {
                 center();
             }
@@ -90,17 +92,38 @@ public class CameraControlAgent implements InputListennerInterface {
 
 
     float dragSensitivity = 10;
+    float heightSensitivity = 5;
+    float rotationSensitivity = PConstants.PI;
 
-    private void drag(float normalizedX, float normalizedY) {
-        log.info(Handy.f("%.2f, %.2f", normalizedX, normalizedY));
+    private void moveHorizontal(float normalizedX, float normalizedZ) {
+        log.info(Handy.f("%.2f, %.2f", normalizedX, normalizedZ));
 
+        // get current position
         Vec newPosition = scene.eye().position();
-        newPosition.add(-normalizedX * dragSensitivity, normalizedY * dragSensitivity, 0);
+
+        // modify coordinates
+        // X and Z are relative,
+        newPosition.add(normalizedX * dragSensitivity,
+                0,
+                -normalizedZ * dragSensitivity);
 
         scene.eye().setPosition(newPosition);
     }
 
-    float rotationSensitivity = PConstants.PI;
+    private void moveVertical(float normalizedY) {
+        log.info(Handy.f("%.2f", normalizedY));
+
+        // get current position
+        Vec newPosition = scene.eye().position();
+
+        // modify coordinates
+        // X and Z are relative,
+        newPosition.add(0,
+                -normalizedY * heightSensitivity,
+                0);
+
+        scene.eye().setPosition(newPosition);
+    }
 
     private void orient(float normalizedX, float normalizedY) {
         log.info(Handy.f("%.2f, %.2f", normalizedX, normalizedY));
@@ -108,7 +131,7 @@ public class CameraControlAgent implements InputListennerInterface {
         Rotation orientation = eye.orientation();
 
         Vec newDirection = eye.viewDirection();
-        newDirection.add(-normalizedX * rotationSensitivity, normalizedY * rotationSensitivity, 0);
+        newDirection.add(normalizedX * rotationSensitivity, -normalizedY * rotationSensitivity, 0);
 
         orientation.fromTo(eye.viewDirection(), newDirection);
 
@@ -116,7 +139,7 @@ public class CameraControlAgent implements InputListennerInterface {
 
         // -------------------------------------------
 
-        eye
+
         //        Rotation rotation =
 //        Vec rotatedVector = orientation.rotate(new Vec(normalizedX * rotationSensitivity, normalizedY * rotationSensitivity));
 //

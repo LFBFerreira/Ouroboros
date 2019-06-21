@@ -86,8 +86,8 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
     private void loadProperties() {
         backgroundColors = props.getIntArray("visualizer.backgroundColors");
-        windowWidth = props.getInt("visualizer.windowWidth");
-        windowHeight = props.getInt("visualizer.windowHeight");
+        windowWidth = props.getInt("visualizer.window.width");
+        windowHeight = props.getInt("visualizer.window.height");
     }
 
     // ================================================================

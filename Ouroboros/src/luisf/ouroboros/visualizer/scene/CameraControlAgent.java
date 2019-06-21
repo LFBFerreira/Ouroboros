@@ -128,16 +128,22 @@ public class CameraControlAgent implements InputListennerInterface {
     private void orient(float normalizedX, float normalizedY) {
         log.info(Handy.f("%.2f, %.2f", normalizedX, normalizedY));
 
-        Rotation orientation = eye.orientation();
-
-        Vec newDirection = eye.viewDirection();
-        newDirection.add(normalizedX * rotationSensitivity, -normalizedY * rotationSensitivity, 0);
-
-        orientation.fromTo(eye.viewDirection(), newDirection);
-
-        eye.setOrientation(orientation);
+//        Rotation orientation = eye.orientation();
+//
+//        Vec newDirection = eye.viewDirection();
+//        newDirection.add(normalizedX * rotationSensitivity, -normalizedY * rotationSensitivity, 0);
+//
+//        orientation.fromTo(eye.viewDirection(), newDirection);
+//
+//        eye.setOrientation(orientation);
 
         // -------------------------------------------
+
+        Vec newDirection2 = scene.camera().viewDirection();
+        newDirection2.add(-normalizedX * rotationSensitivity, 0, 0);
+        scene.camera().setOrientation(newDirection2.x(), newDirection2.y());
+
+//        Camera.setViewDirection(Vec)
 
 
         //        Rotation rotation =

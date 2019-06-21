@@ -52,11 +52,11 @@ public class Illuminati extends GraphicsResource {
 
             if (showIndicator) {
                 // draw direction line
-                graphics.pushStyle();
-                graphics.strokeWeight(0.5f);
-                graphics.stroke(50, 50, 255);
-                graphics.line(xCoord, -height, yCoord, 0, 0, 0);
-                graphics.popStyle();
+//                graphics.pushStyle();
+//                graphics.strokeWeight(0.5f);
+//                graphics.stroke(50, 50, 255);
+//                graphics.line(xCoord, -height, yCoord, 0, 0, 0);
+//                graphics.popStyle();
 
                 // draw sphere
                 graphics.pushMatrix();

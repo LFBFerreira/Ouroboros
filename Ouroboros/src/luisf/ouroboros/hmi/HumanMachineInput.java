@@ -61,7 +61,7 @@ public class HumanMachineInput {
             return;
         }
 
-        log.info(Handy.f("Event %s: %s - %f", event.inputMethod, event.id, event.getAsFloat()));
+        //log.info(Handy.f("Event %s: %s - %f", event.inputMethod, event.id, event.getAsFloat()));
 
         listeners.forEach(l -> l.reactToInput(event));
     }

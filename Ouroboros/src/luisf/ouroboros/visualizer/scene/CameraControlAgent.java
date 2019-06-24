@@ -6,14 +6,16 @@ import luisf.ouroboros.hmi.InputListennerInterface;
 import luisf.ouroboros.hmi.OscStringBuilder;
 import processing.core.PApplet;
 import processing.core.PConstants;
+import remixlab.bias.Agent;
+import remixlab.bias.event.DOF2Event;
+import remixlab.bias.event.MotionEvent;
 import remixlab.dandelion.core.Eye;
-import remixlab.dandelion.geom.Rotation;
 import remixlab.dandelion.geom.Vec;
 import remixlab.proscene.Scene;
 
 import java.util.logging.Logger;
 
-public class CameraControlAgent implements InputListennerInterface {
+public class CameraControlAgent extends Agent implements InputListennerInterface {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     private PApplet parent;
@@ -21,11 +23,16 @@ public class CameraControlAgent implements InputListennerInterface {
     private Eye eye;
 
     public CameraControlAgent(Scene scene) {
+        super(scene.inputHandler());
+
         parent = scene.pApplet();
         this.scene = scene;
         this.eye = scene.eye();
     }
 
+
+    MotionEvent newEvent;
+    MotionEvent prevEvent;
 
     // ================================================================
 
@@ -33,10 +40,10 @@ public class CameraControlAgent implements InputListennerInterface {
 //    private void theRest(int x, int y, int action, int button, int modifiers, int count) {
 //        move = action == processing.event.MouseEvent.MOVE;
 //        press = action == processing.event.MouseEvent.PRESS;
-//        moveHorizontal = action == processing.event.MouseEvent.DRAG;
+//        moveXY = action == processing.event.MouseEvent.DRAG;
 //        release = action == processing.event.MouseEvent.RELEASE;
 //
-//        if (move || press || moveHorizontal || release) {
+//        if (move || press || moveXY || release) {
 //            log.info(Handy.f("%s \t%s\t%s\t%s\t%s\t%s", x, y, action, button, modifiers, count));
 //
 //            currentEvent = new DOF2Event(prevEvent, x - scene.originCorner().x(), y - scene.originCorner().y(),
@@ -78,11 +85,11 @@ public class CameraControlAgent implements InputListennerInterface {
     @Override
     public void reactToInput(InputEvent input) {
         if (input.id.equals(OscStringBuilder.build(1, "moveXY", 1))) {
-            moveHorizontal(input.getAsXY().x, input.getAsXY().y);
+            moveXY(input.getAsXY().x, input.getAsXY().y);
         } else if (input.id.equals(OscStringBuilder.build(1, "lookXY", 1))) {
             orient(input.getAsXY().y, input.getAsXY().x);
         } else if (input.id.equals(OscStringBuilder.build(1, "heightXY", 1))) {
-            moveVertical(input.getAsXY().y);
+            moveZ(input.getAsXY().y);
         } else if (input.id.equals(OscStringBuilder.build(1, "centerPush"))) {
             if (input.getAsBoolean() == true) {
                 center();
@@ -90,27 +97,38 @@ public class CameraControlAgent implements InputListennerInterface {
         }
     }
 
-
     float dragSensitivity = 10;
     float heightSensitivity = 5;
     float rotationSensitivity = PConstants.PI;
 
-    private void moveHorizontal(float normalizedX, float normalizedZ) {
+    private void moveXY(float normalizedX, float normalizedZ) {
         log.info(Handy.f("%.2f, %.2f", normalizedX, normalizedZ));
 
         // get current position
-        Vec newPosition = scene.eye().position();
+//        Vec newPosition = scene.eye().position();
+//        Vec newPosition = scene.eyeFrame().position();
 
         // modify coordinates
         // X and Z are relative,
-        newPosition.add(normalizedX * dragSensitivity,
-                0,
-                -normalizedZ * dragSensitivity);
+//        newPosition.add(normalizedX * dragSensitivity,
+//                -normalizedZ * dragSensitivity, 0);
 
-        scene.eye().setPosition(newPosition);
+        //scene.eye().setPosition(newPosition);
+
+        scene.eyeFrame().translate(new Vec(normalizedX * dragSensitivity,
+                -normalizedZ * dragSensitivity, 0));
+
+
+//        newEvent = new DOF2Event(prevEvent, normalizedX * dragSensitivity, normalizedZ * dragSensitivity,
+//                MotionEvent.NO_MODIFIER_MASK,
+//                MotionEvent.NO_ID);
+//
+//        scene.eyeFrame().performInteraction(newEvent);
+//
+//        prevEvent = newEvent;
     }
 
-    private void moveVertical(float normalizedY) {
+    private void moveZ(float normalizedY) {
         log.info(Handy.f("%.2f", normalizedY));
 
         // get current position

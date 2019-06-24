@@ -8,7 +8,6 @@ import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import remixlab.dandelion.geom.Vec;
 import remixlab.proscene.Scene;
 
 import java.io.File;

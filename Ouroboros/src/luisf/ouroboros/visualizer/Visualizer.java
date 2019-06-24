@@ -15,7 +15,6 @@ import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 import processing.opengl.PGraphics3D;
-import remixlab.proscene.MouseAgent;
 
 import java.io.File;
 import java.util.LinkedList;

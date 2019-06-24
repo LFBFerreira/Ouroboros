@@ -15,6 +15,5 @@
     <orderEntry type="library" name="org.apache.commons:commons-configuration2:2.5" level="project" />
     <orderEntry type="library" name="commons-beanutils:commons-beanutils:1.9.3" level="project" />
     <orderEntry type="library" name="oscP5" level="project" />
-    <orderEntry type="module" module-name="Proscene" />
   </component>
 </module>

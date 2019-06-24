@@ -46,7 +46,7 @@ public class CityscapeSuit extends SuitBase {
      * @param parent
      */
     public CityscapeSuit(List<ClassModel> models, PGraphics graphics, PApplet parent) {
-        super(models, graphics, parent);
+        super(models, null, parent);
 
         illuminati = new Illuminati(graphics, parent);
     }
@@ -83,11 +83,11 @@ public class CityscapeSuit extends SuitBase {
     public void draw(PGraphics g) {
         //graphics.beginDraw();
 
-        graphics.pushMatrix();
+        g.pushMatrix();
 
-        illuminati.turnLights(lightsOn, true);
+        illuminati.turnLights(lightsOn, true, g);
 
-        drawFloor();
+        drawFloor(g);
 
         // debug sphere
 //        graphics.pushStyle();
@@ -96,13 +96,13 @@ public class CityscapeSuit extends SuitBase {
 //        graphics.popStyle();
 
         // pushes everything back, so the model is centered in the world
-        graphics.translate(0, 0, numberSlicesToDraw / -2f * classMargin * 2);
+        g.translate(0, 0, numberSlicesToDraw / -2f * classMargin * 2);
 
-        drawSlices(slices, numberSlicesToDraw);
+        drawSlices(slices, numberSlicesToDraw, g);
 
         //Handy.drawAxes(graphics, false, 60);
 
-        graphics.popMatrix();
+        g.popMatrix();
 
         //graphics.endDraw();
     }
@@ -144,15 +144,15 @@ public class CityscapeSuit extends SuitBase {
 
     // Helpers
 
-    private void drawFloor() {
-        graphics.pushMatrix();
+    private void drawFloor(PGraphics g) {
+        g.pushMatrix();
 
         // lower the floor so that the surface matches y = 0
-        graphics.translate(0, 5, 0);
+        g.translate(0, 5, 0);
 
-        graphics.shape(floor);
+        g.shape(floor);
 
-        graphics.popMatrix();
+        g.popMatrix();
     }
 
     private PShape createFloor() {
@@ -162,7 +162,7 @@ public class CityscapeSuit extends SuitBase {
         return floor;
     }
 
-    private void drawSlices(List<ClassSlice> slicesList, int slicesToDraw) {
+    private void drawSlices(List<ClassSlice> slicesList, int slicesToDraw, PGraphics g) {
         if (slicesToDraw > slicesList.size() || slicesToDraw < 1) {
             slicesToDraw = slicesList.size();
             log.info("The amount of slices to be drawn is incorrect");
@@ -173,14 +173,14 @@ public class CityscapeSuit extends SuitBase {
         float zOffset = slices.get(0).getClassDepth() + classMargin;
 
         for (ClassSlice slice : slicesList) {
-            graphics.pushMatrix();
+            g.pushMatrix();
 
-            graphics.translate(0, -slice.getSliceHeight() / 2, i * zOffset);
+            g.translate(0, -slice.getSliceHeight() / 2, i * zOffset);
 
             //Handy.drawAxes(graphics, false, 20);
-            slice.draw(graphics);
+            slice.draw(g);
 
-            graphics.popMatrix();
+            g.popMatrix();
             i++;
 
             // stop the cycle if the right amount of slices has been drawn

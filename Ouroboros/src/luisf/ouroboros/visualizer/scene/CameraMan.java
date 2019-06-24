@@ -30,7 +30,7 @@ public class CameraMan extends Scene implements InputListennerInterface {
     private String videoPath = "";
     private File outputFolder;
 
-    private SuitBase skin;
+    private SuitBase suit;
 
     // ================================================================
 
@@ -40,9 +40,10 @@ public class CameraMan extends Scene implements InputListennerInterface {
      * @param p
      * @param graphics
      */
-    public CameraMan(PApplet p, PGraphics graphics, File outputFolder) {
+    public CameraMan(PApplet p, PGraphics graphics, File outputFolder, SuitBase suit) {
         super(p, graphics);
         this.outputFolder = outputFolder;
+        this.suit = suit;
     }
 
     // ================================================================
@@ -62,18 +63,18 @@ public class CameraMan extends Scene implements InputListennerInterface {
     // Public
 
     public void initialize() {
-        setRadius(900);
+        setRadius(2000);
 
-        setGridVisualHint(false);
-        setAxesVisualHint(false);
+        setGridVisualHint(true);
+        setAxesVisualHint(true);
 
         eyeFrame().setDamping(0.5f);
 
         camera().setUpVector(0, 1, 0);
-        camera().setPosition(0, -50, 100);
+        camera().setPosition(0, -200, 1300);
         camera().lookAt(0, 0, 0);
 
-        showAll();
+        //showAll();
     }
 
 
@@ -120,17 +121,10 @@ public class CameraMan extends Scene implements InputListennerInterface {
      */
     @Override
     public void proscenium() {
-
+        //pg().scale(2);
+        suit.draw(pg());
     }
 
-    private Vec lastlook = new Vec(0, 0);
-
-    public void changeLook()
-    {
-        lastlook = eye.position();
-        lastlook.add(0, 10, 0);
-        eye().lookAt(lastlook);
-    }
 
     public void keyPressed(int key, int keyCode) {
         if (key == CODED || key == 0) {
@@ -149,46 +143,29 @@ public class CameraMan extends Scene implements InputListennerInterface {
                 case 98: // F2
                     endCapture();
                     break;
-
-                case 'w':
-                    lastlook = eye.position();
-                    lastlook.add(0, 10, 0);
-                    eye().setPosition(lastlook);
-                    break;
-
-                case 's':
-                    lastlook = eye.position();
-                    lastlook.add(0, -10, 0);
-                    eye().setPosition(lastlook);
-                    break;
-
-                case 'c':
-//                    eye().sceneCenter();
-                    eye().interpolateToFitScene();
-                    break;
             }
         }
         else
         {
-            // normal key captures
-            switch (key) {
-                case 'w':
-                    lastlook = eye.viewDirection();
-                    lastlook.add(0, 10, 0);
-                    eye().lookAt(lastlook);
-                    break;
-
-                case 's':
-                    lastlook = eye.viewDirection();
-                    lastlook.add(0, -10, 0);
-                    eye().lookAt(lastlook);
-                    break;
-
-                case 'c':
-//                    eye().sceneCenter();
-                    eye().interpolateToFitScene();
-                    break;
-            }
+//            // normal key captures
+//            switch (key) {
+//                case 'w':
+//                    lastlook = eye.viewDirection();
+//                    lastlook.add(0, 10, 0);
+//                    eye().lookAt(lastlook);
+//                    break;
+//
+//                case 's':
+//                    lastlook = eye.viewDirection();
+//                    lastlook.add(0, -10, 0);
+//                    eye().lookAt(lastlook);
+//                    break;
+//
+//                case 'c':
+////                    eye().sceneCenter();
+//                    eye().interpolateToFitScene();
+//                    break;
+//            }
         }
     }
 

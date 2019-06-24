@@ -110,13 +110,14 @@ public class Visualizer extends PApplet implements InputListennerInterface {
         suitGraphics = createGraphics(windowWidth, windowHeight, renderer);
         backgroundGraphics = createGraphics(windowWidth, windowHeight, renderer);
 
-        cameraMan = new CameraMan(this, suitGraphics, graphicsFolder);
+        suit = new CityscapeSuit(models, suitGraphics, this);
+        suit.initialize();
+
+        cameraMan = new CameraMan(this, suitGraphics, graphicsFolder, suit);
         cameraMan.initialize();
 
         oscControl = new CameraControlAgent(cameraMan);
 
-        suit = new CityscapeSuit(models, suitGraphics, this);
-        suit.initialize();
 
         hmi = new HumanMachineInput(props.getInt("hmi.oscPort"), this);
         hmi.registerListeners(new InputListennerInterface[]{this, cameraMan, suit, oscControl});

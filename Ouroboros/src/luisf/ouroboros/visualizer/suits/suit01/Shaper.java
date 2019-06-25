@@ -3,6 +3,7 @@ package luisf.ouroboros.visualizer.suits.suit01;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PShape;
+import processing.core.PVector;
 
 public class Shaper {
 
@@ -11,42 +12,33 @@ public class Shaper {
         return shape;
     }
 
-    public static PShape createBoxVertex(float width, float height, float depth, PApplet parent) {
+
+    public static PShape createBoxWireframe(float width, float height, float depth, PApplet parent) {
         PShape shape = new PShape();
+        PShape baseShape = createBox(width, height, depth, parent);
+        PVector lastVertex = null;
 
-        shape.beginShape(PConstants.QUADS);
+//        shape.noFill();
+        shape.fill(255);
+        shape.stroke(0);
+        shape.strokeWeight(2);
 
-        shape.vertex(-1, 1, 1);
-        shape.vertex(1, 1, 1);
-        shape.vertex(1, -1, 1);
-        shape.vertex(-1, -1, 1);
+        shape.beginShape();
 
-        shape.vertex(1, 1, 1);
-        shape.vertex(1, 1, -1);
-        shape.vertex(1, -1, -1);
-        shape.vertex(1, -1, 1);
+        // create a new shape using only vertexes
+        for (int i = 0; i < baseShape.getVertexCount(); i++) {
+            PVector v = baseShape.getVertex(i);
+            shape.vertex(v.x, v.y, v.z);
 
-        shape.vertex(1, 1, -1);
-        shape.vertex(-1, 1, -1);
-        shape.vertex(-1, -1, -1);
-        shape.vertex(1, -1, -1);
+//            if(lastVertex != null)
+//            {
+//                shape.vertex(lastVertex.x, lastVertex.y, lastVertex.z);
+//            }
 
-        shape.vertex(-1, 1, -1);
-        shape.vertex(-1, 1, 1);
-        shape.vertex(-1, -1, 1);
-        shape.vertex(-1, -1, -1);
+            lastVertex = v;
+        }
 
-        shape.vertex(-1, 1, -1);
-        shape.vertex(1, 1, -1);
-        shape.vertex(1, 1, 1);
-        shape.vertex(-1, 1, 1);
-
-        shape.vertex(-1, -1, -1);
-        shape.vertex(1, -1, -1);
-        shape.vertex(1, -1, 1);
-        shape.vertex(-1, -1, 1);
-
-        shape.endShape();
+        shape.endShape(PConstants.CLOSE);
 
         return shape;
     }

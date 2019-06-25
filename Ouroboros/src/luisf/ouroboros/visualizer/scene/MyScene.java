@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
-public class CameraMan extends Scene implements InputListennerInterface {
+public class MyScene extends Scene implements InputListennerInterface {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     private final PropertyManager props = PropertyManager.getInstance();
@@ -39,7 +39,7 @@ public class CameraMan extends Scene implements InputListennerInterface {
      * @param p
      * @param graphics
      */
-    public CameraMan(PApplet p, PGraphics graphics, File outputFolder, SuitBase suit) {
+    public MyScene(PApplet p, PGraphics graphics, File outputFolder, SuitBase suit) {
         super(p, graphics);
         this.outputFolder = outputFolder;
         this.suit = suit;
@@ -64,24 +64,30 @@ public class CameraMan extends Scene implements InputListennerInterface {
     public void initialize() {
         setRadius(2000);
 
-        setGridVisualHint(true);
-        setAxesVisualHint(true);
+        setGridVisualHint(false);
+        setAxesVisualHint(false);
+        setPathsVisualHint(false);
 
         eyeFrame().setDamping(0.5f);
 
         camera().setUpVector(0, 1, 0);
-        camera().setPosition(0, -200, 1300);
+        camera().setPosition(0, -900, 2800);
         camera().lookAt(0, 0, 0);
 
-        //showAll();
+//        showAll();
+        //center();
     }
 
+    public void clearScene() {
+        pg().clear();
+    }
 
     public void startStopCapture(String videoPath) {
         if (!captureStarted) {
             log.info(Handy.f("Starting video capture to " + videoPath));
 
             this.videoPath = videoPath;
+//            videoExport = new VideoExport(parent, videoPath, pg());
             videoExport = new VideoExport(parent, videoPath);
 
             configureVideo(videoExport);
@@ -108,7 +114,7 @@ public class CameraMan extends Scene implements InputListennerInterface {
         videoExport.endMovie();
     }
 
-    public void addFrameToVideo(PGraphics frame) {
+    public void addFrameToVideo() {
         if (captureStarted && capturing) {
             videoExport.saveFrame();
         }
@@ -143,9 +149,7 @@ public class CameraMan extends Scene implements InputListennerInterface {
                     endCapture();
                     break;
             }
-        }
-        else
-        {
+        } else {
 //            // normal key captures
 //            switch (key) {
 //                case 'w':
@@ -195,9 +199,9 @@ public class CameraMan extends Scene implements InputListennerInterface {
     // Helpers
 
     private void configureVideo(VideoExport video) {
-        videoExport.setFrameRate(60);
+        videoExport.setFrameRate(props.getInt("visualizer.capture.framerate"));
         videoExport.setDebugging(false);
-        //videoExport.setLoadPixels(false); // calls loadpixels
-        videoExport.setQuality(props.getInt("visualizer.capture.quality"), 128);
+        videoExport.setLoadPixels(true);
+        videoExport.setQuality(props.getInt("visualizer.capture.quality"), 0);
     }
 }

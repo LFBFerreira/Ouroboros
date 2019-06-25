@@ -85,11 +85,11 @@ public class CameraControlAgent extends Agent implements InputListennerInterface
     @Override
     public void reactToInput(InputEvent input) {
         if (input.id.equals(OscStringBuilder.build(1, "moveXY", 1))) {
-            moveXY(input.getAsXY().x, input.getAsXY().y);
+            translate(input.getAsXY().x, 0, input.getAsXY().y);
         } else if (input.id.equals(OscStringBuilder.build(1, "lookXY", 1))) {
             orient(input.getAsXY().y, input.getAsXY().x);
         } else if (input.id.equals(OscStringBuilder.build(1, "heightXY", 1))) {
-            moveZ(input.getAsXY().y);
+            translate(0, input.getAsFloat(), 0);
         } else if (input.id.equals(OscStringBuilder.build(1, "centerPush"))) {
             if (input.getAsBoolean() == true) {
                 center();
@@ -101,7 +101,7 @@ public class CameraControlAgent extends Agent implements InputListennerInterface
     float heightSensitivity = 5;
     float rotationSensitivity = PConstants.PI;
 
-    private void moveXY(float normalizedX, float normalizedZ) {
+    private void moveHorizontal(float normalizedX, float normalizedZ) {
         log.info(Handy.f("%.2f, %.2f", normalizedX, normalizedZ));
 
         // get current position
@@ -177,6 +177,12 @@ public class CameraControlAgent extends Agent implements InputListennerInterface
 //        eye.lookAt(direction);
     }
 
+
+    private void translate(float normalizedX, float normalizedY, float normalizedZ)
+    {
+        scene.eyeFrame().translate(new Vec(normalizedX * dragSensitivity,
+                -normalizedY * dragSensitivity, -normalizedZ * dragSensitivity));
+    }
 
     private void center() {
         eye.interpolateToFitScene();

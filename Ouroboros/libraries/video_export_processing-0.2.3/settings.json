@@ -47,5 +47,5 @@
     "-2",
     "[output]"
   ],
-  "ffmpeg_path": "C:\\Program Files\\ffmpeg-4.1.3-win64-static\\bin\\ffmpeg.exe"
+  "ffmpeg_path": "C:\\Program Files\\ffmpeg\\ffmpeg-4.1.3-win64-static\\bin\\ffmpeg.exe"
 }

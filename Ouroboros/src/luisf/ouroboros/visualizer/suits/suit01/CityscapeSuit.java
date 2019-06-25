@@ -27,6 +27,7 @@ public class CityscapeSuit extends SuitBase {
 
     private int numberSlicesToDraw = 1;
     private int floorColor = 0xFFFFFFFF;
+    private float classSliceDepth;
 
     private Boolean lightsOn = true;
 
@@ -35,20 +36,19 @@ public class CityscapeSuit extends SuitBase {
     private Illuminati illuminati;
 
     private PShape floor;
-    private final int floorWidth = 800;
-    private final int floorDepth = 1600;
+    private int floorHeight = 4;
+
 
     // ================================================================
 
     /**
      * @param models
-     * @param graphics
      * @param parent
      */
-    public CityscapeSuit(List<ClassModel> models, PGraphics graphics, PApplet parent) {
+    public CityscapeSuit(List<ClassModel> models, PApplet parent) {
         super(models, null, parent);
 
-        illuminati = new Illuminati(graphics, parent);
+        illuminati = new Illuminati(parent);
     }
 
     // ================================================================
@@ -67,12 +67,18 @@ public class CityscapeSuit extends SuitBase {
 
         numberSlicesToDraw = slices.size();
 
+        float totalClassWidth = props.getInt("visualizer.suit01.methodThickness") +
+                     props.getInt("visualizer.suit01.methodMargin") +
+                     props.getInt("visualizer.suit01.classThickness");
+
+
         floor = createFloor();
     }
 
     private void loadProperties() {
         classMargin = props.getInt("visualizer.suit01.classMargin");
         floorColor = props.getInt("visualizer.floorColor");
+        classSliceDepth = props.getInt("visualizer.suit01.classThickness");
     }
 
     // ================================================================
@@ -81,7 +87,7 @@ public class CityscapeSuit extends SuitBase {
 
     @Override
     public void draw(PGraphics g) {
-        //graphics.beginDraw();
+        //Handy.drawAxes(g, false, 100);
 
         g.pushMatrix();
 
@@ -89,22 +95,12 @@ public class CityscapeSuit extends SuitBase {
 
         drawFloor(g);
 
-        // debug sphere
-//        graphics.pushStyle();
-//        graphics.noStroke();
-//        graphics.sphere(100);
-//        graphics.popStyle();
-
         // pushes everything back, so the model is centered in the world
-        g.translate(0, 0, numberSlicesToDraw / -2f * classMargin * 2);
+        g.translate(0, 0, ((numberSlicesToDraw / -2f) )  * (classSliceDepth + classMargin));
 
-        drawSlices(slices, numberSlicesToDraw, g);
-
-        //Handy.drawAxes(graphics, false, 60);
+        drawClassSlices(slices, numberSlicesToDraw, g);
 
         g.popMatrix();
-
-        //graphics.endDraw();
     }
 
     @Override
@@ -148,21 +144,31 @@ public class CityscapeSuit extends SuitBase {
         g.pushMatrix();
 
         // lower the floor so that the surface matches y = 0
-        g.translate(0, 5, 0);
+        g.translate(0, floorHeight - 2, 0);
 
+        //Handy.drawAxes(g, false, 100);
         g.shape(floor);
 
         g.popMatrix();
     }
 
     private PShape createFloor() {
-        PShape floor = Shaper.createBox(floorWidth, 4, floorDepth, parent);
+        float maxWidth = 0;
+
+        for (ClassSlice slice: slices) {
+            if(maxWidth < slice.getWidth())
+            {
+                maxWidth = slice.getWidth();
+            }
+        }
+
+        PShape floor = Shaper.createBox(maxWidth, floorHeight, 1 + slices.size() * (classSliceDepth + classMargin), parent);
         floor.setFill(floorColor);
-        floor.setStroke(200);
+        floor.setStroke(0x0);
         return floor;
     }
 
-    private void drawSlices(List<ClassSlice> slicesList, int slicesToDraw, PGraphics g) {
+    private void drawClassSlices(List<ClassSlice> slicesList, int slicesToDraw, PGraphics g) {
         if (slicesToDraw > slicesList.size() || slicesToDraw < 1) {
             slicesToDraw = slicesList.size();
             log.info("The amount of slices to be drawn is incorrect");
@@ -170,14 +176,14 @@ public class CityscapeSuit extends SuitBase {
 
         int i = 0;
         // class depth is the same for all instances
-        float zOffset = slices.get(0).getClassDepth() + classMargin;
+        float zOffset = classSliceDepth + classMargin;
 
         for (ClassSlice slice : slicesList) {
             g.pushMatrix();
 
-            g.translate(0, -slice.getSliceHeight() / 2, i * zOffset);
+            g.translate(0, -slice.getHeight() / 2, i * zOffset);
 
-            //Handy.drawAxes(graphics, false, 20);
+            //Handy.drawAxes(g, false, 20);
             slice.draw(g);
 
             g.popMatrix();

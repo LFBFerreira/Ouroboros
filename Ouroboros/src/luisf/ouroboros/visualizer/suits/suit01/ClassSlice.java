@@ -65,17 +65,18 @@ public class ClassSlice implements DrawableInterface {
 
         sliceWidth = classModel.getMethods().size() * (methodDepth + methodMargin * 2);
 
-        classSlice = Shaper.createBox(sliceWidth > 0 ? sliceWidth : zeroWidth, sliceHeight + floorOffset * 2, classDepth, parent);
-        classSlice.setFill(classFillColor);
-        classSlice.setStroke(classLineColor);
+        classSlice = Shaper.createBoxWireframe(sliceWidth > 0 ? sliceWidth : zeroWidth, sliceHeight + floorOffset * 2, classDepth, parent);
+        //classSlice.setFill(classFillColor);
+        //classSlice.setStroke(classLineColor);
     }
 
-    public float getClassDepth() {
-        return classDepth;
-    }
 
-    public float getSliceHeight() {
+    public float getHeight() {
         return sliceHeight;
+    }
+
+    public float getWidth() {
+        return sliceWidth;
     }
 
 
@@ -88,7 +89,6 @@ public class ClassSlice implements DrawableInterface {
 
         // draw class slice
         //graphics.shape(classSlice);
-//        classSlice.setShininess();
 
         // one time offset, so the "methods" are drawn from the corner and not the center of the box
         graphics.translate(-sliceWidth / 2 + methodMargin + methodDepth / 2, 0, 0);

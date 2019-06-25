@@ -16,13 +16,13 @@ public class Illuminati extends GraphicsResource {
     private PVector center = new PVector();
     private float angleStep = PConstants.PI * 0.003f;
     private float currentAngle = 0;
-    private float rotationRadius = 900;
+    private float rotationRadius = 800;
     private float indicatorRadius = 15;
     private float height = 200;
 
     // ================================================================
 
-    public Illuminati(PGraphics graphics, PApplet parent) {
+    public Illuminati(PApplet parent) {
         super(parent, null);
     }
 
@@ -64,7 +64,7 @@ public class Illuminati extends GraphicsResource {
                 g.rotateX(PConstants.HALF_PI);
                 g.translate(xCoord, yCoord, height);
                 g.pushStyle();
-                g.fill(200);
+                g.fill(200, 50, 50);
                 g.noStroke();
                 g.sphere(indicatorRadius);
                 g.popStyle();

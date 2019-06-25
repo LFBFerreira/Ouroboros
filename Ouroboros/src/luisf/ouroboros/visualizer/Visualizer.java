@@ -7,14 +7,12 @@ import luisf.ouroboros.hmi.InputListennerInterface;
 import luisf.ouroboros.models.ClassModel;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.scene.CameraControlAgent;
-import luisf.ouroboros.visualizer.scene.CameraMan;
+import luisf.ouroboros.visualizer.scene.MyScene;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import luisf.ouroboros.visualizer.suits.suit01.CityscapeSuit;
-import oscP5.OscMessage;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
-import processing.opengl.PGraphics3D;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -26,13 +24,13 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
     private final PropertyManager props = PropertyManager.getInstance();
 
-    public List<ClassModel> models = new LinkedList<>();
+    public List<ClassModel> models;
     public File graphicsFolder;
 
     private SuitBase suit;
     private PGraphics suitGraphics;
     private PGraphics backgroundGraphics;
-    private CameraMan cameraMan;
+    private MyScene myScene;
 
     private int windowHeight = 768;
     private int windowWidth = 1024;
@@ -104,22 +102,21 @@ public class Visualizer extends PApplet implements InputListennerInterface {
      * Setup
      */
     public void setup() {
-        frameRate(60);
+        frameRate(45);
 
         suitGraphics = createGraphics(windowWidth, windowHeight, renderer);
         backgroundGraphics = createGraphics(windowWidth, windowHeight, renderer);
 
-        suit = new CityscapeSuit(models, suitGraphics, this);
+        suit = new CityscapeSuit(models,this);
         suit.initialize();
 
-        cameraMan = new CameraMan(this, suitGraphics, graphicsFolder, suit);
-        cameraMan.initialize();
+        myScene = new MyScene(this, suitGraphics, graphicsFolder, suit);
+        myScene.initialize();
 
-        oscControl = new CameraControlAgent(cameraMan);
-
+        oscControl = new CameraControlAgent(myScene);
 
         hmi = new HumanMachineInput(props.getInt("hmi.oscPort"), this);
-        hmi.registerListeners(new InputListennerInterface[]{this, cameraMan, suit, oscControl});
+        hmi.registerListeners(new InputListennerInterface[]{this, myScene, suit, oscControl});
 
         createBackground();
     }
@@ -130,7 +127,7 @@ public class Visualizer extends PApplet implements InputListennerInterface {
     public void dispose() {
         log.info(String.format("Terminating %s", Visualizer.class.getSimpleName()));
 
-        cameraMan.dispose();
+        myScene.dispose();
     }
 
     // ================================================================
@@ -145,24 +142,17 @@ public class Visualizer extends PApplet implements InputListennerInterface {
         //backgroundGraphics(100);
         image(backgroundGraphics, 0, 0);
 
-        cameraMan.beginDraw();
-        //cameraMan.changeLook();
+        myScene.beginDraw();
 
-        suitGraphics.clear();
+        myScene.clearScene();
+        myScene.pg().scale(2);
 
-        suitGraphics.beginDraw();
-//        suitGraphics.translate(500, 0, 0);
+        myScene.endDraw();
 
-        // draw suit
-        suit.draw(suitGraphics);
+        // copy scene output to main graphics buffer
+        myScene.display();
 
-        suitGraphics.endDraw();
-
-        cameraMan.endDraw();
-
-        cameraMan.display();
-
-        cameraMan.addFrameToVideo(g);
+        myScene.addFrameToVideo();
     }
 
     // ================================================================
@@ -175,7 +165,7 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
         // forward the event
         suit.keyPressed(key, keyCode);
-        cameraMan.keyPressed(key, keyCode);
+        myScene.keyPressed(key, keyCode);
     }
 
     // ================================================================
@@ -194,7 +184,7 @@ public class Visualizer extends PApplet implements InputListennerInterface {
     private void setWindowTitle() {
         surface.setTitle(String.format("Ouroboros (%d fps) %s",
                 (int) frameRate,
-                cameraMan.isCapturing() ? "[Recording]" : ""));
+                myScene.isCapturing() ? "[Recording]" : ""));
     }
 
     private void createBackground() {

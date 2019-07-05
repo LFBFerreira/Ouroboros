@@ -5,10 +5,12 @@ import luisf.ouroboros.models.ClassModel;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.modelsWriter.ModelsIO;
 import luisf.ouroboros.properties.PropertyManager;
+import luisf.ouroboros.timemachine.TimeMachine;
 import luisf.ouroboros.visualizer.Visualizer;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -23,25 +25,37 @@ public class Director {
 
     private Boolean parseCode;
     private Boolean generateGraphics;
+    private Boolean checkoutCommits;
+
     private File projectFilesFolder;
     private File graphicsFolder;
     private File modelsFolder;
     private File appConfigFile;
+    private URL checkoutUrl;
+    private int numCheckouts;
 
     // ================================================================
 
     public Director(Boolean parseCode,
                     Boolean generateGraphics,
+                    Boolean checkoutCommits,
                     File projectFilesFolder,
                     File graphicsFolder,
                     File modelsFolder,
-                    File appConfigFile) {
+                    File appConfigFile,
+                    URL checkoutUrl,
+                    int numCheckouts) {
+
         this.parseCode = parseCode;
         this.generateGraphics = generateGraphics;
+        this.checkoutCommits = checkoutCommits;
+
         this.projectFilesFolder = projectFilesFolder;
         this.graphicsFolder = graphicsFolder;
         this.modelsFolder = modelsFolder;
         this.appConfigFile = appConfigFile;
+        this.checkoutUrl = checkoutUrl;
+        this.numCheckouts = numCheckouts;
     }
 
 
@@ -77,6 +91,12 @@ public class Director {
 
         classModels = new LinkedList<ClassModel>();
 
+        if (checkoutCommits)
+        {
+            log.info(Handy.f("Checking out from '%s'", checkoutUrl));
+            checkoutCode(checkoutUrl, numCheckouts, modelsFolder);
+        }
+
         if (parseCode) {
             parseProjectFiles(projectFilesFolder, classModels);
             saveModels(modelsFolder, classModels);
@@ -94,9 +114,15 @@ public class Director {
     }
 
 
+
     // ================================================================
 
     // Helpers
+
+    private void checkoutCode(URL checkoutUrl, int numCheckouts, File saveFolder) {
+        TimeMachine timeMachine = new TimeMachine(checkoutUrl, numCheckouts, saveFolder);
+
+    }
 
     private List<ClassModel> readModels(File modelsFolder) {
         log.info(Handy.f("Reading models..."));

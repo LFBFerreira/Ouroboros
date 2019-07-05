@@ -8,6 +8,7 @@ import org.apache.commons.cli.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.LogManager;
@@ -51,8 +52,11 @@ public class Main {
     private static final String helpArgument = "h";
 
     private static final String parseCodeArgument = "p";
+    private static final String checkoutCommitsArgument = "h";
     private static final String generateGraphicsArgument = "g";
 
+    private static final String checkoutUrlArgument = "u";
+    private static final String numberCheckoutsArgument = "n";
     private static final String codeFolderArgument = "c";
     private static final String modelsOutputFolderArgument = "m";
     private static final String visualsOutputFolderArgument = "v";
@@ -77,7 +81,7 @@ public class Main {
 
         // validate project files folder
         File projectFilesFolder = Handy.validateFolderPath(argumentsMapping.get(codeFolderArgument));
-        if (projectFilesFolder == null) {
+        if (argumentsMapping.containsKey(parseCodeArgument) && projectFilesFolder == null) {
             log.severe(Handy.f("The code folder is invalid"));
             //System.exit(0);
         }
@@ -99,6 +103,7 @@ public class Main {
             }
         }
 
+        // load the selected app config file, or loads a default it none is specified
         File propertiesFile = Handy.validateFilePath(argumentsMapping.get(appPropertiesFileArgument));
         if (propertiesFile == null) {
             if (!Handy.isNullOrEmpty(argumentsMapping.get(appPropertiesFileArgument))) {
@@ -116,12 +121,32 @@ public class Main {
             }
         }
 
+        // validate checkout URL
+        URL checkoutUrl = Handy.validateUrl(argumentsMapping.get(checkoutUrlArgument));
+        if (argumentsMapping.containsKey(checkoutCommitsArgument) && checkoutUrl == null) {
+            log.severe(Handy.f("The checkout URL is invalid"));
+            System.exit(0);
+        }
+
+        int numberCheckouts = 0;
+
+        try{
+            numberCheckouts = Integer.parseInt(argumentsMapping.get(numberCheckoutsArgument));
+        }
+        catch(NumberFormatException e)
+        {
+            log.info(Handy.f("The number of checkouts is either invalid or not present. Downloading All commits"));
+        }
+
         Director director = new Director(argumentsMapping.containsKey(parseCodeArgument),
                 argumentsMapping.containsKey(generateGraphicsArgument),
+                argumentsMapping.containsKey(checkoutCommitsArgument),
                 projectFilesFolder,
                 visualsOutputFolder,
                 modelsOutputFolder,
-                propertiesFile);
+                propertiesFile,
+                checkoutUrl,
+                numberCheckouts);
 
         log.info("Starting Ouroboros");
 
@@ -143,12 +168,7 @@ public class Main {
         Options argumentOptions = new Options();
         CommandLineParser parser = new DefaultParser();
 
-        argumentOptions.addOption(parseCodeArgument, false, "parse code");
-        argumentOptions.addOption(generateGraphicsArgument, false, "generate graphics");
-        argumentOptions.addOption(codeFolderArgument, true, "code folder path");
-        argumentOptions.addOption(visualsOutputFolderArgument, true, "graphics output folder path");
-        argumentOptions.addOption(modelsOutputFolderArgument, true, "models output folder path");
-        argumentOptions.addOption(appPropertiesFileArgument, true, "app configuration file path");
+        addArgumentOptions(argumentOptions);
 
         CommandLine commandLineArguments = null;
 
@@ -176,6 +196,10 @@ public class Main {
             argumentsMapping.put(generateGraphicsArgument, "");
         }
 
+        if (commandLineArguments.hasOption(checkoutCommitsArgument)) {
+            argumentsMapping.put(checkoutCommitsArgument, "");
+        }
+
         if (commandLineArguments.hasOption(codeFolderArgument)) {
             argumentsMapping.put(codeFolderArgument, commandLineArguments.getOptionValue(codeFolderArgument));
         }
@@ -192,7 +216,27 @@ public class Main {
             argumentsMapping.put(appPropertiesFileArgument, commandLineArguments.getOptionValue(appPropertiesFileArgument));
         }
 
+        if (commandLineArguments.hasOption(checkoutUrlArgument)) {
+            argumentsMapping.put(checkoutUrlArgument, commandLineArguments.getOptionValue(checkoutUrlArgument));
+        }
+
+        if (commandLineArguments.hasOption(numberCheckoutsArgument)) {
+            argumentsMapping.put(numberCheckoutsArgument, commandLineArguments.getOptionValue(numberCheckoutsArgument));
+        }
+
         return argumentsMapping;
+    }
+
+    private static void addArgumentOptions(Options argumentOptions) {
+        argumentOptions.addOption(parseCodeArgument, false, "parse code");
+        argumentOptions.addOption(generateGraphicsArgument, false, "generate graphics");
+        argumentOptions.addOption(checkoutCommitsArgument, false, "checkout commits");
+
+        argumentOptions.addOption(checkoutUrlArgument, true, "checkout URL");
+        argumentOptions.addOption(codeFolderArgument, true, "code folder");
+        argumentOptions.addOption(visualsOutputFolderArgument, true, "graphics output folder");
+        argumentOptions.addOption(modelsOutputFolderArgument, true, "models output folder");
+        argumentOptions.addOption(appPropertiesFileArgument, true, "app configuration file");
     }
 
 //    private static void testResources() {

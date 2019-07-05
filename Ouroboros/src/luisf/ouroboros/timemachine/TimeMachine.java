@@ -13,7 +13,7 @@ public class TimeMachine {
     private final PropertyManager props = PropertyManager.getInstance();
 
 
-    public void TimeMachine(URL repoUrl, int numCheckouts, File saveFolder)
+    public TimeMachine(URL repoUrl, int numCheckouts, File saveFolder)
     {
 
     }

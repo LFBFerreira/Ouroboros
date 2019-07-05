@@ -8,12 +8,12 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Processing" level="project" />
-    <orderEntry type="library" name="Commons CLI" level="project" />
-    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
-    <orderEntry type="library" name="video_export_processing-0.2" level="project" />
-    <orderEntry type="library" name="org.apache.commons:commons-configuration2:2.5" level="project" />
-    <orderEntry type="library" name="commons-beanutils:commons-beanutils:1.9.3" level="project" />
-    <orderEntry type="library" name="oscP5" level="project" />
+    <orderEntry type="library" exported="" name="Processing" level="project" />
+    <orderEntry type="library" exported="" name="Commons CLI" level="project" />
+    <orderEntry type="library" exported="" name="com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
+    <orderEntry type="library" exported="" name="video_export_processing-0.2" level="project" />
+    <orderEntry type="library" exported="" name="org.apache.commons:commons-configuration2:2.5" level="project" />
+    <orderEntry type="library" exported="" name="commons-beanutils:commons-beanutils:1.9.3" level="project" />
+    <orderEntry type="library" exported="" name="oscP5" level="project" />
   </component>
 </module>

@@ -49,8 +49,10 @@ public class Main {
     private static final String defaultAppConfigFileName = "app.config";
 
     private static final String helpArgument = "h";
+
     private static final String parseCodeArgument = "p";
     private static final String generateGraphicsArgument = "g";
+
     private static final String codeFolderArgument = "c";
     private static final String modelsOutputFolderArgument = "m";
     private static final String visualsOutputFolderArgument = "v";
@@ -66,6 +68,12 @@ public class Main {
     public static void main(String[] args) {
 
         Map<String, String> argumentsMapping = getArguments(args);
+
+        if (argumentsMapping.isEmpty())
+        {
+            System.out.println("\nParameters expected");
+            System.exit(1);
+        }
 
         // validate project files folder
         File projectFilesFolder = Handy.validateFolderPath(argumentsMapping.get(codeFolderArgument));

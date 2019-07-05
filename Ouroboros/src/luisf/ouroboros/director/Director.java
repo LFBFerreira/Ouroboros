@@ -100,6 +100,7 @@ public class Director {
         if (parseCode) {
             parseProjectFiles(projectFilesFolder, classModels);
             saveModels(modelsFolder, classModels);
+            log.info("Parsed " + classModels.size() + " classes");
         }
 
         if (generateGraphics) {
@@ -110,7 +111,6 @@ public class Director {
             startGenerator(projectFilesFolder, graphicsFolder, classModels);
         }
 
-        log.info("Parsed " + classModels.size() + " classes");
     }
 
 
@@ -120,8 +120,9 @@ public class Director {
     // Helpers
 
     private void checkoutCode(URL checkoutUrl, int numCheckouts, File saveFolder) {
-        TimeMachine timeMachine = new TimeMachine(checkoutUrl, numCheckouts, saveFolder);
+        TimeMachine timeMachine = new TimeMachine(checkoutUrl, saveFolder);
 
+        timeMachine.checkout(numCheckouts);
     }
 
     private List<ClassModel> readModels(File modelsFolder) {

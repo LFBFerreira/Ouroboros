@@ -227,7 +227,6 @@ public class Handy {
                 return new URL(urlString);
             } catch (MalformedURLException e) {
                 log.severe(Handy.f("Exception occurred while creating a URL from '%s'", urlString));
-                e.printStackTrace();
             }
         }
 

@@ -47,7 +47,9 @@ public class TimeMachine {
         branchName = props.getString("code.branchName");
     }
 
-    public void checkout() {
+    public List<File> checkout() {
+
+        List<File> folderList = new LinkedList<>();
 
         Boolean isFolderReady = prepareCheckoutFolder(checkoutfolder);
 
@@ -86,7 +88,9 @@ public class TimeMachine {
                         .setStartPoint(id)
                         .call();
 
-                copyFolder(tempFolder, new File(checkoutfolder, id));
+                File destinationFolder =new File(checkoutfolder, id);
+                copyFolder(tempFolder, destinationFolder);
+                folderList.add(destinationFolder);
             }
         } catch (GitAPIException e) {
             log.severe("Couldn't checkout the commit");
@@ -94,6 +98,8 @@ public class TimeMachine {
         }
 
         git.close();
+
+        return folderList;
     }
 
     private List<String> getCommitIDs(Git git, Repository repository, int numCheckouts) {
@@ -177,20 +183,9 @@ public class TimeMachine {
     }
 
 
-    private File createFolder(File folder) {
-        try {
-            folder.mkdir();
-        } catch (SecurityException e) {
-            log.severe("There was an exception while creating the directory");
-            return null;
-        }
-
-        return folder;
-    }
-
     private boolean copyFolder(File source, File destination) {
         if (!destination.exists()) {
-            createFolder(destination);
+            Handy.createFolder(destination);
         }
 
         try {

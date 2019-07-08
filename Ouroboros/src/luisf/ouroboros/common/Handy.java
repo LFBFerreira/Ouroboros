@@ -253,8 +253,14 @@ public class Handy {
     }
 
 
-    public static void deleteFolderContent(File folder)
-    {
+    public static File createFolder(File folder) {
+        try {
+            folder.mkdir();
+        } catch (SecurityException e) {
+            log.severe("There was an exception while creating the directory");
+            return null;
+        }
 
+        return folder;
     }
 }

@@ -8,7 +8,6 @@ import org.apache.commons.cli.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.LogManager;
@@ -51,15 +50,16 @@ public class Main {
 
     private static final String helpArgument = "h";
 
-    private static final String checkoutCommitsArgument = "h";
+    private static final String checkoutCommitsArgument = "k";
     private static final String checkoutDirectoryArgument = "d";
 
     private static final String parseCodeArgument = "p";
     private static final String codeFolderArgument = "c";
-    private static final String modelsOutputFolderArgument = "m";
 
     private static final String generateGraphicsArgument = "g";
     private static final String visualsOutputFolderArgument = "v";
+
+    private static final String modelsOutputFolderArgument = "m";
 
     private static final String appPropertiesFileArgument = "a";
 
@@ -72,7 +72,9 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        Map<String, String> argumentsMapping = getArguments(args);
+        Options argumentOptions = initializeArgumentOptions();
+
+        Map<String, String> argumentsMapping = getArguments(args, argumentOptions);
 
         if (argumentsMapping.isEmpty())
         {
@@ -80,23 +82,26 @@ public class Main {
             System.exit(1);
         }
 
-        // validate project files folder
+        // validate checkout folder
         File checkoutFolder = Handy.validateFolderPath(argumentsMapping.get(checkoutDirectoryArgument));
-        if (argumentsMapping.containsKey(parseCodeArgument) && checkoutFolder == null) {
-            log.severe(Handy.f("The checkout folder is invalid"));
+        if (argumentsMapping.containsKey(checkoutCommitsArgument) && checkoutFolder == null) {
+            log.severe(Handy.f("You need a valid Checkout folder to checkout commits"));
             //System.exit(0);
         }
 
         // validate project files folder
         File projectFilesFolder = Handy.validateFolderPath(argumentsMapping.get(codeFolderArgument));
-        if (argumentsMapping.containsKey(parseCodeArgument) && projectFilesFolder == null) {
-            log.severe(Handy.f("The code folder is invalid"));
+        if (argumentsMapping.containsKey(parseCodeArgument) &&
+                !argumentsMapping.containsKey(checkoutCommitsArgument) &&
+                projectFilesFolder == null) {
+            log.severe(Handy.f("You need a valid Code folder to parse"));
             //System.exit(0);
         }
 
         // validate models output folder
         File modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsOutputFolderArgument));
-        if (modelsOutputFolder == null) {
+        if ((argumentsMapping.containsKey(parseCodeArgument) || argumentsMapping.containsKey(generateGraphicsArgument)) &&
+                modelsOutputFolder == null) {
             log.severe(Handy.f("The models output folder is invalid"));
             //System.exit(0);
         }
@@ -154,13 +159,10 @@ public class Main {
      * @param args
      * @return
      */
-    private static Map<String, String> getArguments(String[] args) {
+    private static Map<String, String> getArguments(String[] args, Options argumentOptions) {
+
         Map<String, String> argumentsMapping = new HashMap<String, String>();
-        Options argumentOptions = new Options();
         CommandLineParser parser = new DefaultParser();
-
-        addArgumentOptions(argumentOptions);
-
         CommandLine commandLineArguments = null;
 
         try {
@@ -173,49 +175,21 @@ public class Main {
             e.printStackTrace();
         }
 
+        for (Option option: commandLineArguments.getOptions()) {
+            argumentsMapping.put(option.getOpt(), option.getValue());
+        }
+
         if (args.length == 0 || argumentsMapping.containsKey(helpArgument)) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("ant", argumentOptions);
+            formatter.printHelp("", argumentOptions);
         }
-
-        // populate arguments and their values
-        if (commandLineArguments.hasOption(parseCodeArgument)) {
-            argumentsMapping.put(parseCodeArgument, "");
-        }
-
-        if (commandLineArguments.hasOption(generateGraphicsArgument)) {
-            argumentsMapping.put(generateGraphicsArgument, "");
-        }
-
-        if (commandLineArguments.hasOption(checkoutCommitsArgument)) {
-            argumentsMapping.put(checkoutCommitsArgument, "");
-        }
-
-        if (commandLineArguments.hasOption(codeFolderArgument)) {
-            argumentsMapping.put(codeFolderArgument, commandLineArguments.getOptionValue(codeFolderArgument));
-        }
-
-        if (commandLineArguments.hasOption(visualsOutputFolderArgument)) {
-            argumentsMapping.put(visualsOutputFolderArgument, commandLineArguments.getOptionValue(visualsOutputFolderArgument));
-        }
-
-        if (commandLineArguments.hasOption(modelsOutputFolderArgument)) {
-            argumentsMapping.put(modelsOutputFolderArgument, commandLineArguments.getOptionValue(modelsOutputFolderArgument));
-        }
-
-        if (commandLineArguments.hasOption(appPropertiesFileArgument)) {
-            argumentsMapping.put(appPropertiesFileArgument, commandLineArguments.getOptionValue(appPropertiesFileArgument));
-        }
-
-        if (commandLineArguments.hasOption(checkoutDirectoryArgument)) {
-            argumentsMapping.put(checkoutDirectoryArgument, commandLineArguments.getOptionValue(checkoutDirectoryArgument));
-        }
-
 
         return argumentsMapping;
     }
 
-    private static void addArgumentOptions(Options argumentOptions) {
+    private static Options initializeArgumentOptions() {
+        Options argumentOptions = new Options();
+
         argumentOptions.addOption(parseCodeArgument, false, "parse code");
         argumentOptions.addOption(generateGraphicsArgument, false, "generate graphics");
         argumentOptions.addOption(checkoutCommitsArgument, false, "checkout commits");
@@ -227,29 +201,6 @@ public class Main {
         argumentOptions.addOption(appPropertiesFileArgument, true, "app configuration file");
         argumentOptions.addOption(checkoutDirectoryArgument, true, "checkouts folder");
 
-
+        return argumentOptions;
     }
-
-//    private static void testResources() {
-//        CodeAnalyzer analyzer = new CodeAnalyzer();
-//        System.out.println(analyzer);
-//
-//        ClassLoader classLoader = new Main().getClass().getClassLoader();
-//        File file = analyzer.getFileFromResources("app.config");
-//
-//        if (file != null) {
-//            System.out.println("Got it!");
-//        } else {
-//            System.out.println("Failed file");
-//        }
-
-//        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-//        InputStream is = classloader.getResourceAsStream("app.config");
-//
-//        if (is != null) {
-//            System.out.println("Got the stream!");
-//        } else {
-//            System.out.println("Failed stream");
-//        }
-//    }
 }

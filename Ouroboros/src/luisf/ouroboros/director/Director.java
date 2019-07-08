@@ -8,6 +8,7 @@ import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.timemachine.TimeMachine;
 import luisf.ouroboros.visualizer.Visualizer;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -59,6 +60,7 @@ public class Director {
 
 
     public void start() {
+
         // load configuration file
         if (props.loadConfiguration(appConfigFile.getPath()) == false) {
             log.severe(Handy.f("It was not possible to load the configuration file from %s", appConfigFile.getPath()));
@@ -67,22 +69,32 @@ public class Director {
 
         loadProperties();
 
+        List<File> checkedOutFolders = null;
+        classModels = new LinkedList<ClassModel>();
+
         if (checkoutCommits)
         {
-            log.info(Handy.f("Checking out from '%s'", checkoutUrl));
-            checkoutCode(checkoutUrl, numCheckouts, checkoutFolder);
+            checkedOutFolders = checkoutCode(checkoutUrl, numCheckouts, checkoutFolder);
         }
 
         if (parseCode) {
-            try {
-                log.info(Handy.f("Parsing code from '%s'", projectFilesFolder.getCanonicalPath()));
-                log.info(Handy.f("Saving models to '%s'", modelsFolder.getCanonicalPath()));
-            } catch (IOException e) {
-                log.severe("An exception occurred while getting the canonical path");
-                e.printStackTrace();
+            if (projectFilesFolder == null) {
+                // use the checked out folders
+                for (File projectFolder : checkedOutFolders) {
+                    File modelsSubFolder = Handy.createFolder(new File(modelsFolder, projectFolder.getName()));
+
+                    parseProjectFiles(projectFolder, classModels);
+                    saveModels(modelsSubFolder, classModels);
+                    log.info("Parsed " + classModels.size() + " classes");
+                }
             }
-        } else {
-            log.info(Handy.f("Not parsing code "));
+            else
+            {
+                // use the folder specified by the user
+                parseProjectFiles(projectFilesFolder, classModels);
+                saveModels(modelsFolder, classModels);
+                log.info("Parsed " + classModels.size() + " classes");
+            }
         }
 
         if (generateGraphics) {
@@ -92,20 +104,7 @@ public class Director {
                 log.severe("An exception occurred while getting the canonical path");
                 e.printStackTrace();
             }
-        } else {
-            log.info(Handy.f("Not generating graphics"));
-        }
 
-        classModels = new LinkedList<ClassModel>();
-
-
-        if (parseCode) {
-            parseProjectFiles(projectFilesFolder, classModels);
-            saveModels(modelsFolder, classModels);
-            log.info("Parsed " + classModels.size() + " classes");
-        }
-
-        if (generateGraphics) {
             if (classModels.isEmpty()) {
                 classModels = readModels(modelsFolder);
             }
@@ -130,10 +129,10 @@ public class Director {
 
     // Helpers
 
-    private void checkoutCode(URL checkoutUrl, int numCheckouts, File checkoutFolder) {
+    private List<File> checkoutCode(URL checkoutUrl, int numCheckouts, File checkoutFolder) {
         log.info("Getting commits...");
         TimeMachine timeMachine = new TimeMachine(checkoutUrl, checkoutFolder, numCheckouts);
-        timeMachine.checkout();
+        return timeMachine.checkout();
     }
 
     private List<ClassModel> readModels(File modelsFolder) {
@@ -145,6 +144,14 @@ public class Director {
     }
 
     private void parseProjectFiles(File projectFilesFolder, List<ClassModel> models) {
+        try {
+            log.info(Handy.f("Parsing code from '%s'", projectFilesFolder.getCanonicalPath()));
+            log.info(Handy.f("Saving models to '%s'", modelsFolder.getCanonicalPath()));
+        } catch (IOException e) {
+            log.severe("An exception occurred while getting the canonical path");
+            e.printStackTrace();
+        }
+
         models.clear();
 
         parser = new CodeAnalyzer(projectFilesFolder, models);

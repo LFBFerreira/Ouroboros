@@ -251,4 +251,10 @@ public class Handy {
             return false;
         }
     }
+
+
+    public static void deleteFolderContent(File folder)
+    {
+
+    }
 }

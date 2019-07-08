@@ -175,7 +175,7 @@ public class Main {
         try {
             commandLineArguments = parser.parse(argumentOptions, args);
         } catch (UnrecognizedOptionException e) {
-            log.severe("There was an unrecognized input parameter");
+            System.err.println("One of the arguments you used is incorrect");
             e.printStackTrace();
         } catch (ParseException e) {
             System.err.println("An exception occurred while parsing the command line arguments");
@@ -237,6 +237,7 @@ public class Main {
         argumentOptions.addOption(visualsOutputFolderArgument, true, "graphics output folder");
         argumentOptions.addOption(modelsOutputFolderArgument, true, "models output folder");
         argumentOptions.addOption(appPropertiesFileArgument, true, "app configuration file");
+        argumentOptions.addOption(numberCheckoutsArgument, true, "number of commits to checkout");
     }
 
 //    private static void testResources() {

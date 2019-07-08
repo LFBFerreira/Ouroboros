@@ -2,16 +2,18 @@ package luisf.ouroboros.timemachine;
 
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.properties.PropertyManager;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.internal.storage.file.FileRepository;
-import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -35,54 +37,12 @@ public class TimeMachine {
 
     public void checkout(int numCheckouts) {
 
-        parsedRepoUrl = removeProtocolFromUrl(repoUrl);
-
-        Repository repo = null;
-
-        try {
-            repo = new FileRepository(parsedRepoUrl + ".git");
-        } catch (IOException e) {
-            log.severe("Couldn't create a local repository");
-            return;
-        }
-
-        Git git = new Git(repo);
-
-        List<Ref> branches = null;
-        try {
-            branches = git.branchList().call();
-        } catch (GitAPIException e) {
-            log.severe("Couldn't get the branch list");
-            return;
-        }
-
-
-//        for (Ref branch : branches) {
-//            String branchName = branch.getName();
-//
-//            System.out.println("Commits of branch: " + branchName);
-//            System.out.println("-------------------------------------");
-//
-//            Iterable<RevCommit> commits = git.log().add(repo.resolve(branchName)).call();
-//
-//            List<RevCommit> commitsList = Lists.newArrayList(commits.iterator());
-//
-//            for (RevCommit commit : commitsList) {
-//                System.out.println(commit.getName());
-//                System.out.println(commit.getAuthorIdent().getName());
-//                System.out.println(new Date(commit.getCommitTime() * 1000L));
-//                System.out.println(commit.getFullMessage());
-//            }
-//        }
-
-        git.close();
-
         if (saveFolder == null) {
             log.severe("The models folder is null. Cannot checkout");
             return;
         }
 
-        File checkoutFolder = createCheckoutFolder(saveFolder, "test");
+        File checkoutFolder = createFolder(new File(saveFolder, "test"));
 
         if (checkoutFolder == null || !checkoutFolder.exists()) {
             try {
@@ -95,39 +55,113 @@ public class TimeMachine {
             return;
         }
 
+        if (checkoutFolder.isDirectory() && checkoutFolder.listFiles().length > 0) {
+            try {
+                FileUtils.cleanDirectory(checkoutFolder);
+            } catch (IOException e) {
+                log.severe("Couldn't clean the folder");
+                e.printStackTrace();
+            }
+        }
+
+        //parsedRepoUrl = removeProtocolFromUrl(repoUrl);
+
+
+        String branchName = "refs/heads/master"; // tag or branch
+
+        Git git = null;
+
+        // clone repository
+        try {
+            git = Git.cloneRepository()
+                    .setURI(repoUrl + ".git")
+                    .setDirectory(checkoutFolder)
+                    .setBranchesToClone(Arrays.asList(branchName))
+                    .call();
+        } catch (GitAPIException e) {
+            log.severe("Couldn't clone the repository");
+            e.printStackTrace();
+        }
+
+        // ---------------------------------------------------------------------------------------------
+        // initialize repo
+
+        Repository repository = git.getRepository();
+
+//        File dir = File.createTempFile("gitinit", ".test");
+//        if(!dir.delete()) {
+//            throw new IOException("Could not delete file " + dir);
+//        }
+
+
+        // initialize commit iterator
+        Iterable<RevCommit> commitIterator = null;
+        try {
+            commitIterator = git.log().add(repository.resolve(branchName)).call();
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<String> commitsToCheckout = new LinkedList<>();
+        int counter = 0;
+
+        // list all commits
+        for (RevCommit commit : commitIterator) {
+            PersonIdent authorIdent = commit.getAuthorIdent();
+            log.info(Handy.f("%s - %s [%s]", authorIdent.getWhen(), commit.getShortMessage(), commit.getName()));
+
+            if (counter < numCheckouts) {
+                commitsToCheckout.add(commit.getName());
+            }
+            counter++;
+        }
+
+
+        // ---------------------------------------------------------------------------------------------
+
+        // checkout specific ID
+        try {
+            for (String id : commitsToCheckout) {
+                git.checkout()
+                        .setCreateBranch(true)
+                        .setName("commit_" + id)
+                        .setStartPoint(id)
+                        .call();
+            }
+        } catch (GitAPIException e) {
+            log.severe("Couldn't checkout the commit");
+            e.printStackTrace();
+        }
+
+        // list branches
+//        List<Ref> call = null;
 //        try {
-//            log.info(Handy.f("Cloning '%d' commits from '%s'", numCheckouts, repoUrl));
-//
-//            Git.cloneRepository()
-//                    .setURI(repoUrl.toString())
-//                    .setDirectory(checkoutFolder)
-//                    .call();
-//
-//            System.out.println("Completed Cloning");
+//            call = git.branchList().call();
 //        } catch (GitAPIException e) {
-//            log.severe("Exception occurred while cloning repo");
+//            log.severe("Couldn't get the branch list");
 //            e.printStackTrace();
 //        }
+//
+//        for (Ref ref : call) {
+//            System.out.println("Branch: " + ref + " " + ref.getName() + " " + ref.getObjectId().getName());
+//        }
+
+        git.close();
+
     }
 
     // ================================================================
 
-    private File createCheckoutFolder(File saveFolder, String test) {
-        File newFolder = new File(Paths.get(saveFolder.toString(), test).toString());
-
+    private File createFolder(File folder) {
         try {
-            newFolder.mkdir();
+            folder.mkdir();
         } catch (SecurityException e) {
             log.severe("There was an exception while creating the checkout directory");
             return null;
         }
 
-        return newFolder;
-    }
-
-
-    private String removeProtocolFromUrl(URL repoUrl) {
-        String parsedUrl = repoUrl.toString();
-        return parsedUrl.replaceFirst("http[s]*://", "");
+        return folder;
     }
 }

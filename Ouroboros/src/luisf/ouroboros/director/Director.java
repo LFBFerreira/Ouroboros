@@ -30,6 +30,7 @@ public class Director {
     private File projectFilesFolder;
     private File graphicsFolder;
     private File modelsFolder;
+    private File checkoutFolder;
     private File appConfigFile;
     private URL checkoutUrl;
     private int numCheckouts;
@@ -43,8 +44,7 @@ public class Director {
                     File graphicsFolder,
                     File modelsFolder,
                     File appConfigFile,
-                    URL checkoutUrl,
-                    int numCheckouts) {
+                    File checkoutFolder) {
 
         this.parseCode = parseCode;
         this.generateGraphics = generateGraphics;
@@ -54,16 +54,23 @@ public class Director {
         this.graphicsFolder = graphicsFolder;
         this.modelsFolder = modelsFolder;
         this.appConfigFile = appConfigFile;
-        this.checkoutUrl = checkoutUrl;
-        this.numCheckouts = numCheckouts;
+        this.checkoutFolder = checkoutFolder;
     }
 
 
     public void start() {
-        // load configuration
+        // load configuration file
         if (props.loadConfiguration(appConfigFile.getPath()) == false) {
             log.severe(Handy.f("It was not possible to load the configuration file from %s", appConfigFile.getPath()));
             System.exit(0);
+        }
+
+        loadProperties();
+
+        if (checkoutCommits)
+        {
+            log.info(Handy.f("Checking out from '%s'", checkoutUrl));
+            checkoutCode(checkoutUrl, numCheckouts, checkoutFolder);
         }
 
         if (parseCode) {
@@ -91,11 +98,6 @@ public class Director {
 
         classModels = new LinkedList<ClassModel>();
 
-        if (checkoutCommits)
-        {
-            log.info(Handy.f("Checking out from '%s'", checkoutUrl));
-            checkoutCode(checkoutUrl, numCheckouts, modelsFolder);
-        }
 
         if (parseCode) {
             parseProjectFiles(projectFilesFolder, classModels);
@@ -113,16 +115,25 @@ public class Director {
 
     }
 
+    private void loadProperties() {
+        numCheckouts = props.getInt("code.numberCheckouts");
+
+        checkoutUrl = Handy.validateUrl(props.getString("code.gitAddress"));
+        if (checkoutUrl == null) {
+            log.severe(Handy.f("The checkout URL is invalid"));
+            System.exit(0);
+        }
+    }
 
 
     // ================================================================
 
     // Helpers
 
-    private void checkoutCode(URL checkoutUrl, int numCheckouts, File saveFolder) {
-        TimeMachine timeMachine = new TimeMachine(checkoutUrl, saveFolder);
-
-        timeMachine.checkout(numCheckouts);
+    private void checkoutCode(URL checkoutUrl, int numCheckouts, File checkoutFolder) {
+        log.info("Getting commits...");
+        TimeMachine timeMachine = new TimeMachine(checkoutUrl, checkoutFolder, numCheckouts);
+        timeMachine.checkout();
     }
 
     private List<ClassModel> readModels(File modelsFolder) {

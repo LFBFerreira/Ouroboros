@@ -51,15 +51,16 @@ public class Main {
 
     private static final String helpArgument = "h";
 
-    private static final String parseCodeArgument = "p";
     private static final String checkoutCommitsArgument = "h";
-    private static final String generateGraphicsArgument = "g";
+    private static final String checkoutDirectoryArgument = "d";
 
-    private static final String checkoutUrlArgument = "u";
-    private static final String numberCheckoutsArgument = "n";
+    private static final String parseCodeArgument = "p";
     private static final String codeFolderArgument = "c";
     private static final String modelsOutputFolderArgument = "m";
+
+    private static final String generateGraphicsArgument = "g";
     private static final String visualsOutputFolderArgument = "v";
+
     private static final String appPropertiesFileArgument = "a";
 
     // ================================================================
@@ -77,6 +78,13 @@ public class Main {
         {
             System.out.println("\nParameters expected");
             System.exit(1);
+        }
+
+        // validate project files folder
+        File checkoutFolder = Handy.validateFolderPath(argumentsMapping.get(checkoutDirectoryArgument));
+        if (argumentsMapping.containsKey(parseCodeArgument) && checkoutFolder == null) {
+            log.severe(Handy.f("The checkout folder is invalid"));
+            //System.exit(0);
         }
 
         // validate project files folder
@@ -121,22 +129,6 @@ public class Main {
             }
         }
 
-        // validate checkout URL
-        URL checkoutUrl = Handy.validateUrl(argumentsMapping.get(checkoutUrlArgument));
-        if (argumentsMapping.containsKey(checkoutCommitsArgument) && checkoutUrl == null) {
-            log.severe(Handy.f("The checkout URL is invalid"));
-            System.exit(0);
-        }
-
-        int numberCheckouts = 0;
-
-        try{
-            numberCheckouts = Integer.parseInt(argumentsMapping.get(numberCheckoutsArgument));
-        }
-        catch(NumberFormatException e)
-        {
-            log.info(Handy.f("The number of checkouts is either invalid or not present. Downloading All commits"));
-        }
 
         Director director = new Director(argumentsMapping.containsKey(parseCodeArgument),
                 argumentsMapping.containsKey(generateGraphicsArgument),
@@ -145,8 +137,7 @@ public class Main {
                 visualsOutputFolder,
                 modelsOutputFolder,
                 propertiesFile,
-                checkoutUrl,
-                numberCheckouts);
+                checkoutFolder);
 
         log.info("Starting Ouroboros");
 
@@ -216,13 +207,10 @@ public class Main {
             argumentsMapping.put(appPropertiesFileArgument, commandLineArguments.getOptionValue(appPropertiesFileArgument));
         }
 
-        if (commandLineArguments.hasOption(checkoutUrlArgument)) {
-            argumentsMapping.put(checkoutUrlArgument, commandLineArguments.getOptionValue(checkoutUrlArgument));
+        if (commandLineArguments.hasOption(checkoutDirectoryArgument)) {
+            argumentsMapping.put(checkoutDirectoryArgument, commandLineArguments.getOptionValue(checkoutDirectoryArgument));
         }
 
-        if (commandLineArguments.hasOption(numberCheckoutsArgument)) {
-            argumentsMapping.put(numberCheckoutsArgument, commandLineArguments.getOptionValue(numberCheckoutsArgument));
-        }
 
         return argumentsMapping;
     }
@@ -232,12 +220,14 @@ public class Main {
         argumentOptions.addOption(generateGraphicsArgument, false, "generate graphics");
         argumentOptions.addOption(checkoutCommitsArgument, false, "checkout commits");
 
-        argumentOptions.addOption(checkoutUrlArgument, true, "checkout URL");
         argumentOptions.addOption(codeFolderArgument, true, "code folder");
+        argumentOptions.addOption(checkoutDirectoryArgument, true, "code folder");
         argumentOptions.addOption(visualsOutputFolderArgument, true, "graphics output folder");
         argumentOptions.addOption(modelsOutputFolderArgument, true, "models output folder");
         argumentOptions.addOption(appPropertiesFileArgument, true, "app configuration file");
-        argumentOptions.addOption(numberCheckoutsArgument, true, "number of commits to checkout");
+        argumentOptions.addOption(checkoutDirectoryArgument, true, "checkouts folder");
+
+
     }
 
 //    private static void testResources() {

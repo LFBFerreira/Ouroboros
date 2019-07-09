@@ -26,9 +26,8 @@ public class TimeMachine {
     private final PropertyManager props = PropertyManager.getInstance();
 
     private URL repoUrl;
-    private String parsedRepoUrl;
     private File checkoutfolder;
-    private String pathFromOrigin;
+
     private int numCheckouts = 0;
     private String branchName;
 
@@ -43,7 +42,6 @@ public class TimeMachine {
     }
 
     private void loadProperties() {
-        pathFromOrigin = props.getString("code.pathFromOrigin");
         branchName = props.getString("code.branchName");
     }
 

@@ -53,89 +53,101 @@ public class Main {
     private static final String checkoutCommitsArgument = "k";
     private static final String checkoutDirectoryArgument = "d";
 
-    private static final String parseCodeArgument = "p";
-    private static final String codeFolderArgument = "c";
+    private static final String parseSingleProjectArgument = "ps";
+    private static final String parseMultipleProjectsArgument = "pm";
+    private static final String projectFolderArgument = "c";
 
     private static final String generateGraphicsArgument = "g";
-    private static final String visualsOutputFolderArgument = "v";
+    private static final String visualsFolderArgument = "v";
 
-    private static final String modelsOutputFolderArgument = "m";
+    private static final String modelsFolderArgument = "m";
 
     private static final String appPropertiesFileArgument = "a";
 
     // ================================================================
 
-    /**
-     * Main
-     *
-     * @param args
-     */
     public static void main(String[] args) {
-
         Options argumentOptions = initializeArgumentOptions();
 
         Map<String, String> argumentsMapping = getArguments(args, argumentOptions);
 
         if (argumentsMapping.isEmpty())
         {
-            System.out.println("\nParameters expected");
+            System.err.println("\nDon't know what to do without some parameters");
             System.exit(1);
         }
 
-        // validate checkout folder
-        File checkoutFolder = Handy.validateFolderPath(argumentsMapping.get(checkoutDirectoryArgument));
-        if (argumentsMapping.containsKey(checkoutCommitsArgument) && checkoutFolder == null) {
-            log.severe(Handy.f("You need a valid Checkout folder to checkout commits"));
-            //System.exit(0);
-        }
-
-        // validate project files folder
-        File projectFilesFolder = Handy.validateFolderPath(argumentsMapping.get(codeFolderArgument));
-        if (argumentsMapping.containsKey(parseCodeArgument) &&
-                !argumentsMapping.containsKey(checkoutCommitsArgument) &&
-                projectFilesFolder == null) {
-            log.severe(Handy.f("You need a valid Code folder to parse"));
-            //System.exit(0);
-        }
-
-        // validate models output folder
-        File modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsOutputFolderArgument));
-        if ((argumentsMapping.containsKey(parseCodeArgument) || argumentsMapping.containsKey(generateGraphicsArgument)) &&
-                modelsOutputFolder == null) {
-            log.severe(Handy.f("The models output folder is invalid"));
-            //System.exit(0);
-        }
-
-        // validate visuals output folder
-        File visualsOutputFolder = null;
-        if (argumentsMapping.containsKey(generateGraphicsArgument)) {
-            visualsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(visualsOutputFolderArgument));
-            if (visualsOutputFolder == null) {
-                log.severe(Handy.f("The graphics output folder is invalid"));
-                System.exit(0);
+        // checkout commits validation
+        File checkoutFolder = null;
+        if (argumentsMapping.containsKey(checkoutCommitsArgument))
+        {
+            checkoutFolder = Handy.validateFolderPath(argumentsMapping.get(checkoutDirectoryArgument));
+            if (checkoutFolder == null)
+            {
+                System.err.println(Handy.f("You need a valid Checkout folder to checkout commits"));
+                System.exit(1);
             }
         }
 
-        // load the selected app config file, or loads a default it none is specified
-        File propertiesFile = Handy.validateFilePath(argumentsMapping.get(appPropertiesFileArgument));
+        // parse code validation
+        File projectFilesFolder = null;
+        File modelsOutputFolder = null;
+        if (argumentsMapping.containsKey(parseSingleProjectArgument) ||
+                argumentsMapping.containsKey(parseMultipleProjectsArgument))
+        {
+            projectFilesFolder = Handy.validateFolderPath(argumentsMapping.get(projectFolderArgument));
+            if (projectFilesFolder == null)
+            {
+                System.err.println(Handy.f("You need a valid Checkout folder to checkout commits"));
+                System.exit(1);
+            }
+
+            modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsFolderArgument));
+            if (modelsOutputFolder == null)
+            {
+                System.err.println(Handy.f("The models output folder is invalid"));
+                System.exit(1);
+            }
+        }
+
+        // visuals validation
+        File visualsOutputFolder = null;
+        if (argumentsMapping.containsKey(generateGraphicsArgument)) {
+            visualsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(visualsFolderArgument));
+            if (visualsOutputFolder == null) {
+                System.err.println(Handy.f("The graphics output folder is invalid"));
+            }
+
+            modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsFolderArgument));
+            if (modelsOutputFolder == null)
+            {
+                System.err.println(Handy.f("The models output folder is invalid"));
+                System.exit(1);
+            }
+        }
+
+        // app config file validation
+        String propertiesFilePath = argumentsMapping.get(appPropertiesFileArgument);
+        File propertiesFile = Handy.validateFilePath(propertiesFilePath);
         if (propertiesFile == null) {
-            if (!Handy.isNullOrEmpty(argumentsMapping.get(appPropertiesFileArgument))) {
-                log.severe(Handy.f("It was not possible to load the app configuration file from %s",
+            if (!Handy.isNullOrEmpty(propertiesFilePath)) {
+                System.err.println(Handy.f("It was not possible to load the app configuration file from %s",
                         argumentsMapping.get(appPropertiesFileArgument)));
             }
 
             String configFile = Main.class.getClassLoader().getResource(defaultAppConfigFileName).getFile();
-            log.info(Handy.f("Loading default app configuration file from %s", configFile));
-            propertiesFile = Handy.validateFilePath(configFile);
 
+            System.out.println(Handy.f("Loading default app configuration file from %s", configFile));
+
+            propertiesFile = Handy.validateFilePath(configFile);
             if (propertiesFile == null) {
-                log.severe(Handy.f("Could not load the default app configuration file from %s", configFile));
-                System.exit(0);
+                System.err.println(Handy.f("Could not load the default app configuration file from %s", configFile));
+                System.exit(1);
             }
         }
 
-
-        Director director = new Director(argumentsMapping.containsKey(parseCodeArgument),
+        Director director = new Director(argumentsMapping.containsKey(parseSingleProjectArgument),
+                argumentsMapping.containsKey(parseMultipleProjectsArgument),
                 argumentsMapping.containsKey(generateGraphicsArgument),
                 argumentsMapping.containsKey(checkoutCommitsArgument),
                 projectFilesFolder,
@@ -148,6 +160,90 @@ public class Main {
 
         director.start();
     }
+
+    /**
+     * Main
+     *
+     * @param args
+     */
+//    public static void main2(String[] args) {
+//
+//        Options argumentOptions = initializeArgumentOptions();
+//
+//        Map<String, String> argumentsMapping = getArguments(args, argumentOptions);
+//
+//        if (argumentsMapping.isEmpty())
+//        {
+//            System.out.println("\nParameters expected");
+//            System.exit(1);
+//        }
+//
+//        // validate checkout folder
+//        File checkoutFolder = Handy.validateFolderPath(argumentsMapping.get(checkoutDirectoryArgument));
+//        if (argumentsMapping.containsKey(checkoutCommitsArgument) && checkoutFolder == null) {
+//            log.severe(Handy.f("You need a valid Checkout folder to checkout commits"));
+//            //System.exit(0);
+//        }
+//
+//        // validate project files folder
+//        File projectFilesFolder = Handy.validateFolderPath(argumentsMapping.get(projectFolderArgument));
+//        if (argumentsMapping.containsKey(parseSingleProjectArgument) &&
+//                !argumentsMapping.containsKey(checkoutCommitsArgument) &&
+//                projectFilesFolder == null) {
+//            log.severe(Handy.f("You need a valid Code folder to parse"));
+//            //System.exit(0);
+//        }
+//
+//        // validate models output folder
+//        File modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsFolderArgument));
+//        if ((argumentsMapping.containsKey(parseSingleProjectArgument) || argumentsMapping.containsKey(generateGraphicsArgument)) &&
+//                modelsOutputFolder == null) {
+//            log.severe(Handy.f("The models output folder is invalid"));
+//            //System.exit(0);
+//        }
+//
+//        // validate visuals output folder
+//        File visualsOutputFolder = null;
+//        if (argumentsMapping.containsKey(generateGraphicsArgument)) {
+//            visualsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(visualsFolderArgument));
+//            if (visualsOutputFolder == null) {
+//                log.severe(Handy.f("The graphics output folder is invalid"));
+//                System.exit(0);
+//            }
+//        }
+//
+//        // load the selected app config file, or loads a default it none is specified
+//        File propertiesFile = Handy.validateFilePath(argumentsMapping.get(appPropertiesFileArgument));
+//        if (propertiesFile == null) {
+//            if (!Handy.isNullOrEmpty(argumentsMapping.get(appPropertiesFileArgument))) {
+//                log.severe(Handy.f("It was not possible to load the app configuration file from %s",
+//                        argumentsMapping.get(appPropertiesFileArgument)));
+//            }
+//
+//            String configFile = Main.class.getClassLoader().getResource(defaultAppConfigFileName).getFile();
+//            log.info(Handy.f("Loading default app configuration file from %s", configFile));
+//            propertiesFile = Handy.validateFilePath(configFile);
+//
+//            if (propertiesFile == null) {
+//                log.severe(Handy.f("Could not load the default app configuration file from %s", configFile));
+//                System.exit(0);
+//            }
+//        }
+//
+//
+//        Director director = new Director(argumentsMapping.containsKey(parseSingleProjectArgument),
+//                argumentsMapping.containsKey(generateGraphicsArgument),
+//                argumentsMapping.containsKey(checkoutCommitsArgument),
+//                projectFilesFolder,
+//                visualsOutputFolder,
+//                modelsOutputFolder,
+//                propertiesFile,
+//                checkoutFolder);
+//
+//        log.info("Starting Ouroboros");
+//
+//        director.start();
+//    }
 
     // ================================================================
 
@@ -190,16 +286,16 @@ public class Main {
     private static Options initializeArgumentOptions() {
         Options argumentOptions = new Options();
 
-        argumentOptions.addOption(parseCodeArgument, false, "parse code");
+        argumentOptions.addOption(parseSingleProjectArgument, false, "parse single project");
+        argumentOptions.addOption(parseMultipleProjectsArgument, false, "parse multiple projects");
         argumentOptions.addOption(generateGraphicsArgument, false, "generate graphics");
         argumentOptions.addOption(checkoutCommitsArgument, false, "checkout commits");
 
-        argumentOptions.addOption(codeFolderArgument, true, "code folder");
         argumentOptions.addOption(checkoutDirectoryArgument, true, "code folder");
-        argumentOptions.addOption(visualsOutputFolderArgument, true, "graphics output folder");
-        argumentOptions.addOption(modelsOutputFolderArgument, true, "models output folder");
+        argumentOptions.addOption(projectFolderArgument, true, "code folder");
+        argumentOptions.addOption(visualsFolderArgument, true, "graphics output folder");
+        argumentOptions.addOption(modelsFolderArgument, true, "models output folder");
         argumentOptions.addOption(appPropertiesFileArgument, true, "app configuration file");
-        argumentOptions.addOption(checkoutDirectoryArgument, true, "checkouts folder");
 
         return argumentOptions;
     }

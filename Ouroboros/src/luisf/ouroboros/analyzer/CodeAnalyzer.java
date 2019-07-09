@@ -38,7 +38,10 @@ public class CodeAnalyzer {
      *
      * @return
      */
-    public Boolean parseFiles() {
+    public Boolean parseProject() {
+
+        loadProperties();
+
         List<File> fileList = new ArrayList<File>();
 
         Parse.getFileListRecursive(projectFilesFolder.getPath(), fileList, fileExtensionFilter);
@@ -59,6 +62,10 @@ public class CodeAnalyzer {
         debugPrint(classModels);
 
         return !fileList.isEmpty();
+    }
+
+    private void loadProperties() {
+
     }
 
     public List<ClassModel> getModels() {

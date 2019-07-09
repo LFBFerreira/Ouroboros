@@ -86,7 +86,7 @@ public class Director {
 
         if (parseSingleProject) {
             try {
-                FileUtils.deleteDirectory(modelsFolder);
+                FileUtils.cleanDirectory(modelsFolder);
             } catch (IOException e) {
                 log.severe(Handy.f("It was not possible to delete the contents of '%s'",
                         projectFilesFolder.getAbsolutePath()));

@@ -75,7 +75,8 @@ public class PropertyManager {
         params = new Parameters();
 
         builder = new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
-                .configure(params.xml().setListDelimiterHandler(new DefaultListDelimiterHandler(','))
+                .configure(params.xml()
+                        .setListDelimiterHandler(new DefaultListDelimiterHandler(','))
                         .setFile(configurationFile).setValidating(false));
 
         // load the configuration file

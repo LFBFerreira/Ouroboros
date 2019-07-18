@@ -66,14 +66,13 @@ public class Main {
 
     // ================================================================
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
         Options argumentOptions = initializeArgumentOptions();
-
         Map<String, String> argumentsMapping = getArguments(args, argumentOptions);
 
         if (argumentsMapping.isEmpty())
         {
-            System.err.println("\nDon't know what to do without some parameters");
+            //System.err.println("\nDon't know what to do without some parameters");
             System.exit(1);
         }
 
@@ -161,90 +160,6 @@ public class Main {
         director.start();
     }
 
-    /**
-     * Main
-     *
-     * @param args
-     */
-//    public static void main2(String[] args) {
-//
-//        Options argumentOptions = initializeArgumentOptions();
-//
-//        Map<String, String> argumentsMapping = getArguments(args, argumentOptions);
-//
-//        if (argumentsMapping.isEmpty())
-//        {
-//            System.out.println("\nParameters expected");
-//            System.exit(1);
-//        }
-//
-//        // validate checkout folder
-//        File checkoutFolder = Handy.validateFolderPath(argumentsMapping.get(checkoutDirectoryArgument));
-//        if (argumentsMapping.containsKey(checkoutCommitsArgument) && checkoutFolder == null) {
-//            log.severe(Handy.f("You need a valid Checkout folder to checkout commits"));
-//            //System.exit(0);
-//        }
-//
-//        // validate project files folder
-//        File projectFilesFolder = Handy.validateFolderPath(argumentsMapping.get(projectFolderArgument));
-//        if (argumentsMapping.containsKey(parseSingleProjectArgument) &&
-//                !argumentsMapping.containsKey(checkoutCommitsArgument) &&
-//                projectFilesFolder == null) {
-//            log.severe(Handy.f("You need a valid Code folder to parse"));
-//            //System.exit(0);
-//        }
-//
-//        // validate models output folder
-//        File modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsFolderArgument));
-//        if ((argumentsMapping.containsKey(parseSingleProjectArgument) || argumentsMapping.containsKey(generateGraphicsArgument)) &&
-//                modelsOutputFolder == null) {
-//            log.severe(Handy.f("The models output folder is invalid"));
-//            //System.exit(0);
-//        }
-//
-//        // validate visuals output folder
-//        File visualsOutputFolder = null;
-//        if (argumentsMapping.containsKey(generateGraphicsArgument)) {
-//            visualsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(visualsFolderArgument));
-//            if (visualsOutputFolder == null) {
-//                log.severe(Handy.f("The graphics output folder is invalid"));
-//                System.exit(0);
-//            }
-//        }
-//
-//        // load the selected app config file, or loads a default it none is specified
-//        File propertiesFile = Handy.validateFilePath(argumentsMapping.get(appPropertiesFileArgument));
-//        if (propertiesFile == null) {
-//            if (!Handy.isNullOrEmpty(argumentsMapping.get(appPropertiesFileArgument))) {
-//                log.severe(Handy.f("It was not possible to load the app configuration file from %s",
-//                        argumentsMapping.get(appPropertiesFileArgument)));
-//            }
-//
-//            String configFile = Main.class.getClassLoader().getResource(defaultAppConfigFileName).getFile();
-//            log.info(Handy.f("Loading default app configuration file from %s", configFile));
-//            propertiesFile = Handy.validateFilePath(configFile);
-//
-//            if (propertiesFile == null) {
-//                log.severe(Handy.f("Could not load the default app configuration file from %s", configFile));
-//                System.exit(0);
-//            }
-//        }
-//
-//
-//        Director director = new Director(argumentsMapping.containsKey(parseSingleProjectArgument),
-//                argumentsMapping.containsKey(generateGraphicsArgument),
-//                argumentsMapping.containsKey(checkoutCommitsArgument),
-//                projectFilesFolder,
-//                visualsOutputFolder,
-//                modelsOutputFolder,
-//                propertiesFile,
-//                checkoutFolder);
-//
-//        log.info("Starting Ouroboros");
-//
-//        director.start();
-//    }
-
     // ================================================================
 
     // Helpers
@@ -277,7 +192,7 @@ public class Main {
 
         if (args.length == 0 || argumentsMapping.containsKey(helpArgument)) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("", argumentOptions);
+            formatter.printHelp("java -cp \".;.\\libraries\\*\" luisf.ouroboros.Main", argumentOptions);
         }
 
         return argumentsMapping;

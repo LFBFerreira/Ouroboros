@@ -115,6 +115,7 @@ public class Main {
             visualsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(visualsFolderArgument));
             if (visualsOutputFolder == null) {
                 System.err.println(Handy.f("The graphics output folder is invalid"));
+                System.exit(1);
             }
 
             modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsFolderArgument));

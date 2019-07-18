@@ -13,10 +13,10 @@
     <orderEntry type="library" exported="" name="commons-configuration" level="project" />
     <orderEntry type="library" exported="" name="commons-beanutils" level="project" />
     <orderEntry type="library" exported="" name="oscP5" level="project" />
-    <orderEntry type="library" name="jGit" level="project" />
-    <orderEntry type="library" name="proscene" level="project" />
-    <orderEntry type="library" name="processing-core" level="project" />
-    <orderEntry type="library" name="commons-cli:commons-cli:1.4" level="project" />
-    <orderEntry type="library" name="commons-io:commons-io:2.6" level="project" />
+    <orderEntry type="library" exported="" name="jGit" level="project" />
+    <orderEntry type="library" exported="" name="proscene" level="project" />
+    <orderEntry type="library" exported="" name="processing-core" level="project" />
+    <orderEntry type="library" exported="" name="commons-cli:commons-cli:1.4" level="project" />
+    <orderEntry type="library" exported="" name="commons-io:commons-io:2.6" level="project" />
   </component>
 </module>

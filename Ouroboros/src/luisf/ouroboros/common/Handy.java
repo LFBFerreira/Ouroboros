@@ -6,6 +6,10 @@ import processing.core.PShape;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.logging.Logger;
@@ -215,4 +219,48 @@ public class Handy {
         return content;
     }
 
+    public static URL validateUrl(String urlString)
+    {
+        if(isValidURL(urlString))
+        {
+            try {
+                return new URL(urlString);
+            } catch (MalformedURLException e) {
+                log.severe(Handy.f("Exception occurred while creating a URL from '%s'", urlString));
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Validates an URL
+     * @param url
+     * @return
+     */
+    public static boolean isValidURL(String url) {
+        if (Handy.isNullOrEmpty(url))
+        {
+            return false;
+        }
+
+        try {
+            new URI(url).parseServerAuthority();
+            return true;
+        } catch (URISyntaxException e) {
+            return false;
+        }
+    }
+
+
+    public static File createFolder(File folder) {
+        try {
+            folder.mkdir();
+        } catch (SecurityException e) {
+            log.severe("There was an exception while creating the directory");
+            return null;
+        }
+
+        return folder;
+    }
 }

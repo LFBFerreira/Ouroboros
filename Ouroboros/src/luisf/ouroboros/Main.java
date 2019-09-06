@@ -49,71 +49,112 @@ public class Main {
     private static final String defaultAppConfigFileName = "app.config";
 
     private static final String helpArgument = "h";
-    private static final String parseCodeArgument = "p";
+
+    private static final String checkoutCommitsArgument = "k";
+    private static final String checkoutDirectoryArgument = "d";
+
+    private static final String parseSingleProjectArgument = "ps";
+    private static final String parseMultipleProjectsArgument = "pm";
+    private static final String projectFolderArgument = "c";
+
     private static final String generateGraphicsArgument = "g";
-    private static final String codeFolderArgument = "c";
-    private static final String modelsOutputFolderArgument = "m";
-    private static final String visualsOutputFolderArgument = "v";
+    private static final String visualsFolderArgument = "v";
+
+    private static final String modelsFolderArgument = "m";
+
     private static final String appPropertiesFileArgument = "a";
 
     // ================================================================
 
-    /**
-     * Main
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
+    public static void main(String[] args){
+        Options argumentOptions = initializeArgumentOptions();
+        Map<String, String> argumentsMapping = getArguments(args, argumentOptions);
 
-        Map<String, String> argumentsMapping = getArguments(args);
-
-        // validate project files folder
-        File projectFilesFolder = Handy.validateFolderPath(argumentsMapping.get(codeFolderArgument));
-        if (projectFilesFolder == null) {
-            log.severe(Handy.f("The code folder is invalid"));
-            //System.exit(0);
+        if (argumentsMapping.isEmpty())
+        {
+            //System.err.println("\nDon't know what to do without some parameters");
+            System.exit(1);
         }
 
-        // validate models output folder
-        File modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsOutputFolderArgument));
-        if (modelsOutputFolder == null) {
-            log.severe(Handy.f("The models output folder is invalid"));
-            //System.exit(0);
-        }
-
-        // validate visuals output folder
-        File visualsOutputFolder = null;
-        if (argumentsMapping.containsKey(generateGraphicsArgument)) {
-            visualsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(visualsOutputFolderArgument));
-            if (visualsOutputFolder == null) {
-                log.severe(Handy.f("The graphics output folder is invalid"));
-                System.exit(0);
+        // checkout commits validation
+        File checkoutFolder = null;
+        if (argumentsMapping.containsKey(checkoutCommitsArgument))
+        {
+            checkoutFolder = Handy.validateFolderPath(argumentsMapping.get(checkoutDirectoryArgument));
+            if (checkoutFolder == null)
+            {
+                System.err.println(Handy.f("You need a valid Checkout folder to checkout commits"));
+                System.exit(1);
             }
         }
 
-        File propertiesFile = Handy.validateFilePath(argumentsMapping.get(appPropertiesFileArgument));
+        // parse code validation
+        File projectFilesFolder = null;
+        File modelsOutputFolder = null;
+        if (argumentsMapping.containsKey(parseSingleProjectArgument) ||
+                argumentsMapping.containsKey(parseMultipleProjectsArgument))
+        {
+            projectFilesFolder = Handy.validateFolderPath(argumentsMapping.get(projectFolderArgument));
+            if (projectFilesFolder == null)
+            {
+                System.err.println(Handy.f("You need a valid Checkout folder to checkout commits"));
+                System.exit(1);
+            }
+
+            modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsFolderArgument));
+            if (modelsOutputFolder == null)
+            {
+                System.err.println(Handy.f("The models output folder is invalid"));
+                System.exit(1);
+            }
+        }
+
+        // visuals validation
+        File visualsOutputFolder = null;
+        if (argumentsMapping.containsKey(generateGraphicsArgument)) {
+            visualsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(visualsFolderArgument));
+            if (visualsOutputFolder == null) {
+                System.err.println(Handy.f("The graphics output folder is invalid"));
+                System.exit(1);
+            }
+
+            modelsOutputFolder = Handy.validateFolderPath(argumentsMapping.get(modelsFolderArgument));
+            if (modelsOutputFolder == null)
+            {
+                System.err.println(Handy.f("The models output folder is invalid"));
+                System.exit(1);
+            }
+        }
+
+        // app config file validation
+        String propertiesFilePath = argumentsMapping.get(appPropertiesFileArgument);
+        File propertiesFile = Handy.validateFilePath(propertiesFilePath);
         if (propertiesFile == null) {
-            if (!Handy.isNullOrEmpty(argumentsMapping.get(appPropertiesFileArgument))) {
-                log.severe(Handy.f("It was not possible to load the app configuration file from %s",
+            if (!Handy.isNullOrEmpty(propertiesFilePath)) {
+                System.err.println(Handy.f("It was not possible to load the app configuration file from %s",
                         argumentsMapping.get(appPropertiesFileArgument)));
             }
 
             String configFile = Main.class.getClassLoader().getResource(defaultAppConfigFileName).getFile();
-            log.info(Handy.f("Loading default app configuration file from %s", configFile));
-            propertiesFile = Handy.validateFilePath(configFile);
 
+            System.out.println(Handy.f("Loading default app configuration file from %s", configFile));
+
+            propertiesFile = Handy.validateFilePath(configFile);
             if (propertiesFile == null) {
-                log.severe(Handy.f("Could not load the default app configuration file from %s", configFile));
-                System.exit(0);
+                System.err.println(Handy.f("Could not load the default app configuration file from %s", configFile));
+                System.exit(1);
             }
         }
 
-        Director director = new Director(argumentsMapping.containsKey(parseCodeArgument),
+        Director director = new Director(argumentsMapping.containsKey(parseSingleProjectArgument),
+                argumentsMapping.containsKey(parseMultipleProjectsArgument),
                 argumentsMapping.containsKey(generateGraphicsArgument),
+                argumentsMapping.containsKey(checkoutCommitsArgument),
                 projectFilesFolder,
                 visualsOutputFolder,
                 modelsOutputFolder,
-                propertiesFile);
+                propertiesFile,
+                checkoutFolder);
 
         log.info("Starting Ouroboros");
 
@@ -130,83 +171,48 @@ public class Main {
      * @param args
      * @return
      */
-    private static Map<String, String> getArguments(String[] args) {
+    private static Map<String, String> getArguments(String[] args, Options argumentOptions) {
+
         Map<String, String> argumentsMapping = new HashMap<String, String>();
-        Options argumentOptions = new Options();
         CommandLineParser parser = new DefaultParser();
-
-        argumentOptions.addOption(parseCodeArgument, false, "parse code");
-        argumentOptions.addOption(generateGraphicsArgument, false, "generate graphics");
-        argumentOptions.addOption(codeFolderArgument, true, "code folder path");
-        argumentOptions.addOption(visualsOutputFolderArgument, true, "graphics output folder path");
-        argumentOptions.addOption(modelsOutputFolderArgument, true, "models output folder path");
-        argumentOptions.addOption(appPropertiesFileArgument, true, "app configuration file path");
-
         CommandLine commandLineArguments = null;
 
         try {
             commandLineArguments = parser.parse(argumentOptions, args);
         } catch (UnrecognizedOptionException e) {
-            log.severe("There was an unrecognized input parameter");
+            System.err.println("One of the arguments you used is incorrect");
             e.printStackTrace();
         } catch (ParseException e) {
             System.err.println("An exception occurred while parsing the command line arguments");
             e.printStackTrace();
         }
 
+        for (Option option: commandLineArguments.getOptions()) {
+            argumentsMapping.put(option.getOpt(), option.getValue());
+        }
+
         if (args.length == 0 || argumentsMapping.containsKey(helpArgument)) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("ant", argumentOptions);
-        }
-
-        // populate arguments and their values
-        if (commandLineArguments.hasOption(parseCodeArgument)) {
-            argumentsMapping.put(parseCodeArgument, "");
-        }
-
-        if (commandLineArguments.hasOption(generateGraphicsArgument)) {
-            argumentsMapping.put(generateGraphicsArgument, "");
-        }
-
-        if (commandLineArguments.hasOption(codeFolderArgument)) {
-            argumentsMapping.put(codeFolderArgument, commandLineArguments.getOptionValue(codeFolderArgument));
-        }
-
-        if (commandLineArguments.hasOption(visualsOutputFolderArgument)) {
-            argumentsMapping.put(visualsOutputFolderArgument, commandLineArguments.getOptionValue(visualsOutputFolderArgument));
-        }
-
-        if (commandLineArguments.hasOption(modelsOutputFolderArgument)) {
-            argumentsMapping.put(modelsOutputFolderArgument, commandLineArguments.getOptionValue(modelsOutputFolderArgument));
-        }
-
-        if (commandLineArguments.hasOption(appPropertiesFileArgument)) {
-            argumentsMapping.put(appPropertiesFileArgument, commandLineArguments.getOptionValue(appPropertiesFileArgument));
+            formatter.printHelp("java -cp \".;.\\libraries\\*\" luisf.ouroboros.Main", argumentOptions);
         }
 
         return argumentsMapping;
     }
 
-//    private static void testResources() {
-//        CodeAnalyzer analyzer = new CodeAnalyzer();
-//        System.out.println(analyzer);
-//
-//        ClassLoader classLoader = new Main().getClass().getClassLoader();
-//        File file = analyzer.getFileFromResources("app.config");
-//
-//        if (file != null) {
-//            System.out.println("Got it!");
-//        } else {
-//            System.out.println("Failed file");
-//        }
+    private static Options initializeArgumentOptions() {
+        Options argumentOptions = new Options();
 
-//        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-//        InputStream is = classloader.getResourceAsStream("app.config");
-//
-//        if (is != null) {
-//            System.out.println("Got the stream!");
-//        } else {
-//            System.out.println("Failed stream");
-//        }
-//    }
+        argumentOptions.addOption(parseSingleProjectArgument, false, "parse single project");
+        argumentOptions.addOption(parseMultipleProjectsArgument, false, "parse multiple projects");
+        argumentOptions.addOption(generateGraphicsArgument, false, "generate graphics");
+        argumentOptions.addOption(checkoutCommitsArgument, false, "checkout commits");
+
+        argumentOptions.addOption(checkoutDirectoryArgument, true, "code folder");
+        argumentOptions.addOption(projectFolderArgument, true, "code folder");
+        argumentOptions.addOption(visualsFolderArgument, true, "graphics output folder");
+        argumentOptions.addOption(modelsFolderArgument, true, "models output folder");
+        argumentOptions.addOption(appPropertiesFileArgument, true, "app configuration file");
+
+        return argumentOptions;
+    }
 }

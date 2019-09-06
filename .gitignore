@@ -1,5 +1,7 @@
-Ouroboros/out
-graphics_output
-models_output
 Ouroboros/.idea/
 Ouroboros/.idea/workspace.xml
+graphics/
+models/
+commits/
+graphics_output/
+models_output/

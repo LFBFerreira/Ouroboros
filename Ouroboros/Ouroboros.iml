@@ -8,12 +8,15 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Processing" level="project" />
-    <orderEntry type="library" name="Commons CLI" level="project" />
-    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
-    <orderEntry type="library" name="video_export_processing-0.2" level="project" />
-    <orderEntry type="library" name="org.apache.commons:commons-configuration2:2.5" level="project" />
-    <orderEntry type="library" name="commons-beanutils:commons-beanutils:1.9.3" level="project" />
-    <orderEntry type="library" name="oscP5" level="project" />
+    <orderEntry type="library" exported="" name="jackson" level="project" />
+    <orderEntry type="library" exported="" name="videoExport" level="project" />
+    <orderEntry type="library" exported="" name="commons-configuration" level="project" />
+    <orderEntry type="library" exported="" name="commons-beanutils" level="project" />
+    <orderEntry type="library" exported="" name="oscP5" level="project" />
+    <orderEntry type="library" exported="" name="jGit" level="project" />
+    <orderEntry type="library" exported="" name="proscene" level="project" />
+    <orderEntry type="library" exported="" name="processing-core" level="project" />
+    <orderEntry type="library" exported="" name="commons-cli:commons-cli:1.4" level="project" />
+    <orderEntry type="library" exported="" name="commons-io:commons-io:2.6" level="project" />
   </component>
 </module>

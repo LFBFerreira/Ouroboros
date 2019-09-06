@@ -65,7 +65,7 @@ public class ClassSlice implements DrawableInterface {
 
         sliceWidth = classModel.getMethods().size() * (methodDepth + methodMargin * 2);
 
-        classSlice = Shaper.createBoxWireframe(sliceWidth > 0 ? sliceWidth : zeroWidth, sliceHeight + floorOffset * 2, classDepth, parent);
+        classSlice = Shaper.createBox(sliceWidth > 0 ? sliceWidth : zeroWidth, sliceHeight + floorOffset * 2, classDepth, parent);
         //classSlice.setFill(classFillColor);
         //classSlice.setStroke(classLineColor);
     }

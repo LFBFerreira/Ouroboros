@@ -207,8 +207,8 @@ public class Main {
         argumentOptions.addOption(generateGraphicsArgument, false, "generate graphics");
         argumentOptions.addOption(checkoutCommitsArgument, false, "checkout commits");
 
-        argumentOptions.addOption(checkoutDirectoryArgument, true, "code folder");
-        argumentOptions.addOption(projectFolderArgument, true, "code folder");
+        argumentOptions.addOption(checkoutDirectoryArgument, true, "commits folder");
+        argumentOptions.addOption(projectFolderArgument, true, "sources folder");
         argumentOptions.addOption(visualsFolderArgument, true, "graphics output folder");
         argumentOptions.addOption(modelsFolderArgument, true, "models output folder");
         argumentOptions.addOption(appPropertiesFileArgument, true, "app configuration file");

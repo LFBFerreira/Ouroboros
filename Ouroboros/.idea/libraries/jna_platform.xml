@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="jna-platform">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libraries/video_export_processing-0.2.3/library/jna-platform.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/video_export_processing-0.2.3/library/jna.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/video_export_processing-0.2.3/library/VideoExport.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

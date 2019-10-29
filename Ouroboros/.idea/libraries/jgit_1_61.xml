@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="jgit-1.61">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libraries/jgit/bcpg-jdk15on-1.61.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/jgit/bcpkix-jdk15on-1.61.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/jgit/bcprov-jdk15on-1.61.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/jgit/JavaEWAH-1.1.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/jgit/jsch-0.1.55.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/jgit/jzlib-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/jgit/org.eclipse.jgit-5.4.0.201906121030-r.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/jgit/slf4j-api-1.7.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/libraries/jgit/jsch-0.1.55-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="proscene">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libraries/proscene-3.0.0/library/proscene.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="file://$PROJECT_DIR$/libraries/proscene-3.0.0/reference" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

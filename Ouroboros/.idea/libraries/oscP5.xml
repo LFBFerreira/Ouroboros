@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="oscP5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libraries/oscP5-0.9/library/oscP5.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="file://$PROJECT_DIR$/libraries/oscP5-0.9/reference" />
+    </JAVADOC>
+    <SOURCES />
+    <excluded>
+      <root url="file://$PROJECT_DIR$/libraries/oscP5-0.9/library" />
+    </excluded>
+  </library>
+</component>

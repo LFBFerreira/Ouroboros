@@ -58,13 +58,15 @@ public class TimeMachine {
 
         // clone repository
         try {
-            log.warning(Handy.f("Cloning '%s' from %s. It might take a few seconds", branchName, repoUrl));
+            log.warning(Handy.f("Cloning %s - %s", branchName, repoUrl));
+            log.warning(Handy.f("It might take a few seconds"));
 
             git = Git.cloneRepository()
                     .setURI(repoUrl + ".git")
                     .setDirectory(tempFolder)
                     .setBranchesToClone(Arrays.asList(branchName))
                     .call();
+
         } catch (GitAPIException e) {
             log.severe("Couldn't clone the repository");
             e.printStackTrace();
@@ -109,22 +111,17 @@ public class TimeMachine {
             commitIterator = git.log().add(repository.resolve(branchName)).call();
         } catch (GitAPIException e) {
             e.printStackTrace();
+            return commitsToCheckout;
         } catch (IOException e) {
             e.printStackTrace();
+            return commitsToCheckout;
         }
 
-//        List<String> commitsToCheckout = new LinkedList<>();
-        int counter = 0;
+        List<String> commitNames = generateCommitsList(commitIterator);
 
-        // list all commits
-        for (RevCommit commit : commitIterator) {
-            PersonIdent authorIdent = commit.getAuthorIdent();
-            //log.info(Handy.f("%s - %s [%s]", authorIdent.getWhen(), commit.getShortMessage(), commit.getName()));
-
-            if (counter < numCheckouts) {
-                commitsToCheckout.add(commit.getName());
-            }
-            counter++;
+        for(int i=0 ; i < commitNames.size() ; i += commitNames.size()/numCheckouts)
+        {
+            commitsToCheckout.add(commitNames.get(i));
         }
 
         return commitsToCheckout;
@@ -133,6 +130,18 @@ public class TimeMachine {
     // ================================================================
 
     // Helpers
+
+    private List<String> generateCommitsList(Iterable<RevCommit> commitIterator)
+    {
+        List<String> commitNames = new LinkedList<>();
+
+        for (RevCommit commit : commitIterator) {
+            PersonIdent authorIdent = commit.getAuthorIdent();
+            commitNames.add(commit.getName());
+        }
+
+        return commitNames;
+    }
 
     private File createTempDirectory(String prefix)
     {

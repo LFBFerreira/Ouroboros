@@ -17,7 +17,7 @@ public class Main {
 
     // logger configuration
     static {
-        String logConfigurationfileName = "logging.properties";
+        final String logConfigurationfileName = "logging.properties";
 
         //method 1
 //        URL configFileUrl = Main.class.getResource("/logging.properties");
@@ -46,7 +46,7 @@ public class Main {
 
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
-    private static final String defaultAppConfigFileName = "app.config";
+    private static final String defaultAppConfigFileName = "app.properties";
 
     private static final String helpArgument = "h";
 

@@ -23,13 +23,15 @@ public class CityscapeSuit extends SuitBase {
 
     private float classMargin = 20;
 
+    private List<ClassModel> models;
+
     private List<ClassSlice> slices = new LinkedList<>();
 
     private int numberSlicesToDraw = 1;
     private int floorColor = 0xFFFFFFFF;
     private float classSliceDepth;
 
-    private Boolean lightsOn = true;
+    private Boolean lightsOn = false;
 
     private OscStringBuilder oscBuilder = new OscStringBuilder();
 
@@ -46,8 +48,8 @@ public class CityscapeSuit extends SuitBase {
      * @param parent
      */
     public CityscapeSuit(List<ClassModel> models, PApplet parent) {
-        super(models, null, parent);
-
+        super(null, parent);
+        this.models = models;
         illuminati = new Illuminati(parent);
     }
 
@@ -81,6 +83,12 @@ public class CityscapeSuit extends SuitBase {
         classSliceDepth = props.getInt("visualizer.suit01.classThickness");
     }
 
+    public void switchLights()
+    {
+        lightsOn = !lightsOn;
+        log.info(Handy.f("Lights are %s", lightsOn ? "On" : "Off"));
+    }
+
     // ================================================================
 
     // DrawableInterface Interface
@@ -91,7 +99,7 @@ public class CityscapeSuit extends SuitBase {
 
         g.pushMatrix();
 
-        illuminati.turnLights(lightsOn, true, g);
+        illuminati.addLight(lightsOn, true, g);
 
         drawFloor(g);
 
@@ -120,8 +128,7 @@ public class CityscapeSuit extends SuitBase {
                 break;
 
             case 'l':
-                lightsOn = !lightsOn;
-                log.info(Handy.f("Lights are %s", lightsOn ? "On" : "Off"));
+                switchLights();
                 break;
 
         }

@@ -9,6 +9,10 @@ import processing.core.PVector;
 
 import java.util.logging.Logger;
 
+
+/**
+ * Rotating lamp
+ */
 public class Illuminati extends GraphicsResource {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
     private final PropertyManager props = PropertyManager.getInstance();
@@ -30,7 +34,7 @@ public class Illuminati extends GraphicsResource {
 
     // Public
 
-    public void turnLights(Boolean state, boolean showIndicator, PGraphics g) {
+    public void addLight(Boolean state, boolean showIndicator, PGraphics g) {
         if (state == true) {
 
 //            g.lightFalloff(1, 0, 0);

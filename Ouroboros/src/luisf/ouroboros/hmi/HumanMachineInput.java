@@ -34,6 +34,11 @@ public class HumanMachineInput {
 
     // Public
 
+    public void dispose()
+    {
+        osc.dispose();
+    }
+
     public void registerListeners(InputListennerInterface[] listeners) {
         this.listeners = Arrays.asList(listeners);
     }

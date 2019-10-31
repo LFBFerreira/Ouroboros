@@ -17,6 +17,6 @@
     <orderEntry type="library" name="oscP5" level="project" />
     <orderEntry type="library" name="core" level="project" />
     <orderEntry type="library" name="proscene" level="project" />
-    <orderEntry type="library" name="jna-platform" level="project" />
+    <orderEntry type="library" name="video_export-0.2.3" level="project" />
   </component>
 </module>

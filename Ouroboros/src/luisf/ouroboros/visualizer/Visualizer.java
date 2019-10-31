@@ -1,21 +1,20 @@
 package luisf.ouroboros.visualizer;
 
+import luisf.ouroboros.common.ProjectData;
 import luisf.ouroboros.common.colortools.ColorTools;
 import luisf.ouroboros.hmi.HumanMachineInput;
 import luisf.ouroboros.hmi.InputEvent;
 import luisf.ouroboros.hmi.InputListennerInterface;
-import luisf.ouroboros.models.ClassModel;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.scene.CameraControlAgent;
 import luisf.ouroboros.visualizer.scene.MyScene;
 import luisf.ouroboros.visualizer.suits.SuitBase;
-import luisf.ouroboros.visualizer.suits.suit01.CityscapeSuit;
+import luisf.ouroboros.visualizer.suits.suit01.LandscapeSuit;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
 import java.io.File;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -24,7 +23,9 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
     private final PropertyManager props = PropertyManager.getInstance();
 
-    public List<ClassModel> models;
+    private boolean parseSingleProject = false;
+
+    public List<ProjectData> projects;
     public File graphicsFolder;
 
     private SuitBase suit;
@@ -42,7 +43,7 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
     private HumanMachineInput hmi;
 
-    private CameraControlAgent oscControl ;
+    private CameraControlAgent oscControl;
 
     // ================================================================
 
@@ -51,12 +52,12 @@ public class Visualizer extends PApplet implements InputListennerInterface {
      * available arguments at: https://github.com/processing/processing/blob/master/core/src/processing/core/PApplet.java
      *
      * @param graphicsFolder
-     * @param models
+     * @param projects
      */
-    public static void launchGenerator(File graphicsFolder, List<ClassModel> models) {
+    public static void launchGenerator(File graphicsFolder, List<ProjectData> projects, boolean parseSingleProject) {
         PropertyManager props = PropertyManager.getInstance();
 
-        Visualizer visualizer = new Visualizer(graphicsFolder, models);
+        Visualizer visualizer = new Visualizer(graphicsFolder, projects, parseSingleProject);
 
         int screenIndex = props.getInt("visualizer.displayScreen");
         log.info("Displaying on Screen " + screenIndex);
@@ -72,10 +73,11 @@ public class Visualizer extends PApplet implements InputListennerInterface {
      * Constructor
      *
      * @param graphicsFolder
-     * @param models
+     * @param projects
      */
-    public Visualizer(File graphicsFolder, List<ClassModel> models) {
-        this.models = models;
+    public Visualizer(File graphicsFolder, List<ProjectData> projects, boolean parseSingleProject) {
+        this.projects = projects;
+        this.parseSingleProject = parseSingleProject;
         this.graphicsFolder = graphicsFolder;
 
         loadProperties();
@@ -95,19 +97,19 @@ public class Visualizer extends PApplet implements InputListennerInterface {
     public void settings() {
         size(windowWidth, windowHeight, renderer);
         smooth(8);
-//    hint()
     }
 
     /**
      * Setup
      */
     public void setup() {
-        frameRate(45);
+        frameRate(60);
 
         suitGraphics = createGraphics(windowWidth, windowHeight, renderer);
         backgroundGraphics = createGraphics(windowWidth, windowHeight, renderer);
 
-        suit = new CityscapeSuit(models,this);
+//        suit = new CityscapeSuit(models,this);
+        suit = new LandscapeSuit(projects, this);
         suit.initialize();
 
         myScene = new MyScene(this, suitGraphics, graphicsFolder, suit);
@@ -127,6 +129,7 @@ public class Visualizer extends PApplet implements InputListennerInterface {
     public void dispose() {
         log.info(String.format("Terminating %s", Visualizer.class.getSimpleName()));
 
+        hmi.dispose();
         myScene.dispose();
     }
 
@@ -143,15 +146,14 @@ public class Visualizer extends PApplet implements InputListennerInterface {
         image(backgroundGraphics, 0, 0);
 
         myScene.beginDraw();
-
         myScene.clearScene();
-        myScene.pg().scale(2);
-
+        // suit is drawn after endDraw
         myScene.endDraw();
 
         // copy scene output to main graphics buffer
         myScene.display();
 
+        // save frame if record mode is on
         myScene.addFrameToVideo();
     }
 

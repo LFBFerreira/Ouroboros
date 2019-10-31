@@ -1,21 +1,15 @@
 package luisf.ouroboros.visualizer.suits;
 
 import luisf.ouroboros.hmi.InputListennerInterface;
-import luisf.ouroboros.models.ClassModel;
-import luisf.ouroboros.visualizer.GraphicsResource;
 import luisf.ouroboros.visualizer.DrawableInterface;
+import luisf.ouroboros.visualizer.GraphicsResource;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
-import java.util.List;
-
 public abstract class SuitBase extends GraphicsResource implements DrawableInterface, InputListennerInterface {
-    protected List<ClassModel> models;
 
-    public SuitBase(List<ClassModel> models, PGraphics graphics, PApplet parent) {
+    public SuitBase(PGraphics graphics, PApplet parent) {
         super(parent, graphics);
-
-        this.models = models;
     }
 
     public abstract void initialize();

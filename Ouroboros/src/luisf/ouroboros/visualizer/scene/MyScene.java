@@ -71,8 +71,11 @@ public class MyScene extends Scene implements InputListennerInterface {
         eyeFrame().setDamping(0.5f);
 
         camera().setUpVector(0, 1, 0);
+//        camera().setPosition(0, -900, 2800);
         camera().setPosition(0, -900, 2800);
         camera().lookAt(0, 0, 0);
+
+        scale(2);
 
 //        showAll();
         //center();
@@ -126,7 +129,6 @@ public class MyScene extends Scene implements InputListennerInterface {
      */
     @Override
     public void proscenium() {
-        //pg().scale(2);
         suit.draw(pg());
     }
 

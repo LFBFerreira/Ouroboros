@@ -88,8 +88,7 @@ public class VideoExport {
      * <p>
      * Using a default movie file name (processing-movie.mp4).
      *
-     * @param parent
-     *            Pass "this" when constructing a VideoExport instance
+     * @param parent Pass "this" when constructing a VideoExport instance
      */
     public VideoExport(PApplet parent) {
         this(parent, "processing-movie.mp4", parent.g);
@@ -98,11 +97,9 @@ public class VideoExport {
     /**
      * Constructor that allows specifying a movie file name.
      *
-     * @param parent
-     *            Parent PApplet, normally "this" when called from setup()
-     * @param outputFileName
-     *            The name of the video file to produce, for instance
-     *            "beauty.mp4"
+     * @param parent         Parent PApplet, normally "this" when called from setup()
+     * @param outputFileName The name of the video file to produce, for instance
+     *                       "beauty.mp4"
      * @example basic
      */
     public VideoExport(PApplet parent, String outputFileName) {
@@ -112,18 +109,15 @@ public class VideoExport {
     /**
      * Constructor that allows to set a PImage to export as video (advanced)
      *
-     * @param parent
-     *            Parent PApplet, normally "this" when called from setup()
-     * @param outputFileName
-     *            The name of the video file to produce, for instance
-     *            "beauty.mp4"
-     * @param img
-     *            PImage object to export as video (can be a PGraphics, Movie,
-     *            Capture...)
+     * @param parent         Parent PApplet, normally "this" when called from setup()
+     * @param outputFileName The name of the video file to produce, for instance
+     *                       "beauty.mp4"
+     * @param img            PImage object to export as video (can be a PGraphics, Movie,
+     *                       Capture...)
      * @example usingPGraphics
      */
     public VideoExport(PApplet parent, final String outputFileName,
-            PImage img) {
+                       PImage img) {
 
         parent.registerMethod("dispose", this);
 
@@ -184,9 +178,11 @@ public class VideoExport {
         try {
             File thisJar = new File(VideoExport.class.getProtectionDomain()
                     .getCodeSource().getLocation().toURI().getPath())
-                            .getParentFile().getParentFile();
+                    .getParentFile().getParentFile();
+
             settingsPath = thisJar.getAbsolutePath() + File.separator
                     + "settings.json";
+
             File settingsFile = new File(settingsPath);
             if (settingsFile.isFile()) {
                 settings = parent.loadJSONObject(settingsPath);
@@ -196,13 +192,13 @@ public class VideoExport {
 
                 // If String, make it JSONArray
                 o = settings.get(SETTINGS_CMD_ENCODE_VIDEO);
-                if(o instanceof String) {
+                if (o instanceof String) {
                     settings.setJSONArray(SETTINGS_CMD_ENCODE_VIDEO,
                             toJSONArray((String) o));
                 }
                 // If String, make it JSONArray
                 o = settings.get(SETTINGS_CMD_ENCODE_AUDIO);
-                if(o instanceof String) {
+                if (o instanceof String) {
                     settings.setJSONArray(SETTINGS_CMD_ENCODE_AUDIO,
                             toJSONArray((String) o));
                 }
@@ -237,8 +233,7 @@ public class VideoExport {
      * Allow setting a new movie name, in case we want to export several movies,
      * one after the other.
      *
-     * @param newMovieFileName
-     *            String with file name of the new movie to create
+     * @param newMovieFileName String with file name of the new movie to create
      */
     public void setMovieFileName(final String newMovieFileName) {
         outputFilePath = parent.sketchPath(newMovieFileName);
@@ -251,8 +246,7 @@ public class VideoExport {
     /**
      * Set the PImage element. Advanced use only. Optional.
      *
-     * @param img
-     *            A PImage object. Probably used for off-screen exporting..
+     * @param img A PImage object. Probably used for off-screen exporting..
      */
     public void setGraphics(PImage img) {
         this.img = img;
@@ -261,14 +255,12 @@ public class VideoExport {
     /**
      * Set the quality of the produced video file. Optional.
      *
-     * @param crf
-     *            Video quality. A value between 0 (high compression) and 100
-     *            (high quality, lossless). Default is 70.
-     * @param audioBitRate
-     *            Audio quality (bit rate in kbps).
-     *            128 is the default. 192 is very good.
-     *            More than 256 does not make sense.
-     *            Higher numbers produce heavier files.
+     * @param crf          Video quality. A value between 0 (high compression) and 100
+     *                     (high quality, lossless). Default is 70.
+     * @param audioBitRate Audio quality (bit rate in kbps).
+     *                     128 is the default. 192 is very good.
+     *                     More than 256 does not make sense.
+     *                     Higher numbers produce heavier files.
      */
     public void setQuality(int crf, int audioBitRate) {
         if (ffmpeg != null) {
@@ -287,10 +279,9 @@ public class VideoExport {
     /**
      * Set the frame rate of the produced video file. Optional.
      *
-     * @param frameRate
-     *            The frame rate at which the resulting video file should be
-     *            played. The default is 30, which is the recommended for online
-     *            video.
+     * @param frameRate The frame rate at which the resulting video file should be
+     *                  played. The default is 30, which is the recommended for online
+     *                  video.
      */
     public void setFrameRate(float frameRate) {
         if (ffmpeg != null) {
@@ -306,8 +297,7 @@ public class VideoExport {
      * Useful to avoid calling it twice, which might hurt the
      * performance a bit. Optional.
      *
-     * @param doLoadPixels
-     *            Set to false to disable the internal loadPixels() call.
+     * @param doLoadPixels Set to false to disable the internal loadPixels() call.
      */
     public void setLoadPixels(boolean doLoadPixels) {
         loadPixelsEnabled = doLoadPixels;
@@ -321,9 +311,8 @@ public class VideoExport {
      * call videoExport.setDebugging(false) to avoid creating unnecessary
      * files. Optional.
      *
-     * @param saveDebugFile
-     *            Set to false to disable saving the ffmpeg output in a text
-     *            file
+     * @param saveDebugFile Set to false to disable saving the ffmpeg output in a text
+     *                      file
      */
     public void setDebugging(boolean saveDebugFile) {
         saveDebugInfo = saveDebugFile;
@@ -405,8 +394,8 @@ public class VideoExport {
         String ffmpeg_path = getFfmpegPath();
         // If it did not exist, try to guess where it is
         if (ffmpeg_path.equals(FFMPEG_PATH_UNSET)) {
-            String[] guess_paths = { "/usr/local/bin/ffmpeg",
-                    "/usr/bin/ffmpeg" };
+            String[] guess_paths = {"/usr/local/bin/ffmpeg",
+                    "/usr/bin/ffmpeg"};
             for (String guess_path : guess_paths) {
                 if ((new File(guess_path)).isFile()) {
                     ffmpeg_path = guess_path;
@@ -483,6 +472,7 @@ public class VideoExport {
     /**
      * Call this method if you know the path to ffmpeg on your computer
      * (advanced).
+     *
      * @param path
      */
     public void setFfmpegPath(String path) {
@@ -505,8 +495,7 @@ public class VideoExport {
      * Called internally by the file selector when the user chooses
      * the location of ffmpeg on the disk.
      *
-     * @param selection
-     *            (internal)
+     * @param selection (internal)
      */
     public void onFfmpegSelected(File selection) {
         if (selection == null) {

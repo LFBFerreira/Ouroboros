@@ -2,6 +2,7 @@ package luisf.ouroboros.director;
 
 import luisf.ouroboros.analyzer.CodeAnalyzer;
 import luisf.ouroboros.common.Handy;
+import luisf.ouroboros.common.ProjectData;
 import luisf.ouroboros.models.ClassModel;
 import luisf.ouroboros.modelsWriter.ModelsIO;
 import luisf.ouroboros.properties.PropertyManager;
@@ -78,7 +79,8 @@ public class Director {
         loadProperties();
 
         List<File> checkedOutFolders = null;
-        classModels = new LinkedList<ClassModel>();
+        List<ProjectData> projects = new LinkedList<ProjectData>();
+
 
         if (checkoutCommits) {
             checkedOutFolders = checkoutCode(checkoutUrl, numCheckouts, checkoutFolder);
@@ -93,9 +95,13 @@ public class Director {
                 e.printStackTrace();
             }
 
+            LinkedList<ClassModel> classModels = new LinkedList<ClassModel>();
+
             // use the folder specified by the user
             parseProjectFiles(projectFilesFolder, classModels);
             saveModels(modelsFolder, classModels);
+            projects.add(new ProjectData("models", classModels));
+
             log.info("Parsed " + classModels.size() + " classes");
 
         } else if (parseMultipleProjects) {
@@ -107,6 +113,8 @@ public class Director {
                 e.printStackTrace();
             }
 
+            LinkedList<ClassModel> classModels = new LinkedList<ClassModel>();
+
             for (String folderName : getFoldersList(projectFilesFolder)) {
                 classModels.clear();
 
@@ -115,6 +123,8 @@ public class Director {
 
                 parseProjectFiles(projectSubFolder.toFile(), classModels);
                 saveModels(modelsSubFolder, classModels);
+                projects.add(new ProjectData(projectFilesFolder.getName(), classModels));
+
                 log.info("Parsed " + classModels.size() + " classes");
             }
         }
@@ -127,13 +137,15 @@ public class Director {
                 e.printStackTrace();
             }
 
-            if (classModels.isEmpty()) {
-                classModels = readModels(modelsFolder);
+            if (projects.isEmpty())
+            {
+                log.severe("No models were parsed");
             }
-
-            startGenerator(graphicsFolder, classModels);
+            else {
+                log.info("Starting generator");
+                startGenerator(graphicsFolder, projects, !parseMultipleProjects);
+            }
         }
-
     }
 
     private void loadProperties() {
@@ -152,6 +164,10 @@ public class Director {
     // ================================================================
 
     // Helpers
+
+    private void startGenerator(File graphicsFolder, List<ProjectData> projects, Boolean parseSingleProjects) {
+        Visualizer.launchGenerator(graphicsFolder, projects, parseSingleProjects);
+    }
 
     private List<File> checkoutCode(URL checkoutUrl, int numCheckouts, File checkoutFolder) {
         log.info("Getting commits...");
@@ -186,10 +202,6 @@ public class Director {
         ModelsIO modelsIo = new ModelsIO(modelsFolder);
 //        modelsIo.saveModels(models);
         modelsIo.saveModelsBinary(models);
-    }
-
-    private void startGenerator(File graphicsFolder, List<ClassModel> models) {
-        Visualizer.launchGenerator(graphicsFolder, models);
     }
 
     private List<String> getFoldersList(File folder)

@@ -8,15 +8,16 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.json.simple.JSONObject;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class TimeMachine {
@@ -75,21 +76,30 @@ public class TimeMachine {
         // initialize repo
         Repository repository = git.getRepository();
 
-        List<String> commitsToCheckout = getCommitIDs(git, repository, numCheckouts);
+        // choose which commits to checkout
+        List<RevCommit> commitsToCheckout = getCommitIDs(git, repository, numCheckouts);
 
-        // checkout specific ID
+        // checkout specific commit
         try {
-            for (String id : commitsToCheckout) {
-                log.info("Checking out commit " + id);
+            for (RevCommit commitInfo : commitsToCheckout) {
+                log.info("Checking out commit " + commitInfo.getName());
 
+                String commitId = commitInfo.getName();
+
+                // checkout specific commit
                 git.checkout()
                         .setCreateBranch(true)
-                        .setName("commit_" + id)
-                        .setStartPoint(id)
+                        .setName("commit_" + commitId)
+                        .setStartPoint(commitInfo)
                         .call();
 
-                File destinationFolder =new File(checkoutfolder, id);
+                File destinationFolder = new File(checkoutfolder, commitId);
+
+                // copy the checked-out files to their final destination
                 copyFolder(tempFolder, destinationFolder);
+
+                saveCommitMetadata(commitInfo, destinationFolder);
+
                 folderList.add(destinationFolder);
             }
         } catch (GitAPIException e) {
@@ -102,8 +112,43 @@ public class TimeMachine {
         return folderList;
     }
 
-    private List<String> getCommitIDs(Git git, Repository repository, int numCheckouts) {
-        List<String> commitsToCheckout = new LinkedList<>();
+
+    // ================================================================
+
+    // Helpers
+
+    private void saveCommitMetadata(RevCommit metadata, File destinationFolder) {
+        JSONObject obj = new JSONObject();
+
+
+        PersonIdent authorIdent = metadata.getAuthorIdent();
+//        PersonIdent committerIdent = commit.getCommitterIdent();
+        Date authorDate = authorIdent.getWhen();
+        TimeZone authorTimeZone = authorIdent.getTimeZone();
+
+        // fill object
+        obj.put("id", metadata.getName());
+        obj.put("date", metadata.getCommitTime());
+        obj.put("shortMessage", metadata.getShortMessage());
+        obj.put("fullMessage", metadata.getFullMessage());
+        obj.put("date", authorDate);
+        obj.put("timezone", authorTimeZone);
+
+        File destinationFile = new File(destinationFolder.getParent(), metadata.getName() + ".json");
+
+        // try-with-resources statement based on post comment below :)
+        try (FileWriter file = new FileWriter(destinationFile)) {
+            file.write(obj.toJSONString());
+            log.info(Handy.f("Commit %s metadata saved to %s", metadata.getName(), destinationFile.getPath()));
+        } catch (IOException e) {
+            log.severe(Handy.f("It was not possible to save the commits metadata to {}",
+                    Paths.get(destinationFolder.getPath(), metadata.getName())));
+            e.printStackTrace();
+        }
+    }
+
+    private List<RevCommit> getCommitIDs(Git git, Repository repository, int numCheckouts) {
+        List<RevCommit> commitsToCheckout = new LinkedList<>();
 
         // initialize commit iterator
         Iterable<RevCommit> commitIterator = null;
@@ -117,34 +162,28 @@ public class TimeMachine {
             return commitsToCheckout;
         }
 
-        List<String> commitNames = generateCommitsList(commitIterator);
+        List<RevCommit> commitsInfo = generateCommitsList(commitIterator);
 
-        for(int i=0 ; i < commitNames.size() ; i += commitNames.size()/numCheckouts)
-        {
-            commitsToCheckout.add(commitNames.get(i));
+        for (int i = 0; i < commitsInfo.size(); i += commitsInfo.size() / numCheckouts) {
+            commitsToCheckout.add(commitsInfo.get(i));
         }
 
         return commitsToCheckout;
     }
 
-    // ================================================================
-
-    // Helpers
-
-    private List<String> generateCommitsList(Iterable<RevCommit> commitIterator)
-    {
-        List<String> commitNames = new LinkedList<>();
+    private List<RevCommit> generateCommitsList(Iterable<RevCommit> commitIterator) {
+        List<RevCommit> commitNames = new LinkedList<>();
 
         for (RevCommit commit : commitIterator) {
             PersonIdent authorIdent = commit.getAuthorIdent();
-            commitNames.add(commit.getName());
+//            commitNames.add(commit.getName());
+            commitNames.add(commit);
         }
 
         return commitNames;
     }
 
-    private File createTempDirectory(String prefix)
-    {
+    private File createTempDirectory(String prefix) {
         Path checkoutPath = null;
 
         try {

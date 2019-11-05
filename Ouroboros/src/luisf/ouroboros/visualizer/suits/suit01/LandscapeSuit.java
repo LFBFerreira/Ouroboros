@@ -60,7 +60,7 @@ public class LandscapeSuit extends SuitBase {
 
     // DrawableInterface Interface
 
-    private final int samplesPerRow = 3;
+    private final int samplesPerRow = 9;
 
     @Override
     public void draw(PGraphics g) {
@@ -70,12 +70,12 @@ public class LandscapeSuit extends SuitBase {
 
         Handy.drawAxes(g, false, 200);
 
-        //g.translate(horizontalRes, 0);
         //g.scale(0.2f);
 
-        g.translate(-horizontalOffset * (samplesPerRow/2),
-                -verticalOffset * (samplesPerRow/2));
-
+        // initial offset to center the landscape
+//        g.translate(-horizontalOffset * (samplesPerRow/2),
+//                -verticalOffset * (samplesPerRow/2));
+        g.translate(-horizontalOffset * (samplesPerRow/2), 0);
 
         int cityIndex = 0;
         for (CityscapeSuit city : cities) {
@@ -88,9 +88,9 @@ public class LandscapeSuit extends SuitBase {
             g.translate(horizontalOffset, 0);
 
             // move the anchor to the next position in Y, every samplesPerRow
-            if (cityIndex % samplesPerRow == 0) {
-                g.translate(-horizontalOffset * samplesPerRow, verticalOffset);
-            }
+//            if (cityIndex % samplesPerRow == 0) {
+//                g.translate(-horizontalOffset * samplesPerRow, verticalOffset);
+//            }
         }
 
         g.popMatrix();

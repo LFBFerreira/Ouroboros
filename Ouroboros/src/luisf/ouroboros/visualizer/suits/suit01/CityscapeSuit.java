@@ -31,7 +31,7 @@ public class CityscapeSuit extends SuitBase {
     private int floorColor = 0xFFFFFFFF;
     private float classSliceDepth;
 
-    private Boolean lightsOn = false;
+    private Boolean lightsOn = true;
 
     private OscStringBuilder oscBuilder = new OscStringBuilder();
 

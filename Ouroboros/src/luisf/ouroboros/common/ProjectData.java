@@ -2,6 +2,7 @@ package luisf.ouroboros.common;
 
 import luisf.ouroboros.models.ClassModel;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class ProjectData {
@@ -10,6 +11,6 @@ public class ProjectData {
 
     public ProjectData(String name, List<ClassModel> classModels) {
         this.name = name;
-        this.classModels = classModels;
+        this.classModels = new LinkedList<>(classModels);
     }
 }

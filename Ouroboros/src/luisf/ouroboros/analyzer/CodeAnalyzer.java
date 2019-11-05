@@ -5,6 +5,7 @@ import luisf.ouroboros.models.MethodModel;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.models.ClassModel;
 import luisf.ouroboros.models.ClassModelInterface;
+import luisf.ouroboros.properties.PropertyManager;
 
 import java.io.File;
 import java.util.*;
@@ -14,12 +15,14 @@ import java.util.logging.Logger;
 public class CodeAnalyzer {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
-    private final String fileExtensionFilter = "java";
+    private final PropertyManager props = PropertyManager.getInstance();
+
+    private boolean showParsingDebug = true;
+    private String fileExtensionFilter = "";
 
     private File projectFilesFolder;
 
     private List<ClassModel> classModels;
-
 
     // ================================================================
 
@@ -59,13 +62,16 @@ public class CodeAnalyzer {
         });
 
         // debug print
-        debugPrint(classModels);
+        if (showParsingDebug) {
+            debugPrint(classModels);
+        }
 
         return !fileList.isEmpty();
     }
 
     private void loadProperties() {
-
+        this.showParsingDebug = props.getBoolean("code.showParsingDebug");
+        this.fileExtensionFilter = props.getString("code.fileExtensionFilter");
     }
 
     public List<ClassModel> getModels() {

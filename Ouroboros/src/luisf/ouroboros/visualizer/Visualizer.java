@@ -110,6 +110,7 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
 //        suit = new CityscapeSuit(models,this);
         suit = new LandscapeSuit(projects, this);
+
         suit.initialize();
 
         myScene = new MyScene(this, suitGraphics, graphicsFolder, suit);

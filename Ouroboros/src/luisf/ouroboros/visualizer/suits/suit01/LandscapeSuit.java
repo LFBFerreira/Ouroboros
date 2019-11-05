@@ -6,7 +6,6 @@ import luisf.ouroboros.hmi.InputEvent;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PGraphics;
 
 import java.util.LinkedList;
@@ -21,8 +20,8 @@ public class LandscapeSuit extends SuitBase {
     private List<CityscapeSuit> cities = new LinkedList<>();
     private List<ProjectData> projects = new LinkedList<>();
 
-    private int horizontalRes = 0;
-    private int verticalRes = 0;
+    private int horizontalOffset = 0;
+    private int verticalOffset = 0;
 
 
     // ================================================================
@@ -53,8 +52,8 @@ public class LandscapeSuit extends SuitBase {
     }
 
     private void loadProperties() {
-        this.horizontalRes = props.getInt("visualizer.suit02.horizontalResolution");
-        this.verticalRes = props.getInt("visualizer.suit02.verticalResolution");
+        this.horizontalOffset = props.getInt("visualizer.suit02.horizontalOffset");
+        this.verticalOffset = props.getInt("visualizer.suit02.verticalOffset");
     }
 
     // ================================================================
@@ -71,22 +70,27 @@ public class LandscapeSuit extends SuitBase {
 
         Handy.drawAxes(g, false, 200);
 
-        int horizontalOffset = 800;
-        int verticallOffset = 800;
-
+        //g.translate(horizontalRes, 0);
         //g.scale(0.2f);
 
-        int i = 0;
-        for (CityscapeSuit city : cities) {
-            g.translate(horizontalOffset, 0);
+        g.translate(-horizontalOffset * (samplesPerRow/2),
+                -verticalOffset * (samplesPerRow/2));
 
-            if (i % samplesPerRow == 0) {
-                g.translate(-horizontalOffset * samplesPerRow, verticallOffset);
-            }
+
+        int cityIndex = 0;
+        for (CityscapeSuit city : cities) {
 
             city.draw(g);
 
-            i++;
+            cityIndex++;
+
+            // move the anchor to the next position in Y
+            g.translate(horizontalOffset, 0);
+
+            // move the anchor to the next position in Y, every samplesPerRow
+            if (cityIndex % samplesPerRow == 0) {
+                g.translate(-horizontalOffset * samplesPerRow, verticalOffset);
+            }
         }
 
         g.popMatrix();

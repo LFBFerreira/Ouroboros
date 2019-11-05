@@ -123,7 +123,7 @@ public class Director {
 
                 parseProjectFiles(projectSubFolder.toFile(), classModels);
                 saveModels(modelsSubFolder, classModels);
-                projects.add(new ProjectData(projectFilesFolder.getName(), classModels));
+                projects.add(new ProjectData(folderName, classModels));
 
                 log.info("Parsed " + classModels.size() + " classes");
             }

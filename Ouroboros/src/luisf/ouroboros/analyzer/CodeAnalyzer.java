@@ -37,7 +37,7 @@ public class CodeAnalyzer {
     // Public
 
     /**
-     * Parses the files define during construction time
+     * Parses the files define during construction
      *
      * @return
      */

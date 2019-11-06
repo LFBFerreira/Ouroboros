@@ -9,16 +9,20 @@ import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.timemachine.TimeMachine;
 import luisf.ouroboros.visualizer.Visualizer;
 import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class Director {
@@ -42,6 +46,13 @@ public class Director {
     private URL checkoutUrl;
     private int numCheckouts;
     private String pathFromOrigin;
+
+    private final String metadataFileExtension = ".json";
+    private String metadataIdFieldName = "";
+    private String metadataCommitDateFieldName = "";
+    private String metadataShortMessageFieldName = "";
+    private String metadataFullMessageFieldName = "";
+    private String metadataDateFormat = "";
 
     // ================================================================
 
@@ -95,14 +106,17 @@ public class Director {
                 e.printStackTrace();
             }
 
-            LinkedList<ClassModel> classModels = new LinkedList<ClassModel>();
+            File projectMetadataFile = new File(projectFilesFolder.getParent(),
+                    projectFilesFolder.getName() + metadataFileExtension);
 
             // use the folder specified by the user
-            parseProjectFiles(projectFilesFolder, classModels);
-            saveModels(modelsFolder, classModels);
-            projects.add(new ProjectData("models", classModels));
+            ProjectData metadata = parseProject(projectFilesFolder, projectMetadataFile);
 
-            log.info("Parsed " + classModels.size() + " classes");
+            saveModels(modelsFolder, metadata.classModels);
+
+            projects.add(metadata);
+
+            //log.info("Parsed " + metadata.classModels.size() + " classes");
 
         } else if (parseMultipleProjects) {
             try {
@@ -120,12 +134,13 @@ public class Director {
 
                 File modelsSubFolder = Handy.createFolder(new File(modelsFolder, folderName));
                 Path projectSubFolder = Paths.get(projectFilesFolder.getPath(), folderName, pathFromOrigin);
+                File projectMetadataFile = new File(projectFilesFolder, folderName + metadataFileExtension);
 
-                parseProjectFiles(projectSubFolder.toFile(), classModels);
+                ProjectData metadata = parseProject(projectSubFolder.toFile(), projectMetadataFile);
                 saveModels(modelsSubFolder, classModels);
-                projects.add(new ProjectData(folderName, classModels));
+                projects.add(metadata);
 
-                log.info("Parsed " + classModels.size() + " classes");
+                //log.info("Parsed " + metadata.classModels.size() + " classes");
             }
         }
 
@@ -137,11 +152,9 @@ public class Director {
                 e.printStackTrace();
             }
 
-            if (projects.isEmpty())
-            {
+            if (projects.isEmpty()) {
                 log.severe("No models were parsed");
-            }
-            else {
+            } else {
                 log.info("Starting generator");
                 startGenerator(graphicsFolder, projects, !parseMultipleProjects);
             }
@@ -158,6 +171,12 @@ public class Director {
         }
 
         pathFromOrigin = props.getString("code.pathFromOrigin");
+
+        metadataIdFieldName = props.getString("metadata.idFieldName");
+        metadataCommitDateFieldName = props.getString("metadata.dateFieldName");
+        metadataShortMessageFieldName = props.getString("metadata.shortMessageFieldName");
+        metadataFullMessageFieldName = props.getString("metadata.fullMessageFieldName");
+        metadataDateFormat = props.getString("metadata.dateFormat");
     }
 
 
@@ -183,7 +202,10 @@ public class Director {
         return modelsIo.loadModelsBinary();
     }
 
-    private void parseProjectFiles(File projectFilesFolder, List<ClassModel> models) {
+    private ProjectData parseProject(File projectFilesFolder, File projectMetadataFile) {
+        ProjectData metadata;
+        List<ClassModel> models = new LinkedList<>();
+
         try {
             log.info(Handy.f("Parsing code from '%s'", projectFilesFolder.getCanonicalPath()));
             log.info(Handy.f("Saving models to '%s'", modelsFolder.getCanonicalPath()));
@@ -192,10 +214,70 @@ public class Director {
             e.printStackTrace();
         }
 
-        models.clear();
+        // parse metadata
+        metadata = parseProjectMetadata(projectMetadataFile);
 
+        // parse code
         parser = new CodeAnalyzer(projectFilesFolder, models);
         parser.parseProject();
+
+        // add models to metadata
+        if (metadata == null) {
+            metadata = new ProjectData(models);
+        } else {
+            metadata.classModels = models;
+        }
+
+        return metadata;
+    }
+
+    private ProjectData parseProjectMetadata(File metadataFilePath) {
+        ProjectData metadata = null;
+
+        String id = "";
+        String shortMessage = "";
+        String fullMessage = "";
+        LocalDateTime commitDate;
+
+        Date tempDate;
+        String tempDateText;
+        TimeZone tempTimeZone;
+
+        if (!metadataFilePath.exists()) {
+            log.severe(Handy.f("The project metadata could not be loaded from '%s'", metadataFilePath.getPath()));
+            return null;
+        }
+
+        JSONParser parser = new JSONParser();
+
+        try (Reader reader = new FileReader(metadataFilePath)) {
+            JSONObject jsonObject = (JSONObject) parser.parse(reader);
+
+            tempDateText = (String) jsonObject.get(metadataCommitDateFieldName);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(metadataDateFormat);
+
+            // fill fields
+            commitDate = LocalDateTime.parse(tempDateText, formatter);
+            id = (String) jsonObject.get(metadataIdFieldName);
+            shortMessage = (String) jsonObject.get(metadataIdFieldName);
+            fullMessage = (String) jsonObject.get(metadataIdFieldName);
+
+            // create metadata
+            metadata = new ProjectData(id, commitDate, shortMessage, fullMessage);
+
+        } catch (IOException e) {
+            log.severe(Handy.f("Unable to parse the content of the metadata file at '%s'", metadataFilePath.getPath()));
+            e.printStackTrace();
+        } catch (ParseException e) {
+            log.severe(Handy.f("Unable to parse the content of the metadata file at '%s'", metadataFilePath.getPath()));
+            e.printStackTrace();
+        }
+//        catch (java.text.ParseException e) {
+//            log.severe(Handy.f("Unable to parse the content of the metadata file at '%s'", metadataFilePath.getPath()));
+//            e.printStackTrace();
+//        }
+
+        return metadata;
     }
 
     private void saveModels(File modelsFolder, List<ClassModel> models) {
@@ -204,10 +286,8 @@ public class Director {
         modelsIo.saveModelsBinary(models);
     }
 
-    private List<String> getFoldersList(File folder)
-    {
-        if (folder == null)
-        {
+    private List<String> getFoldersList(File folder) {
+        if (folder == null) {
             return null;
         }
 

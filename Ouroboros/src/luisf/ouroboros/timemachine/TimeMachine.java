@@ -17,6 +17,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -31,6 +33,12 @@ public class TimeMachine {
 
     private int numCheckouts = 0;
     private String branchName;
+    private String metadataDateFormat = "";
+    private final String metadataFileExtension = ".json";
+    private String metadataIdFieldName = "";
+    private String metadataCommitDateFieldName = "";
+    private String metadataShortMessageFieldName = "";
+    private String metadataFullMessageFieldName = "";
 
     // ================================================================
 
@@ -44,6 +52,11 @@ public class TimeMachine {
 
     private void loadProperties() {
         branchName = props.getString("code.branchName");
+        metadataDateFormat= props.getString("metadata.dateFormat");
+        metadataIdFieldName = props.getString("metadata.idFieldName");
+        metadataCommitDateFieldName = props.getString("metadata.dateFieldName");
+        metadataShortMessageFieldName = props.getString("metadata.shortMessageFieldName");
+        metadataFullMessageFieldName = props.getString("metadata.fullMessageFieldName");
     }
 
     public List<File> checkout() {
@@ -118,27 +131,28 @@ public class TimeMachine {
     // Helpers
 
     private void saveCommitMetadata(RevCommit metadata, File destinationFolder) {
-        JSONObject obj = new JSONObject();
-
+        JSONObject jsonObj = new JSONObject();
 
         PersonIdent authorIdent = metadata.getAuthorIdent();
 //        PersonIdent committerIdent = commit.getCommitterIdent();
         Date authorDate = authorIdent.getWhen();
         TimeZone authorTimeZone = authorIdent.getTimeZone();
 
+        LocalDateTime commitDate = authorDate.toInstant().atZone(authorTimeZone.toZoneId()).toLocalDateTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(metadataDateFormat);
+        String formatedDateText = commitDate.format(formatter);
+
         // fill object
-        obj.put("id", metadata.getName());
-        obj.put("date", metadata.getCommitTime());
-        obj.put("shortMessage", metadata.getShortMessage());
-        obj.put("fullMessage", metadata.getFullMessage());
-        obj.put("date", authorDate);
-        obj.put("timezone", authorTimeZone);
+        jsonObj.put(metadataIdFieldName, metadata.getName());
+        jsonObj.put(metadataShortMessageFieldName, metadata.getShortMessage());
+        jsonObj.put(metadataFullMessageFieldName, metadata.getFullMessage());
+        jsonObj.put(metadataCommitDateFieldName, formatedDateText);
 
-        File destinationFile = new File(destinationFolder.getParent(), metadata.getName() + ".json");
+        File destinationFile = new File(destinationFolder.getParent(), metadata.getName() + metadataFileExtension);
 
-        // try-with-resources statement based on post comment below :)
+        // write json object to file
         try (FileWriter file = new FileWriter(destinationFile)) {
-            file.write(obj.toJSONString());
+            file.write(jsonObj.toJSONString());
             log.info(Handy.f("Commit %s metadata saved to %s", metadata.getName(), destinationFile.getPath()));
         } catch (IOException e) {
             log.severe(Handy.f("It was not possible to save the commits metadata to {}",
@@ -147,6 +161,13 @@ public class TimeMachine {
         }
     }
 
+    /**
+     *
+     * @param git
+     * @param repository
+     * @param numCheckouts
+     * @return
+     */
     private List<RevCommit> getCommitIDs(Git git, Repository repository, int numCheckouts) {
         List<RevCommit> commitsToCheckout = new LinkedList<>();
 

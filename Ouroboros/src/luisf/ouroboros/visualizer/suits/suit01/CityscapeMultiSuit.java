@@ -13,12 +13,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class LandscapeSuit extends SuitBase {
+public class CityscapeMultiSuit extends SuitBase {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     private final PropertyManager props = PropertyManager.getInstance();
 
-    private List<CityscapeSuit> cities = new LinkedList<>();
+    private List<CityscapeSingleSuit> cities = new LinkedList<>();
     private List<ProjectData> projects = new LinkedList<>();
 
     private int horizontalOffset = 0;
@@ -33,7 +33,7 @@ public class LandscapeSuit extends SuitBase {
      * @param projects
      * @param parent
      */
-    public LandscapeSuit(List<ProjectData> projects, PApplet parent) {
+    public CityscapeMultiSuit(List<ProjectData> projects, PApplet parent) {
         super(null, parent);
         this.projects = projects;
     }
@@ -54,7 +54,7 @@ public class LandscapeSuit extends SuitBase {
         });
 
         for (ProjectData project : projects) {
-            CityscapeSuit city = new CityscapeSuit(project.classModels, parent);
+            CityscapeSingleSuit city = new CityscapeSingleSuit(project.classModels, parent);
             city.initialize();
             cities.add(city);
         }
@@ -82,12 +82,12 @@ public class LandscapeSuit extends SuitBase {
         //g.scale(0.2f);
 
         // initial offset to center the landscape
+        g.translate(-horizontalOffset * (samplesPerRow / 2), 0);
 //        g.translate(-horizontalOffset * (samplesPerRow/2),
 //                -verticalOffset * (samplesPerRow/2));
-        g.translate(-horizontalOffset * (samplesPerRow/2), 0);
 
         int cityIndex = 0;
-        for (CityscapeSuit city : cities) {
+        for (CityscapeSingleSuit city : cities) {
 
             city.draw(g);
 
@@ -110,7 +110,7 @@ public class LandscapeSuit extends SuitBase {
     public void keyPressed(int key, int keyCode) {
         switch (key) {
             case 'l':
-                for (CityscapeSuit city : cities) {
+                for (CityscapeSingleSuit city : cities) {
                     city.switchLights();
                 }
                 break;
@@ -128,5 +128,3 @@ public class LandscapeSuit extends SuitBase {
 
     }
 }
-
-// ================================================================

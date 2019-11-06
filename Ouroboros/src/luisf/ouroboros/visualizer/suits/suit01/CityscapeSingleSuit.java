@@ -16,38 +16,32 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class CityscapeSuit extends SuitBase {
+public class CityscapeSingleSuit extends SuitBase {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     private final PropertyManager props = PropertyManager.getInstance();
 
     private float classMargin = 20;
-
     private List<ClassModel> models;
-
     private List<ClassSlice> slices = new LinkedList<>();
-
     private int numberSlicesToDraw = 1;
     private int floorColor = 0xFFFFFFFF;
     private float classSliceDepth;
 
     private Boolean lightsOn = true;
-
     private OscStringBuilder oscBuilder = new OscStringBuilder();
-
     private Illuminati illuminati;
-
     private PShape floor;
     private int floorHeight = 4;
-
 
     // ================================================================
 
     /**
+     * Constructor
      * @param models
      * @param parent
      */
-    public CityscapeSuit(List<ClassModel> models, PApplet parent) {
+    public CityscapeSingleSuit(List<ClassModel> models, PApplet parent) {
         super(null, parent);
         this.models = models;
         illuminati = new Illuminati(parent);

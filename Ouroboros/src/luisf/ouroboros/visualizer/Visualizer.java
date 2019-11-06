@@ -9,7 +9,8 @@ import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.scene.CameraControlAgent;
 import luisf.ouroboros.visualizer.scene.MyScene;
 import luisf.ouroboros.visualizer.suits.SuitBase;
-import luisf.ouroboros.visualizer.suits.suit01.LandscapeSuit;
+import luisf.ouroboros.visualizer.suits.suit01.CityscapeMultiSuit;
+import luisf.ouroboros.visualizer.suits.suit01.FlippingMultiSuit;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
@@ -109,7 +110,8 @@ public class Visualizer extends PApplet implements InputListennerInterface {
         backgroundGraphics = createGraphics(windowWidth, windowHeight, renderer);
 
 //        suit = new CityscapeSuit(models,this);
-        suit = new LandscapeSuit(projects, this);
+//        suit = new CityscapeMultiSuit(projects, this);
+        suit = new FlippingMultiSuit(projects, this);
 
         suit.initialize();
 

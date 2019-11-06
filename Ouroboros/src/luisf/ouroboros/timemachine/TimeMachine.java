@@ -185,6 +185,7 @@ public class TimeMachine {
 
         List<RevCommit> commitsInfo = generateCommitsList(commitIterator);
 
+        // TODO its downloading 1 more then it should
         for (int i = 0; i < commitsInfo.size(); i += commitsInfo.size() / numCheckouts) {
             commitsToCheckout.add(commitsInfo.get(i));
         }

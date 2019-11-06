@@ -8,6 +8,7 @@ import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -43,6 +44,14 @@ public class LandscapeSuit extends SuitBase {
 
     public void initialize() {
         loadProperties();
+
+        // order projects by date
+        projects.sort(new Comparator<ProjectData>() {
+            @Override
+            public int compare(ProjectData o1, ProjectData o2) {
+                return o1.commitDate.compareTo(o2.commitDate);
+            }
+        });
 
         for (ProjectData project : projects) {
             CityscapeSuit city = new CityscapeSuit(project.classModels, parent);

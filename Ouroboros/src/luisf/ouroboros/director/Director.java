@@ -162,16 +162,14 @@ public class Director {
     }
 
     private void loadProperties() {
-        numCheckouts = props.getInt("code.numberCheckouts");
-
         checkoutUrl = Handy.validateUrl(props.getString("code.gitAddress"));
         if (checkoutUrl == null) {
             log.severe(Handy.f("The checkout URL is invalid"));
-            System.exit(0);
+//            System.exit(0);
         }
 
+        numCheckouts = props.getInt("code.numberCheckouts");
         pathFromOrigin = props.getString("code.pathFromOrigin");
-
         metadataIdFieldName = props.getString("metadata.idFieldName");
         metadataCommitDateFieldName = props.getString("metadata.dateFieldName");
         metadataShortMessageFieldName = props.getString("metadata.shortMessageFieldName");
@@ -272,10 +270,6 @@ public class Director {
             log.severe(Handy.f("Unable to parse the content of the metadata file at '%s'", metadataFilePath.getPath()));
             e.printStackTrace();
         }
-//        catch (java.text.ParseException e) {
-//            log.severe(Handy.f("Unable to parse the content of the metadata file at '%s'", metadataFilePath.getPath()));
-//            e.printStackTrace();
-//        }
 
         return metadata;
     }

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ProjectData {
     public String name = "";
-    public LocalDateTime date;
+    public LocalDateTime commitDate;
     public String shortMessage;
     public String fullMessage;
     public List<ClassModel> classModels;
@@ -17,20 +17,20 @@ public class ProjectData {
      * Constructor
      * @param classModels
      * @param id
-     * @param date
+     * @param commitDate
      * @param shortMessage
      * @param fullMessage
      */
-    public ProjectData(List<ClassModel> classModels, String id, LocalDateTime date, String shortMessage, String fullMessage) {
+    public ProjectData(List<ClassModel> classModels, String id, LocalDateTime commitDate, String shortMessage, String fullMessage) {
         this.name = id;
         this.classModels = new LinkedList<>(classModels);
-        this.date = date;
+        this.commitDate = commitDate;
         this.shortMessage = shortMessage;
         this.fullMessage = fullMessage;
     }
 
-    public ProjectData(String id, LocalDateTime date, String shortMessage, String fullMessage) {
-        this( new LinkedList<>(), "", LocalDateTime.MIN, "", "");
+    public ProjectData(String id, LocalDateTime commitDate, String shortMessage, String fullMessage) {
+        this( new LinkedList<>(), "", commitDate, "", "");
     }
 
     public ProjectData(List<ClassModel> classModels) {

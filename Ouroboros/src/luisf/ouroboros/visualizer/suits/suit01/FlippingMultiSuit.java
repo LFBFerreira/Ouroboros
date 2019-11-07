@@ -24,6 +24,7 @@ public class FlippingMultiSuit extends SuitBase {
     private int nextProjectIndex = -1;
     private float platformAngle = 0;
     private float rotationSpeed = 0;
+    private float rotationAcceleration = 0;
     private float currentWorldRotation = 0;
 
     // controls if the rotation is on (!=0), and the side(left <0, right>0)
@@ -31,9 +32,9 @@ public class FlippingMultiSuit extends SuitBase {
 
     private int centerOffset = 0;
     private final float targetCitySwtichRotationSpeed = 0.008f;
-    private final float targetCityRotationPeakSpeed = 0.4f;
+    private final float targetCityRotationPeakSpeed = 0.005f;
     private final float defaultWorldRotationSpeed = 0.006f;
-    private final long targetDelayBetweenSwtich = 2500L;
+    private final long targetDelayBetweenSwtich = 3000L;
 
     // ================================================================
 
@@ -146,7 +147,7 @@ public class FlippingMultiSuit extends SuitBase {
                 break;
 
             case '.':
-                iterateThroughCitiesTask.cancel();
+                stopIterateThroughCities();
                 break;
         }
     }
@@ -166,6 +167,8 @@ public class FlippingMultiSuit extends SuitBase {
     // Helpers
 
     private void nextCity() {
+        log.info("Next city");
+
         if (currentProjectIndex + 1 < cities.size()) {
             nextProjectIndex = currentProjectIndex + 1;
             startRotatingLeft();
@@ -178,19 +181,23 @@ public class FlippingMultiSuit extends SuitBase {
     }
 
     private void previousCity() {
+        log.info("Previous city");
+
         if (currentProjectIndex - 1 >= 0) {
             nextProjectIndex = currentProjectIndex - 1;
             startRotatingRight();
         }
         else
         {
-            nextProjectIndex = cities.size();
-            startRotatingLeft();
+            nextProjectIndex = cities.size()-1;
+            startRotatingRight();
         }
     }
 
-    TimerTask iterateThroughCitiesTask;
+    private TimerTask iterateThroughCitiesTask;
     private void iterateThroughCitites() {
+        log.info("Start auto iteration");
+
         iterateThroughCitiesTask = new TimerTask() {
             public void run() {
                 nextCity();
@@ -201,17 +208,23 @@ public class FlippingMultiSuit extends SuitBase {
         timer.scheduleAtFixedRate(iterateThroughCitiesTask, 0, targetDelayBetweenSwtich);
     }
 
-    private void delayedNextCity() {
-        TimerTask task = new TimerTask() {
-            public void run() {
-                nextCity();
-            }
-        };
-        Timer timer = new Timer("Timer");
-
-        long delay = 1000L;
-        timer.schedule(task, delay);
+    private void stopIterateThroughCities()
+    {
+        log.info("Stop auto iteration");
+        iterateThroughCitiesTask.cancel();
     }
+
+//    private void delayedNextCity() {
+//        TimerTask task = new TimerTask() {
+//            public void run() {
+//                nextCity();
+//            }
+//        };
+//        Timer timer = new Timer("Timer");
+//
+//        long delay = 1000L;
+//        timer.schedule(task, delay);
+//    }
 
     private void startRotatingLeft() {
         rotationTrigger = -1;
@@ -225,15 +238,20 @@ public class FlippingMultiSuit extends SuitBase {
 
         // if rotation is active, update the angle
         if (rotationTrigger != 0) {
+            // update acceleration
+            rotationAcceleration = parent.map(parent.cos(platformAngle), 0, PConstants.TWO_PI, 0, 1)
+                    * targetCityRotationPeakSpeed;
 
-            rotationSpeed = parent.map(parent.sin(platformAngle), 0, PConstants.TWO_PI, 0, 1)
-                    * targetCityRotationPeakSpeed + targetCitySwtichRotationSpeed;
-
+            // invert acceleration if trigger points left
             if (rotationTrigger < 0) {
-                platformAngle += rotationSpeed;
-            } else {
-                platformAngle -= rotationSpeed;
+                rotationAcceleration *= -1;
             }
+
+            // update speed
+            rotationSpeed += rotationAcceleration;
+
+            // update angle
+            platformAngle += rotationSpeed;
         }
 
         citieRotationStopCondition();
@@ -246,21 +264,18 @@ public class FlippingMultiSuit extends SuitBase {
     }
 
     private void stopRotation() {
-
         // reset rotation variables
+        rotationAcceleration = 0;
+        rotationSpeed = 0;
         platformAngle = 0;
         rotationTrigger = 0;
 
         // reset citie's indexes
         currentProjectIndex = nextProjectIndex;
         nextProjectIndex = -1;
-
-        // TODO remove later!
-        //nextCity();
     }
 
     private void updateWorldRotation() {
         currentWorldRotation += defaultWorldRotationSpeed;
     }
-
 }

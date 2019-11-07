@@ -38,6 +38,7 @@ public class CityscapeSingleSuit extends SuitBase {
 
     /**
      * Constructor
+     *
      * @param models
      * @param parent
      */
@@ -64,8 +65,8 @@ public class CityscapeSingleSuit extends SuitBase {
         numberSlicesToDraw = slices.size();
 
         float totalClassWidth = props.getInt("visualizer.suit01.methodThickness") +
-                     props.getInt("visualizer.suit01.methodMargin") +
-                     props.getInt("visualizer.suit01.classThickness");
+                props.getInt("visualizer.suit01.methodMargin") +
+                props.getInt("visualizer.suit01.classThickness");
 
 
         floor = createFloor();
@@ -77,12 +78,14 @@ public class CityscapeSingleSuit extends SuitBase {
         classSliceDepth = props.getInt("visualizer.suit01.classThickness");
     }
 
-    public void switchLights()
-    {
+    public void switchLights() {
         lightsOn = !lightsOn;
         log.info(Handy.f("Lights are %s", lightsOn ? "On" : "Off"));
     }
 
+    public int getFloorHeight() {
+        return floorHeight;
+    }
     // ================================================================
 
     // DrawableInterface Interface
@@ -98,7 +101,7 @@ public class CityscapeSingleSuit extends SuitBase {
         drawFloor(g);
 
         // pushes everything back, so the model is centered in the world
-        g.translate(0, 0, ((numberSlicesToDraw / -2f) )  * (classSliceDepth + classMargin));
+        g.translate(0, 0, ((numberSlicesToDraw / -2f)) * (classSliceDepth + classMargin));
 
         drawClassSlices(slices, numberSlicesToDraw, g);
 
@@ -156,9 +159,8 @@ public class CityscapeSingleSuit extends SuitBase {
     private PShape createFloor() {
         float maxWidth = 0;
 
-        for (ClassSlice slice: slices) {
-            if(maxWidth < slice.getWidth())
-            {
+        for (ClassSlice slice : slices) {
+            if (maxWidth < slice.getWidth()) {
                 maxWidth = slice.getWidth();
             }
         }

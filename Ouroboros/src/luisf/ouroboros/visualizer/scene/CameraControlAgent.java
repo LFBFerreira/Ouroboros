@@ -3,11 +3,9 @@ package luisf.ouroboros.visualizer.scene;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.hmi.InputEvent;
 import luisf.ouroboros.hmi.InputListennerInterface;
-import luisf.ouroboros.hmi.OscStringBuilder;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import remixlab.bias.Agent;
-import remixlab.bias.event.DOF2Event;
 import remixlab.bias.event.MotionEvent;
 import remixlab.dandelion.core.Eye;
 import remixlab.dandelion.geom.Vec;
@@ -84,17 +82,30 @@ public class CameraControlAgent extends Agent implements InputListennerInterface
 
     @Override
     public void reactToInput(InputEvent input) {
-        if (input.id.equals(OscStringBuilder.build(1, "moveXY", 1))) {
+
+        if (input.isPage("1") && input.isName("moveXY") && input.isGroup("1")) {
             translate(input.getAsXY().x, 0, input.getAsXY().y);
-        } else if (input.id.equals(OscStringBuilder.build(1, "lookXY", 1))) {
+        } else if (input.isPage("1") && input.isName("lookXY") && input.isGroup("1")) {
             orient(input.getAsXY().y, input.getAsXY().x);
-        } else if (input.id.equals(OscStringBuilder.build(1, "heightXY", 1))) {
+        } else if (input.isPage("1") && input.isName("heightXY") && input.isGroup("1")) {
             translate(0, input.getAsFloat(), 0);
-        } else if (input.id.equals(OscStringBuilder.build(1, "centerPush"))) {
+        } else if (input.isPage("1") && input.isName("centerPush")) {
             if (input.getAsBoolean() == true) {
                 center();
             }
         }
+
+//        if (input.id.equals(OscStringBuilder.build(1, "moveXY", 1))) {
+//            translate(input.getAsXY().x, 0, input.getAsXY().y);
+//        } else if (input.id.equals(OscStringBuilder.build(1, "lookXY", 1))) {
+//            orient(input.getAsXY().y, input.getAsXY().x);
+//        } else if (input.id.equals(OscStringBuilder.build(1, "heightXY", 1))) {
+//            translate(0, input.getAsFloat(), 0);
+//        } else if (input.id.equals(OscStringBuilder.build(1, "centerPush"))) {
+//            if (input.getAsBoolean() == true) {
+//                center();
+//            }
+//        }
     }
 
     float dragSensitivity = 10;
@@ -178,8 +189,7 @@ public class CameraControlAgent extends Agent implements InputListennerInterface
     }
 
 
-    private void translate(float normalizedX, float normalizedY, float normalizedZ)
-    {
+    private void translate(float normalizedX, float normalizedY, float normalizedZ) {
         scene.eyeFrame().translate(new Vec(normalizedX * dragSensitivity,
                 -normalizedY * dragSensitivity, -normalizedZ * dragSensitivity));
     }

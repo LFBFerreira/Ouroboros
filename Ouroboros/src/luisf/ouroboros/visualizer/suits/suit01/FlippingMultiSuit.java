@@ -1,6 +1,5 @@
 package luisf.ouroboros.visualizer.suits.suit01;
 
-import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.common.ProjectData;
 import luisf.ouroboros.hmi.InputEvent;
 import luisf.ouroboros.properties.PropertyManager;
@@ -26,15 +25,16 @@ public class FlippingMultiSuit extends SuitBase {
     private float rotationSpeed = 0;
     private float rotationAcceleration = 0;
     private float currentWorldRotation = 0;
+    private float cityRotationPeakSpeed = 0;
+    private float worldRotationSpeed = 0;
 
     // controls if the rotation is on (!=0), and the side(left <0, right>0)
     private int rotationTrigger = 0;
-
     private int centerOffset = 0;
-    private final float targetCitySwtichRotationSpeed = 0.008f;
-    private final float targetCityRotationPeakSpeed = 0.005f;
-    private final float defaultWorldRotationSpeed = 0.006f;
-    private final long targetDelayBetweenSwtich = 3000L;
+
+    private float cityRotationPeakSpeedDefault = 0.005f;
+    private float worldRotationSpeedDefault = 0.006f;
+    private long targetDelayBetweenSwtich = 3000L;
 
     // ================================================================
 
@@ -72,9 +72,15 @@ public class FlippingMultiSuit extends SuitBase {
         }
 
         centerOffset = cities.get(0).getFloorHeight();
+
+        worldRotationSpeed = worldRotationSpeedDefault;
+        cityRotationPeakSpeed = cityRotationPeakSpeedDefault;
     }
 
     private void loadProperties() {
+        cityRotationPeakSpeedDefault = props.getFloat("visualizer.suit01.cityRotationPeakSpeed");
+        worldRotationSpeedDefault = props.getFloat("visualizer.suit01.worldRotationSpeed");
+        targetDelayBetweenSwtich = props.getLong("visualizer.suit01.delayBetweenSwtich");
     }
 
     // ================================================================
@@ -145,7 +151,6 @@ public class FlippingMultiSuit extends SuitBase {
                     city.switchLights();
                 }
                 break;
-
             case '.':
                 stopIterateThroughCities();
                 break;
@@ -159,7 +164,19 @@ public class FlippingMultiSuit extends SuitBase {
 
     @Override
     public void reactToInput(InputEvent input) {
+        log.info("Input: " + input.toString());
 
+        if (input.isPage("2") && input.isName("push01")) {
+            previousCity();
+        } else if (input.isPage("2") && input.isName("push02")) {
+            nextCity();
+        } else if (input.isPage("2") && input.isName("fader01")) {
+            cityRotationPeakSpeed = cityRotationPeakSpeedDefault * input.getAsFloat(0, 2);
+            log.info("speed " + cityRotationPeakSpeed);
+        } else if (input.isPage("2") && input.isName("fader02")) {
+            worldRotationSpeed = worldRotationSpeedDefault * input.getAsFloat(0, 2);
+            log.info("speed " + worldRotationSpeed);
+        }
     }
 
     // ================================================================
@@ -172,9 +189,7 @@ public class FlippingMultiSuit extends SuitBase {
         if (currentProjectIndex + 1 < cities.size()) {
             nextProjectIndex = currentProjectIndex + 1;
             startRotatingLeft();
-        }
-        else
-        {
+        } else {
             nextProjectIndex = 0;
             startRotatingLeft();
         }
@@ -186,15 +201,14 @@ public class FlippingMultiSuit extends SuitBase {
         if (currentProjectIndex - 1 >= 0) {
             nextProjectIndex = currentProjectIndex - 1;
             startRotatingRight();
-        }
-        else
-        {
-            nextProjectIndex = cities.size()-1;
+        } else {
+            nextProjectIndex = cities.size() - 1;
             startRotatingRight();
         }
     }
 
     private TimerTask iterateThroughCitiesTask;
+
     private void iterateThroughCitites() {
         log.info("Start auto iteration");
 
@@ -208,8 +222,7 @@ public class FlippingMultiSuit extends SuitBase {
         timer.scheduleAtFixedRate(iterateThroughCitiesTask, 0, targetDelayBetweenSwtich);
     }
 
-    private void stopIterateThroughCities()
-    {
+    private void stopIterateThroughCities() {
         log.info("Stop auto iteration");
         iterateThroughCitiesTask.cancel();
     }
@@ -235,12 +248,11 @@ public class FlippingMultiSuit extends SuitBase {
     }
 
     private void updateCitiesRotation() {
-
         // if rotation is active, update the angle
         if (rotationTrigger != 0) {
             // update acceleration
             rotationAcceleration = parent.map(parent.cos(platformAngle), 0, PConstants.TWO_PI, 0, 1)
-                    * targetCityRotationPeakSpeed;
+                    * cityRotationPeakSpeed;
 
             // invert acceleration if trigger points left
             if (rotationTrigger < 0) {
@@ -264,6 +276,8 @@ public class FlippingMultiSuit extends SuitBase {
     }
 
     private void stopRotation() {
+        log.info("Stopping rotation");
+
         // reset rotation variables
         rotationAcceleration = 0;
         rotationSpeed = 0;
@@ -276,6 +290,6 @@ public class FlippingMultiSuit extends SuitBase {
     }
 
     private void updateWorldRotation() {
-        currentWorldRotation += defaultWorldRotationSpeed;
+        currentWorldRotation += worldRotationSpeed;
     }
 }

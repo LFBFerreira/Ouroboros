@@ -61,8 +61,8 @@ public class CityscapeMultiSuit extends SuitBase {
     }
 
     private void loadProperties() {
-        this.horizontalOffset = props.getInt("visualizer.suit02.horizontalOffset");
-        this.verticalOffset = props.getInt("visualizer.suit02.verticalOffset");
+        this.horizontalOffset = props.getInt("visualizer.suit01.horizontalOffset");
+        this.verticalOffset = props.getInt("visualizer.suit01.verticalOffset");
     }
 
     // ================================================================

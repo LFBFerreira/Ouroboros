@@ -1,6 +1,8 @@
 package luisf.ouroboros.hmi;
 
+import luisf.ouroboros.common.Handy;
 import oscP5.OscMessage;
+import processing.core.PGraphics;
 import processing.core.PVector;
 
 import java.util.LinkedList;
@@ -12,11 +14,12 @@ public class InputEvent {
 
     public InputMethodEnum inputMethod = InputMethodEnum.NONE;
 
-    public String id = "";
 
+    public String id = "";
     public String source = "";
 
     private List<Float> values = new LinkedList<>();
+    private final String separatingChar = "/";
 
     // ================================================================
 
@@ -53,6 +56,10 @@ public class InputEvent {
         return values.get(0).floatValue();
     }
 
+    public float getAsFloat(int min, int max) {
+        return map(getAsFloat(), 0, 1, min, max);
+    }
+
     public Boolean getAsBoolean() {
         if (values.isEmpty()) {
             log.severe("There are no values for this input");
@@ -71,10 +78,19 @@ public class InputEvent {
         return new PVector(values.get(0).floatValue(), values.get(1).floatValue());
     }
 
+    @Override
+    public String toString() {
+//        return Handy.f("id = %s \tsource = %s \tvalues = %s", id, source, values);
+        return Handy.f("id = %s \tvalues = %s", id, values);
+    }
 
     // ================================================================
 
     // Helpers
+
+    private float map(float value, float start1, float stop1, float start2, float stop2) {
+        return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
+    }
 
     private List<Float> parseOscValues(OscMessage message) {
         List<Float> values = new LinkedList<>();
@@ -101,4 +117,56 @@ public class InputEvent {
 
         return values;
     }
+
+    public boolean isPage(String page) {
+        return page.equals(getPage());
+    }
+
+    public boolean isName(String name) {
+        return name.equals(getName());
+    }
+
+    public boolean isGroup(String group) {
+        return group.equals(getGroup());
+    }
+
+    public String getPage() {
+        if (id.equals("")) {
+            return "";
+        }
+
+        String[] parts = id.split(separatingChar);
+        if (parts.length > 1) {
+            return parts[1];
+        } else {
+            return "";
+        }
+    }
+
+    public String getName() {
+        if (id.equals("")) {
+            return "";
+        }
+
+        String[] parts = id.split(separatingChar);
+        if (parts.length >= 2) {
+            return parts[2];
+        } else {
+            return "";
+        }
+    }
+
+    public String getGroup() {
+        if (id.equals("")) {
+            return "";
+        }
+
+        String[] parts = id.split(separatingChar);
+        if (parts.length >= 3) {
+            return parts[3];
+        } else {
+            return "";
+        }
+    }
+
 }

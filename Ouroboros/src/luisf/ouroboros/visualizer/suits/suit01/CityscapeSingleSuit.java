@@ -3,7 +3,6 @@ package luisf.ouroboros.visualizer.suits.suit01;
 
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.hmi.InputEvent;
-import luisf.ouroboros.hmi.OscStringBuilder;
 import luisf.ouroboros.models.ClassModel;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.Illuminati;
@@ -29,7 +28,6 @@ public class CityscapeSingleSuit extends SuitBase {
     private float classSliceDepth;
 
     private Boolean lightsOn = true;
-    private OscStringBuilder oscBuilder = new OscStringBuilder();
     private Illuminati illuminati;
     private PShape floor;
     private int floorHeight = 4;

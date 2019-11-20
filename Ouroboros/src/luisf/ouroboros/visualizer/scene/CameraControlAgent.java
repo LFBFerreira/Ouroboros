@@ -1,8 +1,8 @@
 package luisf.ouroboros.visualizer.scene;
 
+import luisf.interfaces.InputEvent;
+import luisf.interfaces.InputListennerInterface;
 import luisf.ouroboros.common.Handy;
-import luisf.ouroboros.hmi.InputEvent;
-import luisf.ouroboros.hmi.InputListennerInterface;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import remixlab.bias.Agent;
@@ -81,7 +81,7 @@ public class CameraControlAgent extends Agent implements InputListennerInterface
 
 
     @Override
-    public void reactToInput(InputEvent input) {
+    public void newEvent(InputEvent input) {
 
         if (input.isPage("1") && input.isName("moveXY") && input.isGroup("1")) {
             translate(input.getAsXY().x, 0, input.getAsXY().y);

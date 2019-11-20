@@ -1,9 +1,9 @@
 package luisf.ouroboros.visualizer.scene;
 
 import com.hamoid.VideoExport;
+import luisf.interfaces.InputEvent;
+import luisf.interfaces.InputListennerInterface;
 import luisf.ouroboros.common.Handy;
-import luisf.ouroboros.hmi.InputEvent;
-import luisf.ouroboros.hmi.InputListennerInterface;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
@@ -185,7 +185,7 @@ public class MyScene extends Scene implements InputListennerInterface {
     private float angleSensitityY = 10;
 
     @Override
-    public void reactToInput(InputEvent input) {
+    public void newEvent(InputEvent input) {
 //        if (input.id.equals(OscStringBuilder.build(1, "multixy1", 1))) {
 //            log.info(Handy.f("XY: %.2f, %.2f", input.getAsXY().x, input.getAsXY().y));
 //
@@ -193,7 +193,6 @@ public class MyScene extends Scene implements InputListennerInterface {
 //            log.info("Fit scene");
 //            interpolateToFitScene();
 //        }
-
     }
 
     // ================================================================

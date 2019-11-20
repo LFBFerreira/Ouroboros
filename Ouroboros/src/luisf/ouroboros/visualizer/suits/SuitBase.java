@@ -1,6 +1,6 @@
 package luisf.ouroboros.visualizer.suits;
 
-import luisf.ouroboros.hmi.InputListennerInterface;
+import luisf.interfaces.InputListennerInterface;
 import luisf.ouroboros.visualizer.DrawableInterface;
 import luisf.ouroboros.visualizer.GraphicsResource;
 import processing.core.PApplet;

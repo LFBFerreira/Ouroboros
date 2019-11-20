@@ -1,7 +1,7 @@
 package luisf.ouroboros.visualizer.suits.suit01;
 
+import luisf.interfaces.InputEvent;
 import luisf.ouroboros.common.ProjectData;
-import luisf.ouroboros.hmi.InputEvent;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
@@ -163,12 +163,12 @@ public class FlippingMultiSuit extends SuitBase {
     // InputListennerInterface
 
     @Override
-    public void reactToInput(InputEvent input) {
+    public void newEvent(InputEvent input) {
         log.info("Input: " + input.toString());
 
-        if (input.isPage("2") && input.isName("push01")) {
+        if (input.isPage("2") && input.isName("push01") && input.isReleased()) {
             previousCity();
-        } else if (input.isPage("2") && input.isName("push02")) {
+        } else if (input.isPage("2") && input.isName("push02") && input.isReleased()) {
             nextCity();
         } else if (input.isPage("2") && input.isName("fader01")) {
             cityRotationPeakSpeed = cityRotationPeakSpeedDefault * input.getAsFloat(0, 2);

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="OscP5Manager">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libraries/OscP5Manager/OscP5Manager.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

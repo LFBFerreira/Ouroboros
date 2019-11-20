@@ -1,8 +1,8 @@
 package luisf.ouroboros.visualizer.suits.suit01;
 
+import luisf.interfaces.InputEvent;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.common.ProjectData;
-import luisf.ouroboros.hmi.InputEvent;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
@@ -124,7 +124,7 @@ public class CityscapeMultiSuit extends SuitBase {
     // InputListennerInterface
 
     @Override
-    public void reactToInput(InputEvent input) {
+    public void newEvent(InputEvent input) {
 
     }
 }

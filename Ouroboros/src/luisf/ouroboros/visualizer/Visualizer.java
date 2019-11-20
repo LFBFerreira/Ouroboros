@@ -1,10 +1,11 @@
 package luisf.ouroboros.visualizer;
 
+import luisf.interfaces.InputEvent;
+import luisf.interfaces.InputListennerInterface;
+import luisf.interfaces.OscP5Manager;
 import luisf.ouroboros.common.ProjectData;
 import luisf.ouroboros.common.colortools.ColorTools;
-import luisf.ouroboros.hmi.HumanMachineInput;
-import luisf.ouroboros.hmi.InputEvent;
-import luisf.ouroboros.hmi.InputListennerInterface;
+
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.scene.CameraControlAgent;
 import luisf.ouroboros.visualizer.scene.MyScene;
@@ -19,7 +20,7 @@ import java.io.File;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class Visualizer extends PApplet implements InputListennerInterface {
+public class Visualizer extends PApplet {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     private final PropertyManager props = PropertyManager.getInstance();
@@ -39,10 +40,9 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
     private final String renderer = P3D;
 
-
     private int[] backgroundColors = new int[]{0xFFD5D8DC, 0xFFACB5C6};
 
-    private HumanMachineInput hmi;
+    private OscP5Manager hmi;
 
     private CameraControlAgent oscControl;
 
@@ -120,8 +120,8 @@ public class Visualizer extends PApplet implements InputListennerInterface {
 
         oscControl = new CameraControlAgent(myScene);
 
-        hmi = new HumanMachineInput(props.getInt("hmi.oscPort"), this);
-        hmi.registerListeners(new InputListennerInterface[]{this, myScene, suit, oscControl});
+        hmi = new OscP5Manager(props.getInt("hmi.oscPort"), this);
+        hmi.registerListeners(new InputListennerInterface[]{oscListenner, myScene, suit, oscControl});
 
         createBackground();
     }
@@ -176,11 +176,12 @@ public class Visualizer extends PApplet implements InputListennerInterface {
     // ================================================================
 
     // InputListennerInterface
+    private InputListennerInterface oscListenner = new InputListennerInterface() {
+        @Override
+        public void newEvent(InputEvent input) {
 
-    @Override
-    public void reactToInput(InputEvent input) {
-
-    }
+        }
+    };
 
     // ================================================================
 

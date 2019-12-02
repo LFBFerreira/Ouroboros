@@ -85,6 +85,11 @@ public class MyScene extends Scene implements InputListennerInterface {
         pg().clear();
     }
 
+    public void startStopCapture() {
+
+    }
+
+
     public void startStopCapture(String videoPath) {
         if (!captureStarted) {
             log.info(Handy.f("Starting video capture to " + videoPath));
@@ -135,10 +140,12 @@ public class MyScene extends Scene implements InputListennerInterface {
 
     public void keyPressed(int key, int keyCode) {
         if (key == CODED || key == 0) {
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
+
             switch (keyCode) {
                 case 97: // F1
-                    LocalDateTime now = LocalDateTime.now();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
+                    formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
 
                     try {
                         startStopCapture(Paths.get(outputFolder.getCanonicalPath(),
@@ -150,27 +157,12 @@ public class MyScene extends Scene implements InputListennerInterface {
                 case 98: // F2
                     endCapture();
                     break;
+                case 99: // F3
+                    takeScreenshot();
+                    break;
             }
         } else {
-//            // normal key captures
-//            switch (key) {
-//                case 'w':
-//                    lastlook = eye.viewDirection();
-//                    lastlook.add(0, 10, 0);
-//                    eye().lookAt(lastlook);
-//                    break;
-//
-//                case 's':
-//                    lastlook = eye.viewDirection();
-//                    lastlook.add(0, -10, 0);
-//                    eye().lookAt(lastlook);
-//                    break;
-//
-//                case 'c':
-////                    eye().sceneCenter();
-//                    eye().interpolateToFitScene();
-//                    break;
-//            }
+
         }
     }
 
@@ -198,6 +190,23 @@ public class MyScene extends Scene implements InputListennerInterface {
     // ================================================================
 
     // Helpers
+
+    private void takeScreenshot() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
+        String filename = "screenshot " + now.format(formatter) + ".jpg";
+        String filePath = "";
+
+        try {
+            filePath = Paths.get(outputFolder.getCanonicalPath(), filename).toString();
+            parent.save(filePath);
+        } catch (IOException e) {
+            log.severe(Handy.f("Could not save the screenshot to '%s'", filePath));
+            e.printStackTrace();
+        }
+
+        log.severe(Handy.f("Screenshot saved the to '%s'", filePath));
+    }
 
     private void configureVideo(VideoExport video) {
         videoExport.setFrameRate(props.getInt("visualizer.capture.framerate"));

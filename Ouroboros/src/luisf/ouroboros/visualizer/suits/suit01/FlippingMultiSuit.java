@@ -157,7 +157,6 @@ public class FlippingMultiSuit extends SuitBase {
         }
     }
 
-
     // ================================================================
 
     // InputListennerInterface

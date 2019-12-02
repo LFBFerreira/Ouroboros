@@ -77,8 +77,7 @@ public class CityscapeMultiSuit extends SuitBase {
         g.beginDraw();
         g.pushMatrix();
 
-        Handy.drawAxes(g, false, 200);
-
+        //Handy.drawAxes(g, false, 200);
         //g.scale(0.2f);
 
         // initial offset to center the landscape

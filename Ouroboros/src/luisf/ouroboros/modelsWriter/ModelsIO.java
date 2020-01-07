@@ -14,18 +14,18 @@ import java.util.logging.Logger;
 public class ModelsIO {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
-    private File outputFolder;
+    private File modelsFolder;
     private String outputFolderString = "";
     private String jsonExtension = ".json";
     private String ouroborosExtension = ".oro";
 
     // ================================================================
 
-    public ModelsIO(File outputFolder) {
-        this.outputFolder = outputFolder;
+    public ModelsIO(File modelsFolder) {
+        this.modelsFolder = modelsFolder;
 
         try {
-            outputFolderString = outputFolder.getCanonicalPath();
+            outputFolderString = modelsFolder.getCanonicalPath();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,7 +91,7 @@ public class ModelsIO {
     public List<ClassModel> loadModels() {
         List<ClassModel> models = new LinkedList<ClassModel>();
 
-        File[] modelFiles = outputFolder.listFiles();
+        File[] modelFiles = modelsFolder.listFiles();
         ObjectMapper objectMapper = new ObjectMapper();
 
         for (File modelFile : modelFiles) {
@@ -114,7 +114,7 @@ public class ModelsIO {
     public List<ClassModel> loadModelsBinary() {
         List<ClassModel> models = new LinkedList<ClassModel>();
 
-        File[] modelFiles = outputFolder.listFiles();
+        File[] modelFiles = modelsFolder.listFiles();
 
         for (File modelFile : modelFiles) {
             if (!Handy.getFileExtension(modelFile).equals(ouroborosExtension.replace(".", "")))

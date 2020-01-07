@@ -30,6 +30,7 @@ public class CodeAnalyzer {
 
         this.projectFilesFolder = projectFilesFolder;
         this.classModels = classModels;
+        loadProperties();
     }
 
     // ================================================================
@@ -42,8 +43,7 @@ public class CodeAnalyzer {
      * @return
      */
     public Boolean parseProject() {
-
-        loadProperties();
+        log.info(Handy.f("Parsing project '%s'", projectFilesFolder.getAbsolutePath()));
 
         List<File> fileList = new ArrayList<File>();
 
@@ -65,6 +65,8 @@ public class CodeAnalyzer {
         if (showParsingDebug) {
             debugPrint(classModels);
         }
+
+        log.info(Handy.f("Parsing complete"));
 
         return !fileList.isEmpty();
     }

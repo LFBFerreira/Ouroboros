@@ -127,17 +127,16 @@ public class Director {
                 e.printStackTrace();
             }
 
-            LinkedList<ClassModel> classModels = new LinkedList<ClassModel>();
-
             for (String folderName : getFoldersList(projectFilesFolder)) {
-                classModels.clear();
 
                 File modelsSubFolder = Handy.createFolder(new File(modelsFolder, folderName));
                 Path projectSubFolder = Paths.get(projectFilesFolder.getPath(), folderName, pathFromOrigin);
                 File projectMetadataFile = new File(projectFilesFolder, folderName + metadataFileExtension);
 
                 ProjectData metadata = parseProject(projectSubFolder.toFile(), projectMetadataFile);
-                saveModels(modelsSubFolder, classModels);
+
+                saveModels(modelsSubFolder, metadata.classModels);
+
                 projects.add(metadata);
 
                 //log.info("Parsed " + metadata.classModels.size() + " classes");
@@ -152,6 +151,8 @@ public class Director {
                 e.printStackTrace();
             }
 
+            projects = loadProjects(modelsFolder);
+
             if (projects.isEmpty()) {
                 log.severe("No models were parsed");
             } else {
@@ -161,11 +162,16 @@ public class Director {
         }
     }
 
+
+    // ================================================================
+
+    // Helpers
+
     private void loadProperties() {
         checkoutUrl = Handy.validateUrl(props.getString("code.gitAddress"));
         if (checkoutUrl == null) {
             log.severe(Handy.f("The checkout URL is invalid"));
-//            System.exit(0);
+            System.exit(0);
         }
 
         numCheckouts = props.getInt("code.numberCheckouts");
@@ -177,10 +183,21 @@ public class Director {
         metadataDateFormat = props.getString("metadata.dateFormat");
     }
 
+    private List<ProjectData> loadProjects(File modelsFolder) {
+        List<ProjectData> projects = new LinkedList<>();
 
-    // ================================================================
+        for (File f : modelsFolder.listFiles()) {
+            // only work on directories
+            if (!f.isDirectory()) {
+                continue;
+            }
 
-    // Helpers
+            ProjectData data = new ProjectData(readModels(f));
+            projects.add(data);
+        }
+
+        return projects;
+    }
 
     private void startGenerator(File graphicsFolder, List<ProjectData> projects, Boolean parseSingleProjects) {
         Visualizer.launchGenerator(graphicsFolder, projects, parseSingleProjects);
@@ -201,7 +218,7 @@ public class Director {
     }
 
     private ProjectData parseProject(File projectFilesFolder, File projectMetadataFile) {
-        ProjectData metadata;
+        ProjectData projectData;
         List<ClassModel> models = new LinkedList<>();
 
         try {
@@ -213,20 +230,20 @@ public class Director {
         }
 
         // parse metadata
-        metadata = parseProjectMetadata(projectMetadataFile);
+        projectData = parseProjectMetadata(projectMetadataFile);
 
         // parse code
         parser = new CodeAnalyzer(projectFilesFolder, models);
         parser.parseProject();
 
         // add models to metadata
-        if (metadata == null) {
-            metadata = new ProjectData(models);
+        if (projectData == null) {
+            projectData = new ProjectData(models);
         } else {
-            metadata.classModels = models;
+            projectData.classModels = models;
         }
 
-        return metadata;
+        return projectData;
     }
 
     private ProjectData parseProjectMetadata(File metadataFilePath) {

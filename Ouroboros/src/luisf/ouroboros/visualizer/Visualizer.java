@@ -14,6 +14,7 @@ import luisf.ouroboros.visualizer.suits.suit01.CityscapeMultiSuit;
 import luisf.ouroboros.visualizer.suits.suit01.FlippingMultiSuit;
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.core.PImage;
 import processing.core.PVector;
 
 import java.io.File;
@@ -110,8 +111,8 @@ public class Visualizer extends PApplet {
         backgroundGraphics = createGraphics(windowWidth, windowHeight, renderer);
 
 //        suit = new CityscapeSuit(models,this);
-        suit = new CityscapeMultiSuit(projects, this);
-//        suit = new FlippingMultiSuit(projects, this);
+//        suit = new CityscapeMultiSuit(projects, this);
+        suit = new FlippingMultiSuit(projects, this);
 
         suit.initialize();
 
@@ -123,7 +124,7 @@ public class Visualizer extends PApplet {
         hmi = new OscP5Manager(props.getInt("hmi.oscPort"), this);
         hmi.registerListeners(new InputListennerInterface[]{oscListenner, myScene, suit, oscControl});
 
-        createBackground();
+        createBackground(backgroundGraphics);
     }
 
     /**
@@ -193,16 +194,19 @@ public class Visualizer extends PApplet {
                 myScene.isCapturing() ? "[Recording]" : ""));
     }
 
-    private void createBackground() {
-        backgroundGraphics.beginDraw();
+    private void createBackground(PGraphics background) {
+
+        background.beginDraw();
+
+        background.clear();
 
         ColorTools.fillGradient(backgroundColors,
-                new PVector(backgroundGraphics.width * 0.1f, 0),
-                new PVector(backgroundGraphics.width * 0.8f, backgroundGraphics.height),
-                backgroundGraphics,
+                new PVector(background.width * 0.1f, 0),
+                new PVector(background.width * 0.8f, background.height),
+                background,
                 false);
 
-        backgroundGraphics.endDraw();
+        background.endDraw();
     }
 
 }

@@ -110,8 +110,8 @@ public class Visualizer extends PApplet {
         backgroundGraphics = createGraphics(windowWidth, windowHeight, renderer);
 
 //        suit = new CityscapeSuit(models,this);
-//        suit = new CityscapeMultiSuit(projects, this);
-        suit = new FlippingMultiSuit(projects, this);
+        suit = new CityscapeMultiSuit(projects, this);
+//        suit = new FlippingMultiSuit(projects, this);
 
         suit.initialize();
 

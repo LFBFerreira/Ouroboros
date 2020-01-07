@@ -50,15 +50,6 @@ public class TimeMachine {
         loadProperties();
     }
 
-    private void loadProperties() {
-        branchName = props.getString("code.branchName");
-        metadataDateFormat= props.getString("metadata.dateFormat");
-        metadataIdFieldName = props.getString("metadata.idFieldName");
-        metadataCommitDateFieldName = props.getString("metadata.dateFieldName");
-        metadataShortMessageFieldName = props.getString("metadata.shortMessageFieldName");
-        metadataFullMessageFieldName = props.getString("metadata.fullMessageFieldName");
-    }
-
     public List<File> checkout() {
 
         List<File> folderList = new LinkedList<>();
@@ -91,6 +82,7 @@ public class TimeMachine {
 
         // choose which commits to checkout
         List<RevCommit> commitsToCheckout = getCommitIDs(git, repository, numCheckouts);
+        List<JSONObject> checkedoutInfo = new LinkedList<>();
 
         // checkout specific commit
         try {
@@ -111,7 +103,7 @@ public class TimeMachine {
                 // copy the checked-out files to their final destination
                 copyFolder(tempFolder, destinationFolder);
 
-                saveCommitMetadata(commitInfo, destinationFolder);
+                checkedoutInfo.add(saveCommitMetadata(commitInfo, destinationFolder));
 
                 folderList.add(destinationFolder);
             }
@@ -122,6 +114,14 @@ public class TimeMachine {
 
         git.close();
 
+        log.info("Checkout complete. The following commits were downloaded:");
+
+        // print checkout info
+        checkedoutInfo.forEach((i) -> {
+            log.info(Handy.f("%s: %s (%s)", i.get(metadataCommitDateFieldName), i.get(metadataShortMessageFieldName),
+                    i.get(metadataIdFieldName)));
+        });
+
         return folderList;
     }
 
@@ -130,7 +130,16 @@ public class TimeMachine {
 
     // Helpers
 
-    private void saveCommitMetadata(RevCommit metadata, File destinationFolder) {
+    private void loadProperties() {
+        branchName = props.getString("code.branchName");
+        metadataDateFormat = props.getString("metadata.dateFormat");
+        metadataIdFieldName = props.getString("metadata.idFieldName");
+        metadataCommitDateFieldName = props.getString("metadata.dateFieldName");
+        metadataShortMessageFieldName = props.getString("metadata.shortMessageFieldName");
+        metadataFullMessageFieldName = props.getString("metadata.fullMessageFieldName");
+    }
+
+    private JSONObject saveCommitMetadata(RevCommit metadata, File destinationFolder) {
         JSONObject jsonObj = new JSONObject();
 
         PersonIdent authorIdent = metadata.getAuthorIdent();
@@ -153,16 +162,17 @@ public class TimeMachine {
         // write json object to file
         try (FileWriter file = new FileWriter(destinationFile)) {
             file.write(jsonObj.toJSONString());
-            log.info(Handy.f("Commit %s metadata saved to %s", metadata.getName(), destinationFile.getPath()));
+            log.info(Handy.f("Metadata saved to %s", metadata.getName(), destinationFile.getPath()));
         } catch (IOException e) {
             log.severe(Handy.f("It was not possible to save the commits metadata to {}",
                     Paths.get(destinationFolder.getPath(), metadata.getName())));
             e.printStackTrace();
         }
+
+        return jsonObj;
     }
 
     /**
-     *
      * @param git
      * @param repository
      * @param numCheckouts

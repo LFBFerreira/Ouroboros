@@ -162,10 +162,10 @@ public class TimeMachine {
         // write json object to file
         try (FileWriter file = new FileWriter(destinationFile)) {
             file.write(jsonObj.toJSONString());
-            log.info(Handy.f("Metadata saved to %s", metadata.getName(), destinationFile.getPath()));
+            log.info(Handy.f("Metadata saved to %s", destinationFile.getPath()));
         } catch (IOException e) {
-            log.severe(Handy.f("It was not possible to save the commits metadata to {}",
-                    Paths.get(destinationFolder.getPath(), metadata.getName())));
+            log.severe(Handy.f("It was not possible to save the commits metadata to %s",
+                    Paths.get(destinationFolder.getPath())));
             e.printStackTrace();
         }
 

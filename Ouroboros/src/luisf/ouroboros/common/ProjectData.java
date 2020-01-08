@@ -30,10 +30,15 @@ public class ProjectData {
     }
 
     public ProjectData(String id, LocalDateTime commitDate, String shortMessage, String fullMessage) {
-        this( new LinkedList<>(), "", commitDate, "", "");
+        this( new LinkedList<>(), id, commitDate, shortMessage, fullMessage);
     }
 
     public ProjectData(List<ClassModel> classModels) {
         this(classModels, "", LocalDateTime.MIN, "", "");
+    }
+
+    public void addModels(List<ClassModel> newModels)
+    {
+        classModels.addAll(newModels);
     }
 }

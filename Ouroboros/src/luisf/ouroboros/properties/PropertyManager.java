@@ -8,6 +8,7 @@ import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -74,10 +75,12 @@ public class PropertyManager {
 
         params = new Parameters();
 
-        builder = new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
-                .configure(params.xml()
-                        .setListDelimiterHandler(new DefaultListDelimiterHandler(','))
-                        .setFile(configurationFile).setValidating(false));
+        builder = new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class);
+
+        builder.configure(params.xml()
+                .setFile(configurationFile)
+                .setListDelimiterHandler(new DefaultListDelimiterHandler(','))
+                .setValidating(false));
 
         // load the configuration file
         try {
@@ -128,26 +131,11 @@ public class PropertyManager {
 
     // region Properties Getters
 
-
-//    public int[] getIntArray(String propertyName) {
-//        String[] stringValues = configuration.getStringArray(propertyName);
-//
-//        int[] intValues = new int[stringValues.length];
-//        for (int i = 0; i < stringValues.length; i++) {
-//            intValues[i] = Integer.parseInt(stringValues[i]);
-//        }
-//
-//        return intValues;
-//    }
-
-
-    public List<Integer> getIntList(String propertyName)
-    {
+    public List<Integer> getIntList(String propertyName) {
         return configuration.getList(Integer.class, propertyName);
     }
 
-    public int[] getIntArray(String propertyName)
-    {
+    public int[] getIntArray(String propertyName) {
         return getIntList(propertyName).stream().mapToInt(Integer::intValue).toArray();
     }
 
@@ -183,8 +171,7 @@ public class PropertyManager {
         return configuration.getByte(propertyName);
     }
 
-    public List<String> getStringList(String propertyName)
-    {
+    public List<String> getStringList(String propertyName) {
         return configuration.getList(String.class, propertyName);
     }
 

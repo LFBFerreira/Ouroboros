@@ -56,37 +56,37 @@ public class ModelsIO {
         return true;
     }
 
-    public Boolean saveModels(List<ClassModel> models) {
-        if (models.isEmpty()) {
-            log.warning("No models!");
-            return false;
-        }
-
-        Boolean result = true;
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enableDefaultTyping();
-
-        for (ClassModel model : models) {
-            if (Handy.isNullOrEmpty(model.getPackageName()) ||
-                    Handy.isNullOrEmpty(model.getClassName())) {
-                log.warning("Found a class without a package or name. Skipping it");
-                continue;
-            }
-
-            File filePath = getModelFilePath(model, outputFolderString, jsonExtension);
-
-            try {
-                objectMapper.writeValue(filePath, model);
-            } catch (IOException e) {
-                log.severe(Handy.f("Could not write the model to '%s'", filePath.getPath()));
-                e.printStackTrace();
-                result = false;
-            }
-        }
-
-        return result;
-    }
+//    public Boolean saveModels(List<ClassModel> models) {
+//        if (models.isEmpty()) {
+//            log.warning("No models!");
+//            return false;
+//        }
+//
+//        Boolean result = true;
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.enableDefaultTyping();
+//
+//        for (ClassModel model : models) {
+//            if (Handy.isNullOrEmpty(model.getPackageName()) ||
+//                    Handy.isNullOrEmpty(model.getClassName())) {
+//                log.warning("Found a class without a package or name. Skipping it");
+//                continue;
+//            }
+//
+//            File filePath = getModelFilePath(model, outputFolderString, jsonExtension);
+//
+//            try {
+//                objectMapper.writeValue(filePath, model);
+//            } catch (IOException e) {
+//                log.severe(Handy.f("Could not write the model to '%s'", filePath.getPath()));
+//                e.printStackTrace();
+//                result = false;
+//            }
+//        }
+//
+//        return result;
+//    }
 
     public List<ClassModel> loadModels() {
         List<ClassModel> models = new LinkedList<ClassModel>();

@@ -9,7 +9,6 @@ import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.timemachine.TimeMachine;
 import luisf.ouroboros.visualizer.Visualizer;
 import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -18,8 +17,6 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -109,12 +106,13 @@ public class Director {
             File projectMetadataFile = new File(projectFilesFolder.getParent(),
                     projectFilesFolder.getName() + metadataFileExtension);
 
-            // use the folder specified by the user
-            ProjectData metadata = parseProject(projectFilesFolder, projectMetadataFile);
+            // parse the project
+            ProjectData projectData = parseProject(projectFilesFolder, projectMetadataFile);
 
-            saveModels(modelsFolder, metadata.classModels);
+            // save project data
+            //saveProjectData(projectData, modelsFolder, projectSubFolder);
 
-            projects.add(metadata);
+            projects.add(projectData);
 
             //log.info("Parsed " + metadata.classModels.size() + " classes");
 
@@ -133,12 +131,13 @@ public class Director {
                 Path projectSubFolder = Paths.get(projectFilesFolder.getPath(), folderName, pathFromOrigin);
                 File projectMetadataFile = new File(projectFilesFolder, folderName + metadataFileExtension);
 
-                ProjectData metadata = parseProject(projectSubFolder.toFile(), projectMetadataFile);
+                // parse the project
+                ProjectData projectData = parseProject(projectSubFolder.toFile(), projectMetadataFile);
 
-                saveModels(modelsSubFolder, metadata.classModels);
+                // save project data
+                saveProjectData(projectData, modelsSubFolder);
 
-                projects.add(metadata);
-
+                projects.add(projectData);
                 //log.info("Parsed " + metadata.classModels.size() + " classes");
             }
         }
@@ -210,7 +209,7 @@ public class Director {
     }
 
     private List<ClassModel> readModels(File modelsFolder) {
-        log.info(Handy.f("Reading models..."));
+        log.info(Handy.f("Reading models from %s", modelsFolder.getPath()));
 
         ModelsIO modelsIo = new ModelsIO(modelsFolder);
 //        return modelsIo.loadModels();
@@ -237,11 +236,7 @@ public class Director {
         parser.parseProject();
 
         // add models to metadata
-        if (projectData == null) {
-            projectData = new ProjectData(models);
-        } else {
-            projectData.classModels = models;
-        }
+        projectData.addModels(models);
 
         return projectData;
     }
@@ -291,10 +286,33 @@ public class Director {
         return metadata;
     }
 
-    private void saveModels(File modelsFolder, List<ClassModel> models) {
+    private void saveProjectData(ProjectData data, File modelsFolder) {
         ModelsIO modelsIo = new ModelsIO(modelsFolder);
-//        modelsIo.saveModels(models);
-        modelsIo.saveModelsBinary(models);
+
+        // save models
+        modelsIo.saveModelsBinary(data.classModels);
+
+        saveCommitMetadata(data, new File(modelsFolder, data.name + metadataFileExtension));
+    }
+
+    private void saveCommitMetadata(ProjectData data, File destinationFile) {
+        JSONObject jsonObj = new JSONObject();
+
+        // fill object
+        jsonObj.put(metadataIdFieldName, data.name);
+        jsonObj.put(metadataShortMessageFieldName, data.shortMessage);
+        jsonObj.put(metadataFullMessageFieldName, data.fullMessage);
+        jsonObj.put(metadataCommitDateFieldName, data.commitDate);
+
+        // write json object to file
+        try (FileWriter file = new FileWriter(destinationFile)) {
+            file.write(jsonObj.toJSONString());
+            log.info(Handy.f("Metadata saved to {}", destinationFile.getPath()));
+        } catch (IOException e) {
+            log.severe(Handy.f("It was not possible to save the commits metadata to %s",
+                    Paths.get(destinationFile.getPath())));
+            e.printStackTrace();
+        }
     }
 
     private List<String> getFoldersList(File folder) {

@@ -110,7 +110,7 @@ public class Director {
             ProjectData projectData = parseProject(projectFilesFolder, projectMetadataFile);
 
             // save project data
-            //saveProjectData(projectData, modelsFolder, projectSubFolder);
+            saveProjectData(projectData, modelsFolder);
 
             projects.add(projectData);
 
@@ -185,14 +185,18 @@ public class Director {
     private List<ProjectData> loadProjects(File modelsFolder) {
         List<ProjectData> projects = new LinkedList<>();
 
+
         for (File f : modelsFolder.listFiles()) {
             // only work on directories
             if (!f.isDirectory()) {
                 continue;
             }
 
-            ProjectData data = new ProjectData(readModels(f));
-            projects.add(data);
+            ProjectData projectData = parseProjectMetadata(new File(f, f.getName() + metadataFileExtension));
+
+            //ProjectData data = new ProjectData(readModels(f));
+            projectData.addModels(readModels(f));
+            projects.add(projectData);
         }
 
         return projects;
@@ -267,10 +271,10 @@ public class Director {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(metadataDateFormat);
 
             // fill fields
-            commitDate = LocalDateTime.parse(tempDateText, formatter);
             id = (String) jsonObject.get(metadataIdFieldName);
             shortMessage = (String) jsonObject.get(metadataIdFieldName);
             fullMessage = (String) jsonObject.get(metadataIdFieldName);
+            commitDate = LocalDateTime.parse(tempDateText, formatter);
 
             // create metadata
             metadata = new ProjectData(id, commitDate, shortMessage, fullMessage);
@@ -298,16 +302,18 @@ public class Director {
     private void saveCommitMetadata(ProjectData data, File destinationFile) {
         JSONObject jsonObj = new JSONObject();
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(metadataDateFormat);
+
         // fill object
         jsonObj.put(metadataIdFieldName, data.name);
         jsonObj.put(metadataShortMessageFieldName, data.shortMessage);
         jsonObj.put(metadataFullMessageFieldName, data.fullMessage);
-        jsonObj.put(metadataCommitDateFieldName, data.commitDate);
+        jsonObj.put(metadataCommitDateFieldName, data.commitDate.format(formatter));
 
         // write json object to file
         try (FileWriter file = new FileWriter(destinationFile)) {
             file.write(jsonObj.toJSONString());
-            log.info(Handy.f("Metadata saved to {}", destinationFile.getPath()));
+            log.info(Handy.f("Metadata saved to %s", destinationFile.getPath()));
         } catch (IOException e) {
             log.severe(Handy.f("It was not possible to save the commits metadata to %s",
                     Paths.get(destinationFile.getPath())));

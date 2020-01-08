@@ -119,7 +119,7 @@ public class ModelsIO {
         for (File modelFile : modelFiles) {
             if (!Handy.getFileExtension(modelFile).equals(ouroborosExtension.replace(".", "")))
             {
-                log.info("Ignoring a file with incompatible extension: %s" + modelFile.getAbsolutePath());
+                //log.info(Handy.f("Ignoring a file with incompatible extension: %s", modelFile.getAbsolutePath()));
                 continue;
             }
 

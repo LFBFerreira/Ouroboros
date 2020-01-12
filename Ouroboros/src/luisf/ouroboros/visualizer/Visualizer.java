@@ -18,6 +18,7 @@ import processing.core.PImage;
 import processing.core.PVector;
 
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -42,7 +43,7 @@ public class Visualizer extends PApplet {
     private final String renderer = P3D;
 
     private int[] backgroundColors = new int[]{0xFFD5D8DC, 0xFFACB5C6};
-
+    private boolean backgroundChanged = false;
     private OscP5Manager hmi;
 
     private CameraControlAgent oscControl;
@@ -124,7 +125,7 @@ public class Visualizer extends PApplet {
         hmi = new OscP5Manager(props.getInt("hmi.oscPort"), this);
         hmi.registerListeners(new InputListennerInterface[]{oscListenner, myScene, suit, oscControl});
 
-        createBackground(backgroundGraphics);
+
     }
 
     /**
@@ -147,6 +148,7 @@ public class Visualizer extends PApplet {
 
         // Background
         //backgroundGraphics(100);
+        createBackground(backgroundGraphics, backgroundColors);
         image(backgroundGraphics, 0, 0);
 
         myScene.beginDraw();
@@ -180,7 +182,43 @@ public class Visualizer extends PApplet {
     private InputListennerInterface oscListenner = new InputListennerInterface() {
         @Override
         public void newEvent(InputEvent input) {
-
+            if (input.isName("multifader1") && input.isGroup("1")) {
+                backgroundColors[0] = ColorTools.composeclr(
+                        input.getAsFloat(0, 1),
+                        green(backgroundColors[0]) / 255,
+                        blue(backgroundColors[0]) / 255,
+                        1);
+            } else if (input.isName("multifader1") && input.isGroup("2")) {
+                backgroundColors[0] = ColorTools.composeclr(
+                        red(backgroundColors[0]) / 255,
+                        input.getAsFloat(0, 1),
+                        blue(backgroundColors[0]) / 255,
+                        1);
+            } else if (input.isName("multifader1") && input.isGroup("3")) {
+                backgroundColors[0] = ColorTools.composeclr(
+                        red(backgroundColors[0]) / 255,
+                        green(backgroundColors[0]) / 255,
+                        input.getAsFloat(0, 1),
+                        1);
+            }else if (input.isName("multifader1") && input.isGroup("4")) {
+                backgroundColors[1] = ColorTools.composeclr(
+                        input.getAsFloat(0, 1),
+                        green(backgroundColors[1]) / 255,
+                        blue(backgroundColors[1]) / 255,
+                        1);
+            } else if (input.isName("multifader1") && input.isGroup("5")) {
+                backgroundColors[1] = ColorTools.composeclr(
+                        red(backgroundColors[1]) / 255,
+                        input.getAsFloat(0, 1),
+                        blue(backgroundColors[1]) / 255,
+                        1);
+            } else if (input.isName("multifader1") && input.isGroup("6")) {
+                backgroundColors[1] = ColorTools.composeclr(
+                        red(backgroundColors[1]) / 255,
+                        green(backgroundColors[1]) / 255,
+                        input.getAsFloat(0, 1),
+                        1);
+            }
         }
     };
 
@@ -194,7 +232,7 @@ public class Visualizer extends PApplet {
                 myScene.isCapturing() ? "[Recording]" : ""));
     }
 
-    private void createBackground(PGraphics background) {
+    private void createBackground(PGraphics background, int[] backgroundColors) {
 
         background.beginDraw();
 
@@ -208,5 +246,4 @@ public class Visualizer extends PApplet {
 
         background.endDraw();
     }
-
 }

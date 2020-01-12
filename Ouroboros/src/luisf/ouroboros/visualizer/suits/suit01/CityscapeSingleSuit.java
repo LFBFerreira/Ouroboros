@@ -146,9 +146,7 @@ public class CityscapeSingleSuit extends SuitBase {
         g.pushMatrix();
 
         // lower the floor so that the surface matches y = 0
-        g.translate(0, floorHeight - 2, 0);
-
-        //Handy.drawAxes(g, false, 100);
+        g.translate(0, floorHeight - 2, -classMargin);
         g.shape(floor);
 
         g.popMatrix();
@@ -163,7 +161,9 @@ public class CityscapeSingleSuit extends SuitBase {
             }
         }
 
-        PShape floor = Shaper.createBox(maxWidth, floorHeight, 1 + slices.size() * (classSliceDepth + classMargin), parent);
+        PShape floor = Shaper.createBox(maxWidth, floorHeight,
+                (1 + slices.size()) * (classSliceDepth + classMargin),
+                parent);
         floor.setFill(floorColor);
         floor.setStroke(0x0);
         return floor;

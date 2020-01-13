@@ -9,6 +9,8 @@ import processing.core.PShape;
 
 import java.util.logging.Logger;
 
+import static luisf.ouroboros.analyzer.ModifierEnum.PRIVATE;
+
 public class MethodLine implements DrawableInterface {
     private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
@@ -21,6 +23,7 @@ public class MethodLine implements DrawableInterface {
     private MethodModel method;
     private int methodStrokeColor;
     private int methodFillColor;
+    private int methodFillColor2;
 
     private PShape methodBox;
 
@@ -37,13 +40,20 @@ public class MethodLine implements DrawableInterface {
         loadProperties();
 
         methodBox = Shaper.createBox(methodWidth, getHeight(), methodWidth, parent);
-        methodBox.setFill(methodFillColor);
+        if (method.modifiers.contains(PRIVATE))
+        {
+            methodBox.setFill(methodFillColor2);
+        }else
+        {
+            methodBox.setFill(methodFillColor);
+        }
         methodBox.setStroke(methodStrokeColor);
     }
 
     private void loadProperties() {
         methodHeightIncrement = props.getInt("visualizer.suit01.methodLineIncrement");
         methodFillColor = props.getInt("visualizer.suit01.methodFillColor");
+        methodFillColor2 = props.getInt("visualizer.suit01.methodFillColor2");
         methodStrokeColor = props.getInt("visualizer.suit01.methodLineColor");
         methodWidth = props.getInt("visualizer.suit01.methodThickness");
     }

@@ -41,7 +41,7 @@ public class CityscapeMultiSuit extends SuitBase {
     // ================================================================
 
     // Public
-
+    @Override
     public void initialize() {
         loadProperties();
 
@@ -54,7 +54,7 @@ public class CityscapeMultiSuit extends SuitBase {
         });
 
         for (ProjectData project : projects) {
-            CityscapeSingleSuit city = new CityscapeSingleSuit(project.classModels, parent);
+            CityscapeSingleSuit city = new CityscapeSingleSuit(project, parent);
             city.initialize();
             cities.add(city);
         }
@@ -63,6 +63,11 @@ public class CityscapeMultiSuit extends SuitBase {
     private void loadProperties() {
         this.horizontalOffset = props.getInt("visualizer.suit01.horizontalOffset");
         this.verticalOffset = props.getInt("visualizer.suit01.verticalOffset");
+    }
+
+    @Override
+    public ProjectData getCurrentProject() {
+        return null; //projects.get(currentProjectIndex);
     }
 
     // ================================================================
@@ -115,8 +120,9 @@ public class CityscapeMultiSuit extends SuitBase {
                 break;
 
         }
-    }
 
+        cities.forEach(c -> c.keyPressed(key, keyCode));
+    }
 
     // ================================================================
 

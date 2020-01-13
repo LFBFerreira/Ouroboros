@@ -1,13 +1,13 @@
 package luisf.ouroboros.visualizer.suits.suit01;
 
 import luisf.interfaces.InputEvent;
+import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.common.ProjectData;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PGraphics;
+import processing.core.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -35,6 +35,12 @@ public class FlippingMultiSuit extends SuitBase {
     private float cityRotationPeakSpeedDefault = 0.005f;
     private float worldRotationSpeedDefault = 0.006f;
     private long targetDelayBetweenSwtich = 3000L;
+
+    private int fontColor = 0x00000000;    // overriden by app.properties
+    private int fontSize = 40;     // overriden by app.properties
+    private PFont defaultFont;
+    private PVector textAnchor;
+    private String fontName = "Roboto Bold";
 
     // ================================================================
 
@@ -66,7 +72,7 @@ public class FlippingMultiSuit extends SuitBase {
 
         // initialize cities
         for (ProjectData project : projects) {
-            CityscapeSingleSuit city = new CityscapeSingleSuit(project.classModels, parent);
+            CityscapeSingleSuit city = new CityscapeSingleSuit(project, parent);
             city.initialize();
             cities.add(city);
         }
@@ -75,12 +81,21 @@ public class FlippingMultiSuit extends SuitBase {
 
         worldRotationSpeed = worldRotationSpeedDefault;
         cityRotationPeakSpeed = cityRotationPeakSpeedDefault;
+
+        defaultFont = parent.createFont(fontName, fontSize);
     }
 
     private void loadProperties() {
         cityRotationPeakSpeedDefault = props.getFloat("visualizer.suit01.cityRotationPeakSpeed");
         worldRotationSpeedDefault = props.getFloat("visualizer.suit01.worldRotationSpeed");
         targetDelayBetweenSwtich = props.getLong("visualizer.suit01.delayBetweenSwtich");
+        fontColor = props.getInt("visualizer.suit01.fontColor");
+        fontSize = props.getInt("visualizer.suit01.fontSize");
+    }
+
+    @Override
+    public ProjectData getCurrentProject() {
+        return projects.get(currentProjectIndex);
     }
 
     // ================================================================
@@ -90,16 +105,15 @@ public class FlippingMultiSuit extends SuitBase {
     @Override
     public void draw(PGraphics g) {
         g.beginDraw();
-        g.pushMatrix();
 
-        //Handy.drawAxes(g, false, 200);
+        // draw text statistics
+        drawStatistics(g, projects.get(currentProjectIndex));
+
+        //Handy.drawAxes(g, false);
 
         // update world
         updateCitiesRotation();
         updateWorldRotation();
-
-        // scale everything
-        g.scale(2.2f);
 
         // constant world rotation
         g.rotateY(currentWorldRotation);
@@ -130,7 +144,6 @@ public class FlippingMultiSuit extends SuitBase {
             g.popMatrix();
         }
 
-        g.popMatrix();
         g.endDraw();
     }
 
@@ -147,14 +160,16 @@ public class FlippingMultiSuit extends SuitBase {
                 iterateThroughCitites();
                 break;
             case 'l':
-                for (CityscapeSingleSuit city : cities) {
-                    city.switchLights();
-                }
+                cities.forEach(c -> c.switchLights());
+                break;
+            case 'k':
+                cities.forEach(c -> c.hideLights());
                 break;
             case '.':
                 stopIterateThroughCities();
                 break;
         }
+
     }
 
     // ================================================================
@@ -169,18 +184,79 @@ public class FlippingMultiSuit extends SuitBase {
             previousCity();
         } else if (input.isPage("2") && input.isName("push02") && input.isReleased()) {
             nextCity();
-        } else if (input.isPage("2") && input.isName("fader01")) {
+        } else if (input.isName("multifader1") && input.isGroup("1")) {
             cityRotationPeakSpeed = cityRotationPeakSpeedDefault * input.getAsFloat(0, 2);
-            log.info("speed " + cityRotationPeakSpeed);
-        } else if (input.isPage("2") && input.isName("fader02")) {
+            log.info("city speed " + cityRotationPeakSpeed);
+        } else if (input.isName("multifader1") && input.isGroup("2")) {
             worldRotationSpeed = worldRotationSpeedDefault * input.getAsFloat(0, 2);
-            log.info("speed " + worldRotationSpeed);
+            log.info("world speed " + worldRotationSpeed);
         }
     }
 
     // ================================================================
 
     // Helpers
+
+    private final int verticalShift = 40;
+    private final int textBoxWidth = 1400;
+    private final int textBoxHeight = 800;
+    private final float smallFontMultiplier = 0.8f;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-mm-yyyy \thh:mm:ss");
+    private final PVector textTranslationCoordinates = new PVector(-1000, -70);
+
+    /**
+     * @param g
+     * @param project
+     */
+    private void drawStatistics(PGraphics g, ProjectData project) {
+        textAnchor = new PVector(g.width * 0.2f, g.height * 0.3f);
+
+        g.pushMatrix();
+        g.pushStyle();
+
+        // translate text origin
+        g.translate(textTranslationCoordinates.x, textTranslationCoordinates.y);
+
+        g.textFont(defaultFont);
+        //g.textLeading(10);
+        g.textAlign(parent.LEFT, parent.TOP);
+        g.fill(fontColor);
+
+        // project ID
+        g.textSize(Math.round(fontSize * smallFontMultiplier));
+        g.text("ID", textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+        textAnchor.y += verticalShift;
+
+        g.textSize(fontSize);
+        g.text(Handy.f("%s", project.id), textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+        textAnchor.y += verticalShift * 1.8f;
+
+        // project date
+        g.textSize(Math.round(fontSize * smallFontMultiplier));
+        g.text("Date", textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+        textAnchor.y += verticalShift;
+
+        g.textSize(fontSize);
+        g.text(Handy.f("%s", project.commitDate.format(formatter)), textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+        textAnchor.y += verticalShift * 1.8f;
+
+        // class sizes
+        g.textSize(Math.round(fontSize * smallFontMultiplier));
+        g.text("# Methods", textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+        textAnchor.y += verticalShift;
+
+        g.textSize(fontSize);
+        StringJoiner methodsSize = new StringJoiner(" ");
+        project.classModels.forEach(m -> methodsSize.add(String.format("%02d", m.getMethods().size())));
+        g.text(Handy.f("%s", methodsSize.toString()), textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+        textAnchor.y += verticalShift;
+
+//        g.text(Handy.f("%d", project.classModels.size()), anchor.x, anchor.y, textBoxWidth, textBoxHeight);
+//        anchor.y += verticalShift;
+
+        g.popStyle();
+        g.popMatrix();
+    }
 
     private void nextCity() {
         log.info("Next city");
@@ -192,7 +268,11 @@ public class FlippingMultiSuit extends SuitBase {
             nextProjectIndex = 0;
             startRotatingLeft();
         }
+
+        log.info(Handy.f("City: %s %s", projects.get(nextProjectIndex).getCommitDateFormated(),
+                projects.get(nextProjectIndex).id));
     }
+
 
     private void previousCity() {
         log.info("Previous city");
@@ -204,6 +284,9 @@ public class FlippingMultiSuit extends SuitBase {
             nextProjectIndex = cities.size() - 1;
             startRotatingRight();
         }
+
+        log.info(Handy.f("City: %s %s", projects.get(nextProjectIndex).getCommitDateFormated(),
+                projects.get(nextProjectIndex).id));
     }
 
     private TimerTask iterateThroughCitiesTask;
@@ -225,18 +308,6 @@ public class FlippingMultiSuit extends SuitBase {
         log.info("Stop auto iteration");
         iterateThroughCitiesTask.cancel();
     }
-
-//    private void delayedNextCity() {
-//        TimerTask task = new TimerTask() {
-//            public void run() {
-//                nextCity();
-//            }
-//        };
-//        Timer timer = new Timer("Timer");
-//
-//        long delay = 1000L;
-//        timer.schedule(task, delay);
-//    }
 
     private void startRotatingLeft() {
         rotationTrigger = -1;

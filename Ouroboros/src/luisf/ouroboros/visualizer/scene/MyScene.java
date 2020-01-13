@@ -4,10 +4,13 @@ import com.hamoid.VideoExport;
 import luisf.interfaces.InputEvent;
 import luisf.interfaces.InputListennerInterface;
 import luisf.ouroboros.common.Handy;
+import luisf.ouroboros.common.ProjectData;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PGraphics;
+import processing.core.PVector;
 import remixlab.proscene.Scene;
 
 import java.io.File;
@@ -30,6 +33,12 @@ public class MyScene extends Scene implements InputListennerInterface {
     private File outputFolder;
 
     private SuitBase suit;
+
+    private PVector cameraPosition = new PVector(0, 0, 0);
+
+    private final String screenshotExtension = ".png";
+    private int videoExportFramerate;
+    private int videoExportQuality;
 
     // ================================================================
 
@@ -62,7 +71,8 @@ public class MyScene extends Scene implements InputListennerInterface {
     // Public
 
     public void initialize() {
-        setRadius(2000);
+        loadProperties();
+
 
         setGridVisualHint(false);
         setAxesVisualHint(false);
@@ -70,12 +80,10 @@ public class MyScene extends Scene implements InputListennerInterface {
 
         eyeFrame().setDamping(0.5f);
 
+        setRadius(2000);
         camera().setUpVector(0, 1, 0);
-//        camera().setPosition(0, -900, 2800);
-        camera().setPosition(0, -900, 2800);
+        setCameraPosition(cameraPosition);
         camera().lookAt(0, 0, 0);
-
-        scale(2);
 
 //        showAll();
         //center();
@@ -85,11 +93,10 @@ public class MyScene extends Scene implements InputListennerInterface {
         pg().clear();
     }
 
-    public void startStopCapture() {
-
-    }
-
-
+    /**
+     *
+     * @param videoPath
+     */
     public void startStopCapture(String videoPath) {
         if (!captureStarted) {
             log.info(Handy.f("Starting video capture to " + videoPath));
@@ -109,6 +116,9 @@ public class MyScene extends Scene implements InputListennerInterface {
         log.info(Handy.f("Video capture is %s", capturing ? "On" : "Off"));
     }
 
+    /**
+     *
+     */
     public void endCapture() {
         if (!captureStarted) {
             log.warning("There is no video being recorded");
@@ -135,6 +145,7 @@ public class MyScene extends Scene implements InputListennerInterface {
     @Override
     public void proscenium() {
         suit.draw(pg());
+        //drawTitle(pg());
     }
 
 
@@ -170,6 +181,15 @@ public class MyScene extends Scene implements InputListennerInterface {
         return capturing;
     }
 
+    public void setCameraPosition(PVector position) {
+        setCameraPosition((int) position.x, (int) position.y, (int) position.z);
+    }
+
+    public void setCameraPosition(int x, int y, int z) {
+        cameraPosition = new PVector(x, y, z);
+        camera().setPosition(cameraPosition.x, cameraPosition.y, cameraPosition.z);
+    }
+
     // ================================================================
 
     // InputListennerInterface
@@ -191,14 +211,20 @@ public class MyScene extends Scene implements InputListennerInterface {
 
     // Helpers
 
+    private void loadProperties() {
+        videoExportFramerate = props.getInt("visualizer.capture.framerate");
+        videoExportQuality = props.getInt("visualizer.capture.quality");
+    }
+
     private void takeScreenshot() {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
-        String filename = "screenshot " + now.format(formatter) + ".jpg";
+        String filename = Handy.f("screenshot %s%s" ,now.format(formatter), screenshotExtension);
         String filePath = "";
 
         try {
             filePath = Paths.get(outputFolder.getCanonicalPath(), filename).toString();
+
             parent.save(filePath);
         } catch (IOException e) {
             log.severe(Handy.f("Could not save the screenshot to '%s'", filePath));
@@ -209,9 +235,9 @@ public class MyScene extends Scene implements InputListennerInterface {
     }
 
     private void configureVideo(VideoExport video) {
-        videoExport.setFrameRate(props.getInt("visualizer.capture.framerate"));
+        videoExport.setFrameRate(videoExportFramerate);
         videoExport.setDebugging(false);
         videoExport.setLoadPixels(true);
-        videoExport.setQuality(props.getInt("visualizer.capture.quality"), 0);
+        videoExport.setQuality(videoExportQuality, 0);
     }
 }

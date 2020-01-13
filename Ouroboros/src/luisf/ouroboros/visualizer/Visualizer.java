@@ -3,6 +3,7 @@ package luisf.ouroboros.visualizer;
 import luisf.interfaces.InputEvent;
 import luisf.interfaces.InputListennerInterface;
 import luisf.interfaces.OscP5Manager;
+import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.common.ProjectData;
 import luisf.ouroboros.common.colortools.ColorTools;
 
@@ -10,16 +11,15 @@ import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.scene.CameraControlAgent;
 import luisf.ouroboros.visualizer.scene.MyScene;
 import luisf.ouroboros.visualizer.suits.SuitBase;
-import luisf.ouroboros.visualizer.suits.suit01.CityscapeMultiSuit;
 import luisf.ouroboros.visualizer.suits.suit01.FlippingMultiSuit;
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PGraphics;
-import processing.core.PImage;
 import processing.core.PVector;
 
 import java.io.File;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.logging.Logger;
 
 public class Visualizer extends PApplet {
@@ -42,11 +42,17 @@ public class Visualizer extends PApplet {
 
     private final String renderer = P3D;
 
-    private int[] backgroundColors = new int[]{0xFFD5D8DC, 0xFFACB5C6};
+    private int[] backgroundColors = new int[]{0xFFD5D8DC, 0xFFACB5C6}; // overriden by app.properties
     private boolean backgroundChanged = false;
     private OscP5Manager hmi;
 
     private CameraControlAgent oscControl;
+
+    private PVector initialCameraPosition = new PVector(0, -200, 1500);
+
+    private int titleFontColor = 0x00000000;    // overriden by app.properties
+    private int titleFontSize = 40;     // overriden by app.properties
+    private PFont defaultFont;
 
     // ================================================================
 
@@ -84,12 +90,17 @@ public class Visualizer extends PApplet {
         this.graphicsFolder = graphicsFolder;
 
         loadProperties();
+
+        // trigger first draw
+        backgroundChanged = true;
     }
 
     private void loadProperties() {
         backgroundColors = props.getIntArray("visualizer.backgroundColors");
         windowWidth = props.getInt("visualizer.window.width");
         windowHeight = props.getInt("visualizer.window.height");
+        titleFontColor = props.getInt("visualizer.titleFontColor");
+        titleFontSize = props.getInt("visualizer.titleFontSize");
     }
 
     // ================================================================
@@ -99,7 +110,7 @@ public class Visualizer extends PApplet {
      */
     public void settings() {
         size(windowWidth, windowHeight, renderer);
-        smooth(8);
+        //smooth(8);
     }
 
     /**
@@ -107,6 +118,8 @@ public class Visualizer extends PApplet {
      */
     public void setup() {
         frameRate(60);
+
+        //frame.setLocation(displayWidth / 2 - width / 2, displayHeight / 2 - height / 2);
 
         suitGraphics = createGraphics(windowWidth, windowHeight, renderer);
         backgroundGraphics = createGraphics(windowWidth, windowHeight, renderer);
@@ -125,7 +138,9 @@ public class Visualizer extends PApplet {
         hmi = new OscP5Manager(props.getInt("hmi.oscPort"), this);
         hmi.registerListeners(new InputListennerInterface[]{oscListenner, myScene, suit, oscControl});
 
+        myScene.setCameraPosition(initialCameraPosition);
 
+        defaultFont = createFont("Roboto", titleFontSize);
     }
 
     /**
@@ -154,15 +169,46 @@ public class Visualizer extends PApplet {
         myScene.beginDraw();
         myScene.clearScene();
         // suit is drawn after endDraw
+        //myScene.drawTitle(suit.getTitle());
+
         myScene.endDraw();
 
         // copy scene output to main graphics buffer
         myScene.display();
 
+        //drawStatistics(g, suit.getCurrentProject());
+
         // save frame if record mode is on
         myScene.addFrameToVideo();
     }
 
+    private final int verticalShift = 20;
+    private final int textBoxWidth = 600;
+    private final int textBoxHeight = 400;
+
+    public void drawStatistics(PGraphics g, ProjectData project) {
+        g.pushStyle();
+
+        g.textFont(defaultFont);
+        g.textLeading(10);
+        g.textAlign(LEFT, TOP);
+        g.fill(titleFontColor);
+        g.textSize(titleFontSize);
+
+        PVector anchor = new PVector(g.width * 0.2f, g.height * 0.1f);
+        g.text(Handy.f("%s", project.id), anchor.x, anchor.y, textBoxWidth, textBoxHeight);
+        anchor.y += verticalShift * 2;
+        g.text(Handy.f("%s", project.commitDate), anchor.x, anchor.y, textBoxWidth, textBoxHeight);
+        anchor.y += verticalShift;
+        g.text(Handy.f("%d", project.classModels.size()), anchor.x, anchor.y, textBoxWidth, textBoxHeight);
+        anchor.y += verticalShift;
+        StringJoiner methodsSize = new StringJoiner(" ");
+        project.classModels.forEach(m -> methodsSize.add(String.format("%02d", m.getMethods().size())));
+        g.text(Handy.f("%s", methodsSize.toString()), anchor.x, anchor.y, textBoxWidth, textBoxHeight);
+        anchor.y += verticalShift;
+
+        g.popStyle();
+    }
     // ================================================================
 
     /**
@@ -170,7 +216,6 @@ public class Visualizer extends PApplet {
      */
 
     public void keyPressed() {
-
         // forward the event
         suit.keyPressed(key, keyCode);
         myScene.keyPressed(key, keyCode);
@@ -182,43 +227,51 @@ public class Visualizer extends PApplet {
     private InputListennerInterface oscListenner = new InputListennerInterface() {
         @Override
         public void newEvent(InputEvent input) {
+            /*
             if (input.isName("multifader1") && input.isGroup("1")) {
                 backgroundColors[0] = ColorTools.composeclr(
                         input.getAsFloat(0, 1),
                         green(backgroundColors[0]) / 255,
                         blue(backgroundColors[0]) / 255,
                         1);
+                backgroundChanged = true;
             } else if (input.isName("multifader1") && input.isGroup("2")) {
                 backgroundColors[0] = ColorTools.composeclr(
                         red(backgroundColors[0]) / 255,
                         input.getAsFloat(0, 1),
                         blue(backgroundColors[0]) / 255,
                         1);
+                backgroundChanged = true;
             } else if (input.isName("multifader1") && input.isGroup("3")) {
                 backgroundColors[0] = ColorTools.composeclr(
                         red(backgroundColors[0]) / 255,
                         green(backgroundColors[0]) / 255,
                         input.getAsFloat(0, 1),
                         1);
-            }else if (input.isName("multifader1") && input.isGroup("4")) {
+                backgroundChanged = true;
+            } else if (input.isName("multifader1") && input.isGroup("4")) {
                 backgroundColors[1] = ColorTools.composeclr(
                         input.getAsFloat(0, 1),
                         green(backgroundColors[1]) / 255,
                         blue(backgroundColors[1]) / 255,
                         1);
+                backgroundChanged = true;
             } else if (input.isName("multifader1") && input.isGroup("5")) {
                 backgroundColors[1] = ColorTools.composeclr(
                         red(backgroundColors[1]) / 255,
                         input.getAsFloat(0, 1),
                         blue(backgroundColors[1]) / 255,
                         1);
+                backgroundChanged = true;
             } else if (input.isName("multifader1") && input.isGroup("6")) {
                 backgroundColors[1] = ColorTools.composeclr(
                         red(backgroundColors[1]) / 255,
                         green(backgroundColors[1]) / 255,
                         input.getAsFloat(0, 1),
                         1);
+                backgroundChanged = true;
             }
+            */
         }
     };
 
@@ -233,6 +286,9 @@ public class Visualizer extends PApplet {
     }
 
     private void createBackground(PGraphics background, int[] backgroundColors) {
+        if (!backgroundChanged) {
+            return;
+        }
 
         background.beginDraw();
 
@@ -245,5 +301,7 @@ public class Visualizer extends PApplet {
                 false);
 
         background.endDraw();
+
+        backgroundChanged = false;
     }
 }

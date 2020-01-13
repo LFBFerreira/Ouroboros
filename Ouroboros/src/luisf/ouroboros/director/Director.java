@@ -296,7 +296,7 @@ public class Director {
         // save models
         modelsIo.saveModelsBinary(data.classModels);
 
-        saveCommitMetadata(data, new File(modelsFolder, data.name + metadataFileExtension));
+        saveCommitMetadata(data, new File(modelsFolder, data.id + metadataFileExtension));
     }
 
     private void saveCommitMetadata(ProjectData data, File destinationFile) {
@@ -305,7 +305,7 @@ public class Director {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(metadataDateFormat);
 
         // fill object
-        jsonObj.put(metadataIdFieldName, data.name);
+        jsonObj.put(metadataIdFieldName, data.id);
         jsonObj.put(metadataShortMessageFieldName, data.shortMessage);
         jsonObj.put(metadataFullMessageFieldName, data.fullMessage);
         jsonObj.put(metadataCommitDateFieldName, data.commitDate.format(formatter));

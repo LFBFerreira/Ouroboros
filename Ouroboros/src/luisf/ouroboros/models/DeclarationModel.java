@@ -21,5 +21,4 @@ public class DeclarationModel implements Serializable {
         this.name = name;
         this.type = type;
     }
-
 }

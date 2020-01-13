@@ -24,7 +24,6 @@ public class ClassSlice implements DrawableInterface {
     private float sliceWidth = 0;
     private float sliceHeight = 0;
 
-    private int classFillColor;
     private int classLineColor;
 
 
@@ -115,13 +114,10 @@ public class ClassSlice implements DrawableInterface {
     // Helpers
 
     private void loadProperties() {
-        classFillColor = props.getInt("visualizer.suit01.classFillColor");
         classLineColor = props.getInt("visualizer.suit01.classLineColor");
         methodDepth = props.getInt("visualizer.suit01.methodThickness");
         methodMargin = props.getInt("visualizer.suit01.methodMargin");
         classDepth = props.getInt("visualizer.suit01.classThickness");
         methodHeightIncrement = props.getInt("visualizer.suit01.methodLineIncrement");
-
     }
-
 }

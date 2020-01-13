@@ -24,6 +24,7 @@ public class Illuminati extends GraphicsResource {
     private float indicatorRadius = 15;
     private float height = 200;
 
+    private int pointLight01Color = 0xFFFFFFFF;
     // ================================================================
 
     public Illuminati(PApplet parent) {
@@ -41,6 +42,7 @@ public class Illuminati extends GraphicsResource {
 //            g.lightSpecular(20, 20, 20);
 //            g.ambientLight(200, 200, 200);
             //g.directionalLight(128, 128, 128, 0, 0, -1);
+
             g.lights();
 
             float xCoord = center.x + rotationRadius * parent.cos(currentAngle);
@@ -52,30 +54,42 @@ public class Illuminati extends GraphicsResource {
 //                    0, 0, 0,
 //                    PConstants.PI, 32);
 
-            g.pointLight(200, 50, 50,
+            g.pointLight(parent.red(pointLight01Color), parent.green(pointLight01Color), parent.blue(pointLight01Color),
                     xCoord, -height, yCoord);
 
-            if (showIndicator) {
-                // draw direction line
+            if (showIndicator) { drawFixture(g, xCoord, yCoord); }
+        } else {
+            g.noLights();
+        }
+    }
+
+    public void setPointLight01Color(int color){
+        pointLight01Color = color;
+    };
+
+
+    // ================================================================
+
+
+    // Helpers
+
+    private void drawFixture(PGraphics g, float xCoord, float yCoord) {
+        // draw direction line
 //                graphics.pushStyle();
 //                graphics.strokeWeight(0.5f);
 //                graphics.stroke(50, 50, 255);
 //                graphics.line(xCoord, -height, yCoord, 0, 0, 0);
 //                graphics.popStyle();
 
-                // draw sphere
-                g.pushMatrix();
-                g.rotateX(PConstants.HALF_PI);
-                g.translate(xCoord, yCoord, height);
-                g.pushStyle();
-                g.fill(200, 50, 50);
-                g.noStroke();
-                g.sphere(indicatorRadius);
-                g.popStyle();
-                g.popMatrix();
-            }
-        } else {
-            g.noLights();
-        }
+        // draw sphere
+        g.pushMatrix();
+        g.rotateX(PConstants.HALF_PI);
+        g.translate(xCoord, yCoord, height);
+        g.pushStyle();
+        g.fill(200, 50, 50);
+        g.noStroke();
+        g.sphere(indicatorRadius);
+        g.popStyle();
+        g.popMatrix();
     }
 }

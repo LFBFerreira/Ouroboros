@@ -3,6 +3,7 @@ package luisf.ouroboros.visualizer.suits.suit01;
 
 import luisf.interfaces.InputEvent;
 import luisf.ouroboros.common.Handy;
+import luisf.ouroboros.common.ProjectData;
 import luisf.ouroboros.models.ClassModel;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.Illuminati;
@@ -21,13 +22,15 @@ public class CityscapeSingleSuit extends SuitBase {
     private final PropertyManager props = PropertyManager.getInstance();
 
     private float classMargin = 20;
-    private List<ClassModel> models;
+    private ProjectData project;
     private List<ClassSlice> slices = new LinkedList<>();
     private int numberSlicesToDraw = 1;
-    private int floorColor = 0xFFFFFFFF;
+    private int floorColor = 0xFFFFFFFF;    // overriden by app.properties
+    private int pointLightColor = 0xFFFFFFFF;   // overriden by app.properties
     private float classSliceDepth;
 
     private Boolean lightsOn = true;
+    private Boolean hideLights = true;
     private Illuminati illuminati;
     private PShape floor;
     private int floorHeight = 4;
@@ -37,12 +40,12 @@ public class CityscapeSingleSuit extends SuitBase {
     /**
      * Constructor
      *
-     * @param models
+     * @param project
      * @param parent
      */
-    public CityscapeSingleSuit(List<ClassModel> models, PApplet parent) {
+    public CityscapeSingleSuit(ProjectData project , PApplet parent) {
         super(null, parent);
-        this.models = models;
+        this.project = project;
         illuminati = new Illuminati(parent);
     }
 
@@ -54,7 +57,7 @@ public class CityscapeSingleSuit extends SuitBase {
         loadProperties();
 
         // create and initialize a ClassSlice for each class model
-        models.forEach(m -> {
+        project.classModels.forEach(m -> {
             ClassSlice slice = new ClassSlice(m, parent);
             slice.initialize();
             slices.add(slice);
@@ -68,9 +71,12 @@ public class CityscapeSingleSuit extends SuitBase {
 
 
         floor = createFloor();
+
+        illuminati.setPointLight01Color(pointLightColor);
     }
 
     private void loadProperties() {
+        pointLightColor= props.getInt("visualizer.suit01.pointLightColor");
         classMargin = props.getInt("visualizer.suit01.classMargin");
         floorColor = props.getInt("visualizer.floorColor");
         classSliceDepth = props.getInt("visualizer.suit01.classThickness");
@@ -81,9 +87,20 @@ public class CityscapeSingleSuit extends SuitBase {
         log.info(Handy.f("Lights are %s", lightsOn ? "On" : "Off"));
     }
 
+    public void hideLights() {
+        hideLights = !hideLights;
+        log.info(Handy.f("Lights are %s", hideLights ? "Hidden" : "Visible"));
+    }
+
     public int getFloorHeight() {
         return floorHeight;
     }
+
+    @Override
+    public ProjectData getCurrentProject() {
+        return project;
+    }
+
     // ================================================================
 
     // DrawableInterface Interface
@@ -94,7 +111,7 @@ public class CityscapeSingleSuit extends SuitBase {
 
         g.pushMatrix();
 
-        illuminati.addLight(lightsOn, true, g);
+        illuminati.addLight(lightsOn, !hideLights, g);
 
         drawFloor(g);
 
@@ -124,6 +141,10 @@ public class CityscapeSingleSuit extends SuitBase {
 
             case 'l':
                 switchLights();
+                break;
+
+            case 'k':
+                hideLights();
                 break;
 
         }

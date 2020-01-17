@@ -11,6 +11,7 @@ import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.scene.CameraControlAgent;
 import luisf.ouroboros.visualizer.scene.MyScene;
 import luisf.ouroboros.visualizer.suits.SuitBase;
+import luisf.ouroboros.visualizer.suits.suit01.CityscapeMultiSuit;
 import luisf.ouroboros.visualizer.suits.suit01.FlippingMultiSuit;
 import processing.core.PApplet;
 import processing.core.PFont;
@@ -37,21 +38,20 @@ public class Visualizer extends PApplet {
     private PGraphics backgroundGraphics;
     private MyScene myScene;
 
-    private int windowHeight = 768;
-    private int windowWidth = 1024;
-
+    private int windowHeight;               // overriden by app.properties
+    private int windowWidth;                // overriden by app.properties
     private final String renderer = P3D;
 
-    private int[] backgroundColors = new int[]{0xFFD5D8DC, 0xFFACB5C6}; // overriden by app.properties
+    private int[] backgroundColors;         // overriden by app.properties
     private boolean backgroundChanged = false;
     private OscP5Manager hmi;
 
-    private CameraControlAgent oscControl;
+//    private CameraControlAgent oscControl;
 
-    private PVector initialCameraPosition = new PVector(0, -200, 1500);
+    private PVector initialCameraPosition = new PVector(0, -350, 1500);
 
-    private int titleFontColor = 0x00000000;    // overriden by app.properties
-    private int titleFontSize = 40;     // overriden by app.properties
+    private int titleFontColor;             // overriden by app.properties
+    private int titleFontSize;              // overriden by app.properties
     private PFont defaultFont;
 
     // ================================================================
@@ -71,7 +71,11 @@ public class Visualizer extends PApplet {
         int screenIndex = props.getInt("visualizer.displayScreen");
         log.info("Displaying on Screen " + screenIndex);
 
-        String[] args = new String[]{"--display=" + screenIndex, visualizer.getClass().getSimpleName()};
+        String[] args = new String[]{
+                "--display=" + screenIndex,
+                "--location=100,50",
+//                "--sketch-path=" + sketchPath,
+                visualizer.getClass().getSimpleName()};
 
         runSketch(args, visualizer);
     }
@@ -110,33 +114,29 @@ public class Visualizer extends PApplet {
      */
     public void settings() {
         size(windowWidth, windowHeight, renderer);
-        //smooth(8);
+        smooth(4);
     }
 
     /**
      * Setup
      */
     public void setup() {
-        frameRate(60);
-
-        //frame.setLocation(displayWidth / 2 - width / 2, displayHeight / 2 - height / 2);
+        frameRate(30);
 
         suitGraphics = createGraphics(windowWidth, windowHeight, renderer);
         backgroundGraphics = createGraphics(windowWidth, windowHeight, renderer);
 
 //        suit = new CityscapeSuit(models,this);
-//        suit = new CityscapeMultiSuit(projects, this);
-        suit = new FlippingMultiSuit(projects, this);
+        suit = new CityscapeMultiSuit(projects, this);
+//        suit = new FlippingMultiSuit(projects, this);
 
         suit.initialize();
 
         myScene = new MyScene(this, suitGraphics, graphicsFolder, suit);
         myScene.initialize();
 
-        oscControl = new CameraControlAgent(myScene);
-
         hmi = new OscP5Manager(props.getInt("hmi.oscPort"), this);
-        hmi.registerListeners(new InputListennerInterface[]{oscListenner, myScene, suit, oscControl});
+        hmi.registerListeners(new InputListennerInterface[]{oscListenner, myScene, suit});
 
         myScene.setCameraPosition(initialCameraPosition);
 

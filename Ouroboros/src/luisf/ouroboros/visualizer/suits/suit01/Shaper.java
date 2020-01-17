@@ -19,9 +19,9 @@ public class Shaper {
         PVector lastVertex = null;
 
 //        shape.noFill();
-        shape.fill(255);
-        shape.stroke(0);
-        shape.strokeWeight(2);
+        shape.setFill(255);
+        shape.setStroke(0);
+        shape.setStrokeWeight(2);
 
         shape.beginShape();
 

@@ -18,6 +18,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Logger;
@@ -41,6 +43,7 @@ public class Director {
     private File checkoutFolder;
     private File appConfigFile;
     private URL checkoutUrl;
+    private int maxLoadedProjects;
     private int numCheckouts;
     private String pathFromOrigin;
 
@@ -88,7 +91,6 @@ public class Director {
 
         List<File> checkedOutFolders = null;
         List<ProjectData> projects = new LinkedList<ProjectData>();
-
 
         if (checkoutCommits) {
             checkedOutFolders = checkoutCode(checkoutUrl, numCheckouts, checkoutFolder);
@@ -150,7 +152,7 @@ public class Director {
                 e.printStackTrace();
             }
 
-            projects = loadProjects(modelsFolder);
+            projects = loadProjects(modelsFolder, maxLoadedProjects);
 
             if (projects.isEmpty()) {
                 log.severe("No models were parsed");
@@ -180,21 +182,31 @@ public class Director {
         metadataShortMessageFieldName = props.getString("metadata.shortMessageFieldName");
         metadataFullMessageFieldName = props.getString("metadata.fullMessageFieldName");
         metadataDateFormat = props.getString("metadata.dateFormat");
+        maxLoadedProjects = props.getInt("visualizer.maxLoadedProjects");
     }
 
     private List<ProjectData> loadProjects(File modelsFolder) {
+        return loadProjects(modelsFolder, 0);
+    }
+
+    private List<ProjectData> loadProjects(File modelsFolder, int maxLoadedProjects) {
         List<ProjectData> projects = new LinkedList<>();
+        List<File> projectFiles = new LinkedList<>();
 
-
+        // collect all project folders
         for (File f : modelsFolder.listFiles()) {
             // only work on directories
             if (!f.isDirectory()) {
                 continue;
             }
 
-            ProjectData projectData = parseProjectMetadata(new File(f, f.getName() + metadataFileExtension));
+            projectFiles.add(f);
+        }
 
-            //ProjectData data = new ProjectData(readModels(f));
+        // load projects, limited by maxLoadedProjects
+        for (int i = 0; i < projectFiles.size(); i += projectFiles.size() / maxLoadedProjects) {
+            File f = projectFiles.get(i);
+            ProjectData projectData = parseProjectMetadata(new File(f, f.getName() + metadataFileExtension));
             projectData.addModels(readModels(f));
             projects.add(projectData);
         }

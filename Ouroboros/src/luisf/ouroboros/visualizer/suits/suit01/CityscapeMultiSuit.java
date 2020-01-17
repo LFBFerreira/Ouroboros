@@ -22,7 +22,6 @@ public class CityscapeMultiSuit extends SuitBase {
     private List<ProjectData> projects = new LinkedList<>();
 
     private int horizontalOffset = 0;
-    private int verticalOffset = 0;
 
 
     // ================================================================
@@ -60,11 +59,6 @@ public class CityscapeMultiSuit extends SuitBase {
         }
     }
 
-    private void loadProperties() {
-        this.horizontalOffset = props.getInt("visualizer.suit01.horizontalOffset");
-        this.verticalOffset = props.getInt("visualizer.suit01.verticalOffset");
-    }
-
     @Override
     public ProjectData getCurrentProject() {
         return null; //projects.get(currentProjectIndex);
@@ -83,12 +77,9 @@ public class CityscapeMultiSuit extends SuitBase {
         g.pushMatrix();
 
         //Handy.drawAxes(g, false, 200);
-        //g.scale(0.2f);
 
         // initial offset to center the landscape
         g.translate(-horizontalOffset * (samplesPerRow / 2), 0);
-//        g.translate(-horizontalOffset * (samplesPerRow/2),
-//                -verticalOffset * (samplesPerRow/2));
 
         int cityIndex = 0;
         for (CityscapeSingleSuit city : cities) {
@@ -99,11 +90,6 @@ public class CityscapeMultiSuit extends SuitBase {
 
             // move the anchor to the next position in Y
             g.translate(horizontalOffset, 0);
-
-            // move the anchor to the next position in Y, every samplesPerRow
-//            if (cityIndex % samplesPerRow == 0) {
-//                g.translate(-horizontalOffset * samplesPerRow, verticalOffset);
-//            }
         }
 
         g.popMatrix();
@@ -131,5 +117,14 @@ public class CityscapeMultiSuit extends SuitBase {
     @Override
     public void newEvent(InputEvent input) {
 
+    }
+
+
+    // ================================================================
+
+    // Helpers
+
+    private void loadProperties() {
+        horizontalOffset = props.getInt("visualizer.suit01.horizontalOffset");
     }
 }

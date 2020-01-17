@@ -73,6 +73,7 @@ public class MyScene extends Scene implements InputListennerInterface {
     public void initialize() {
         loadProperties();
 
+        //removeKeyBindings();
 
         setGridVisualHint(false);
         setAxesVisualHint(false);

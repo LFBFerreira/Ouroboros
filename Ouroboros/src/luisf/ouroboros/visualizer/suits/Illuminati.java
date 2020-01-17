@@ -19,6 +19,7 @@ public class Illuminati extends GraphicsResource {
 
     private PVector center = new PVector();
     private float angleStep = PConstants.PI * 0.003f;
+    private float linearStep = 0.03f;
     private float currentAngle = 0;
     private float rotationRadius = 800;
     private float indicatorRadius = 15;
@@ -35,24 +36,26 @@ public class Illuminati extends GraphicsResource {
 
     // Public
 
-    public void addLight(Boolean state, boolean showIndicator, PGraphics g) {
+    public void addLight(Boolean state, boolean showIndicator, PGraphics g, int travelDistance) {
         if (state == true) {
-
+//            g.ambientLight(128, 128, 128);
+//            g.directionalLight(128, 128, 128, 0, 0, -1);
 //            g.lightFalloff(1, 0, 0);
-//            g.lightSpecular(20, 20, 20);
-//            g.ambientLight(200, 200, 200);
-            //g.directionalLight(128, 128, 128, 0, 0, -1);
+//            g.lightSpecular(102, 102, 102);
 
             g.lights();
+            g.ambientLight(60,60,60);
 
-            float xCoord = center.x + rotationRadius * parent.cos(currentAngle);
-            float yCoord = center.y + rotationRadius * parent.sin(currentAngle);
-            currentAngle += angleStep;
+            // circular motion
+//            float xCoord = center.x + rotationRadius * parent.cos(currentAngle);
+//            float yCoord = center.y + rotationRadius * parent.sin(currentAngle);
+//            currentAngle += angleStep;
 
-//            graphics.spotLight(200, 50, 50,
-//                    xCoord, -height, yCoord,
-//                    0, 0, 0,
-//                    PConstants.PI, 32);
+            // straight motion
+            float xCoord = center.x;
+            float yCoord = center.y + travelDistance * parent.cos(currentAngle);
+//            currentAngle += angleStep;
+            currentAngle += linearStep;
 
             g.pointLight(parent.red(pointLight01Color), parent.green(pointLight01Color), parent.blue(pointLight01Color),
                     xCoord, -height, yCoord);

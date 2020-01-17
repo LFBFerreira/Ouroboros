@@ -75,13 +75,6 @@ public class CityscapeSingleSuit extends SuitBase {
         illuminati.setPointLight01Color(pointLightColor);
     }
 
-    private void loadProperties() {
-        pointLightColor= props.getInt("visualizer.suit01.pointLightColor");
-        classMargin = props.getInt("visualizer.suit01.classMargin");
-        floorColor = props.getInt("visualizer.floorColor");
-        classSliceDepth = props.getInt("visualizer.suit01.classThickness");
-    }
-
     public void switchLights() {
         lightsOn = !lightsOn;
         log.info(Handy.f("Lights are %s", lightsOn ? "On" : "Off"));
@@ -92,8 +85,12 @@ public class CityscapeSingleSuit extends SuitBase {
         log.info(Handy.f("Lights are %s", hideLights ? "Hidden" : "Visible"));
     }
 
-    public int getFloorHeight() {
-        return floorHeight;
+    public float getFloorHeight() {
+        return floor.height;
+    }
+
+    public float getCityWidth() {
+        return floor.width;
     }
 
     @Override
@@ -111,7 +108,8 @@ public class CityscapeSingleSuit extends SuitBase {
 
         g.pushMatrix();
 
-        illuminati.addLight(lightsOn, !hideLights, g);
+        int travelDistance = Math.round(2.5f * slices.size() * classSliceDepth);
+        illuminati.addLight(lightsOn, !hideLights, g, travelDistance);
 
         drawFloor(g);
 
@@ -163,6 +161,13 @@ public class CityscapeSingleSuit extends SuitBase {
 
     // Helpers
 
+    private void loadProperties() {
+        pointLightColor= props.getInt("visualizer.suit01.pointLightColor");
+        classMargin = props.getInt("visualizer.suit01.classMargin");
+        floorColor = props.getInt("visualizer.suit01.floorColor");
+        classSliceDepth = props.getInt("visualizer.suit01.classThickness");
+    }
+
     private void drawFloor(PGraphics g) {
         g.pushMatrix();
 
@@ -185,8 +190,12 @@ public class CityscapeSingleSuit extends SuitBase {
         PShape floor = Shaper.createBox(maxWidth, floorHeight,
                 (1 + slices.size()) * (classSliceDepth + classMargin),
                 parent);
+
         floor.setFill(floorColor);
         floor.setStroke(0x0);
+        floor.setStrokeWeight(1);
+        floor.setSpecular(0xFF787878);
+
         return floor;
     }
 

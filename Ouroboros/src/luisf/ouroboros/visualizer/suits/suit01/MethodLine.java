@@ -22,6 +22,7 @@ public class MethodLine implements DrawableInterface {
     private float methodHeightIncrement = 2;
     private MethodModel method;
     private int methodStrokeColor;
+    private float methodStrokeWeight;
     private int methodFillColor;
     private int methodFillColor2;
 
@@ -39,15 +40,21 @@ public class MethodLine implements DrawableInterface {
     public void initialize() {
         loadProperties();
 
+        // create box
         methodBox = Shaper.createBox(methodWidth, getHeight(), methodWidth, parent);
+
+        // set boxe's properties
+//        methodBox.setSpecular(0xFF787878);
+        methodBox.setStroke(methodStrokeColor);
+        methodBox.setStrokeWeight(methodStrokeWeight);
+
         if (method.modifiers.contains(PRIVATE))
         {
             methodBox.setFill(methodFillColor2);
-        }else
+        }else   // for PUBLIC methods
         {
             methodBox.setFill(methodFillColor);
         }
-        methodBox.setStroke(methodStrokeColor);
     }
 
     private void loadProperties() {
@@ -55,6 +62,7 @@ public class MethodLine implements DrawableInterface {
         methodFillColor = props.getInt("visualizer.suit01.methodFillColor");
         methodFillColor2 = props.getInt("visualizer.suit01.methodFillColor2");
         methodStrokeColor = props.getInt("visualizer.suit01.methodLineColor");
+        methodStrokeWeight = props.getFloat("visualizer.suit01.methodLineWeight");
         methodWidth = props.getInt("visualizer.suit01.methodThickness");
     }
 
@@ -71,8 +79,8 @@ public class MethodLine implements DrawableInterface {
     // DrawableInterface
 
     @Override
-    public void draw(PGraphics graphics) {
-        graphics.shape(methodBox);
+    public void draw(PGraphics g) {
+        g.shape(methodBox);
     }
 
     // ================================================================

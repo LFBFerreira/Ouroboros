@@ -1,6 +1,7 @@
 package luisf.ouroboros.visualizer.suits.suit01;
 
 import luisf.interfaces.InputEvent;
+import luisf.interfaces.InputListennerInterface;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.common.ProjectData;
 import luisf.ouroboros.properties.PropertyManager;
@@ -32,15 +33,29 @@ public class FlippingMultiSuit extends SuitBase {
     private int rotationTrigger = 0;
     private int centerOffset = 0;
 
-    private float cityRotationPeakSpeedDefault = 0.005f;
-    private float worldRotationSpeedDefault = 0.006f;
-    private long targetDelayBetweenSwtich = 3000L;
+    private float flippingSpeedDefault = 0.005f;            // overriden by app.properties
+    private float worldRotationSpeedDefault = 0.006f;       // overriden by app.properties
+    private long targetDelayBetweenSwtich = 5000L;          // overriden by app.properties
 
-    private int fontColor = 0x00000000;    // overriden by app.properties
-    private int fontSize = 40;     // overriden by app.properties
+    private int fontColor;                     // overriden by app.properties
+    private int fontSize;                              // overriden by app.properties
+
     private PFont defaultFont;
-    private PVector textAnchor;
-    private String fontName = "Roboto Bold";
+    private String fontName = "Roboto";
+
+    private final int verticalShift = 40;
+    private final int textBoxWidth = 900;
+    private final int textBoxHeight = 800;
+    private final float smallFontMultiplier = 0.8f;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-mm-yyyy \thh:mm:ss");
+    private PVector statisticsOffset = new PVector(0, -150, -500);
+
+    private final int statisticsHorizontalTiles = 8;
+    private final int statisticsVerticalTiles = 9;
+    private final int statisticsHorizontalSpacing = 1100;
+    private final int statisticsVerticalSpacing = 550;
+
+    private TimerTask iterateThroughCitiesTask;
 
     // ================================================================
 
@@ -77,16 +92,16 @@ public class FlippingMultiSuit extends SuitBase {
             cities.add(city);
         }
 
-        centerOffset = cities.get(0).getFloorHeight();
+        centerOffset = Math.round(cities.get(0).getFloorHeight());
 
         worldRotationSpeed = worldRotationSpeedDefault;
-        cityRotationPeakSpeed = cityRotationPeakSpeedDefault;
+        cityRotationPeakSpeed = flippingSpeedDefault;
 
         defaultFont = parent.createFont(fontName, fontSize);
     }
 
     private void loadProperties() {
-        cityRotationPeakSpeedDefault = props.getFloat("visualizer.suit01.cityRotationPeakSpeed");
+        flippingSpeedDefault = props.getFloat("visualizer.suit01.flipSpeed");
         worldRotationSpeedDefault = props.getFloat("visualizer.suit01.worldRotationSpeed");
         targetDelayBetweenSwtich = props.getLong("visualizer.suit01.delayBetweenSwtich");
         fontColor = props.getInt("visualizer.suit01.fontColor");
@@ -175,7 +190,6 @@ public class FlippingMultiSuit extends SuitBase {
     // ================================================================
 
     // InputListennerInterface
-
     @Override
     public void newEvent(InputEvent input) {
         log.info("Input: " + input.toString());
@@ -185,7 +199,7 @@ public class FlippingMultiSuit extends SuitBase {
         } else if (input.isPage("2") && input.isName("push02") && input.isReleased()) {
             nextCity();
         } else if (input.isName("multifader1") && input.isGroup("1")) {
-            cityRotationPeakSpeed = cityRotationPeakSpeedDefault * input.getAsFloat(0, 2);
+            cityRotationPeakSpeed = flippingSpeedDefault * input.getAsFloat(0, 2);
             log.info("city speed " + cityRotationPeakSpeed);
         } else if (input.isName("multifader1") && input.isGroup("2")) {
             worldRotationSpeed = worldRotationSpeedDefault * input.getAsFloat(0, 2);
@@ -193,69 +207,75 @@ public class FlippingMultiSuit extends SuitBase {
         }
     }
 
+
     // ================================================================
 
     // Helpers
-
-    private final int verticalShift = 40;
-    private final int textBoxWidth = 1400;
-    private final int textBoxHeight = 800;
-    private final float smallFontMultiplier = 0.8f;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-mm-yyyy \thh:mm:ss");
-    private final PVector textTranslationCoordinates = new PVector(-1000, -70);
 
     /**
      * @param g
      * @param project
      */
     private void drawStatistics(PGraphics g, ProjectData project) {
-        textAnchor = new PVector(g.width * 0.2f, g.height * 0.3f);
-
-        g.pushMatrix();
         g.pushStyle();
+        g.pushMatrix();
 
-        // translate text origin
-        g.translate(textTranslationCoordinates.x, textTranslationCoordinates.y);
+        // initial translation to anchor point
+        g.translate((statisticsHorizontalTiles * statisticsHorizontalSpacing) / -2 + statisticsOffset.x,
+                (statisticsVerticalTiles * statisticsVerticalSpacing) / -2 + statisticsOffset.y,
+                statisticsOffset.z);
+
+        //g.translate(statisticsAnchor.x, statisticsAnchor.y, statisticsAnchor.z);
 
         g.textFont(defaultFont);
         //g.textLeading(10);
         g.textAlign(parent.LEFT, parent.TOP);
         g.fill(fontColor);
 
-        // project ID
-        g.textSize(Math.round(fontSize * smallFontMultiplier));
-        g.text("ID", textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
-        textAnchor.y += verticalShift;
+        // translate text origin
+        for (int i = 0; i < statisticsVerticalTiles; i++) {
+            for (int j = 0; j < statisticsHorizontalTiles; j++) {
+                PVector textAnchor = new PVector();
 
-        g.textSize(fontSize);
-        g.text(Handy.f("%s", project.id), textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
-        textAnchor.y += verticalShift * 1.8f;
+                g.pushMatrix();
+                g.translate(statisticsHorizontalSpacing * j,
+                        statisticsVerticalSpacing * i);
 
-        // project date
-        g.textSize(Math.round(fontSize * smallFontMultiplier));
-        g.text("Date", textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
-        textAnchor.y += verticalShift;
+                // project ID
+                g.textSize(Math.round(fontSize * smallFontMultiplier));
+                g.text("ID", textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+                textAnchor.y += verticalShift;
 
-        g.textSize(fontSize);
-        g.text(Handy.f("%s", project.commitDate.format(formatter)), textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
-        textAnchor.y += verticalShift * 1.8f;
+                g.textSize(fontSize);
+                g.text(Handy.f("%s", project.id), textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+                textAnchor.y += verticalShift * 1.8f;
 
-        // class sizes
-        g.textSize(Math.round(fontSize * smallFontMultiplier));
-        g.text("# Methods", textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
-        textAnchor.y += verticalShift;
+                // project date
+                g.textSize(Math.round(fontSize * smallFontMultiplier));
+                g.text("Date", textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+                textAnchor.y += verticalShift;
 
-        g.textSize(fontSize);
-        StringJoiner methodsSize = new StringJoiner(" ");
-        project.classModels.forEach(m -> methodsSize.add(String.format("%02d", m.getMethods().size())));
-        g.text(Handy.f("%s", methodsSize.toString()), textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
-        textAnchor.y += verticalShift;
+                g.textSize(fontSize);
+                g.text(Handy.f("%s", project.getZonedCommitDate().format(formatter)), textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+                textAnchor.y += verticalShift * 1.8f;
 
-//        g.text(Handy.f("%d", project.classModels.size()), anchor.x, anchor.y, textBoxWidth, textBoxHeight);
-//        anchor.y += verticalShift;
+                // class sizes
+                g.textSize(Math.round(fontSize * smallFontMultiplier));
+                g.text("# Methods", textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+                textAnchor.y += verticalShift;
 
-        g.popStyle();
+                g.textSize(fontSize);
+                StringJoiner methodsSize = new StringJoiner(" ");
+                project.classModels.forEach(m -> methodsSize.add(String.format("%02d", m.getMethods().size())));
+                g.text(Handy.f("%s", methodsSize.toString()), textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+                textAnchor.y += verticalShift;
+
+                g.popMatrix();
+            }
+        }
+
         g.popMatrix();
+        g.popStyle();
     }
 
     private void nextCity() {
@@ -269,7 +289,7 @@ public class FlippingMultiSuit extends SuitBase {
             startRotatingLeft();
         }
 
-        log.info(Handy.f("City: %s %s", projects.get(nextProjectIndex).getCommitDateFormated(),
+        log.info(Handy.f("City: %s %s", projects.get(nextProjectIndex).getFormatedCommitDate(),
                 projects.get(nextProjectIndex).id));
     }
 
@@ -285,11 +305,9 @@ public class FlippingMultiSuit extends SuitBase {
             startRotatingRight();
         }
 
-        log.info(Handy.f("City: %s %s", projects.get(nextProjectIndex).getCommitDateFormated(),
+        log.info(Handy.f("City: %s %s", projects.get(nextProjectIndex).getFormatedCommitDate(),
                 projects.get(nextProjectIndex).id));
     }
-
-    private TimerTask iterateThroughCitiesTask;
 
     private void iterateThroughCitites() {
         log.info("Start auto iteration");
@@ -306,7 +324,10 @@ public class FlippingMultiSuit extends SuitBase {
 
     private void stopIterateThroughCities() {
         log.info("Stop auto iteration");
-        iterateThroughCitiesTask.cancel();
+
+        if (iterateThroughCitiesTask != null) {
+            iterateThroughCitiesTask.cancel();
+        }
     }
 
     private void startRotatingLeft() {

@@ -81,7 +81,7 @@ public class MyScene extends Scene implements InputListennerInterface {
 
         eyeFrame().setDamping(0.5f);
 
-        setRadius(2000);
+        setRadius(4000);
         camera().setUpVector(0, 1, 0);
         setCameraPosition(cameraPosition);
         camera().lookAt(0, 0, 0);

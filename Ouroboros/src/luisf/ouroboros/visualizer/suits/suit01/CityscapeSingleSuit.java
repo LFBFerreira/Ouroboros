@@ -11,6 +11,7 @@ import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PShape;
+import processing.core.PVector;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class CityscapeSingleSuit extends SuitBase {
     private ProjectData project;
     private List<ClassSlice> slices = new LinkedList<>();
     private int numberSlicesToDraw = 1;
-    private int floorColor = 0xFFFFFFFF;    // overriden by app.properties
+    private int floorColor = 0xFFFFFFFF;        // overriden by app.properties
     private int pointLightColor = 0xFFFFFFFF;   // overriden by app.properties
     private float classSliceDepth;
 
@@ -34,6 +35,8 @@ public class CityscapeSingleSuit extends SuitBase {
     private Illuminati illuminati;
     private PShape floor;
     private int floorHeight = 4;
+
+    PVector initialCameraPosition = new PVector(0, 0, 0);
 
     // ================================================================
 
@@ -86,16 +89,21 @@ public class CityscapeSingleSuit extends SuitBase {
     }
 
     public float getFloorHeight() {
-        return floor.height;
+        return floor.getHeight();
     }
 
     public float getCityWidth() {
-        return floor.width;
+        return floor.getWidth();
     }
 
     @Override
     public ProjectData getCurrentProject() {
         return project;
+    }
+
+    @Override
+    public PVector getInitialCameraPosition() {
+        return initialCameraPosition;
     }
 
     // ================================================================

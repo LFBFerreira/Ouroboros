@@ -57,6 +57,8 @@ public class FlippingMultiSuit extends SuitBase {
 
     private TimerTask iterateThroughCitiesTask;
 
+    PVector initialCameraPosition = new PVector(0, -350, 1500);
+
     // ================================================================
 
     /**
@@ -111,6 +113,11 @@ public class FlippingMultiSuit extends SuitBase {
     @Override
     public ProjectData getCurrentProject() {
         return projects.get(currentProjectIndex);
+    }
+
+    @Override
+    public PVector getInitialCameraPosition() {
+        return initialCameraPosition;
     }
 
     // ================================================================

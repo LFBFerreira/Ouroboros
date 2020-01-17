@@ -48,8 +48,6 @@ public class Visualizer extends PApplet {
 
 //    private CameraControlAgent oscControl;
 
-    private PVector initialCameraPosition = new PVector(0, -350, 1500);
-
     private int titleFontColor;             // overriden by app.properties
     private int titleFontSize;              // overriden by app.properties
     private PFont defaultFont;
@@ -138,7 +136,7 @@ public class Visualizer extends PApplet {
         hmi = new OscP5Manager(props.getInt("hmi.oscPort"), this);
         hmi.registerListeners(new InputListennerInterface[]{oscListenner, myScene, suit});
 
-        myScene.setCameraPosition(initialCameraPosition);
+        myScene.setCameraPosition(suit.getInitialCameraPosition());
 
         defaultFont = createFont("Roboto", titleFontSize);
     }

@@ -1,12 +1,12 @@
 package luisf.ouroboros.visualizer.suits.suit01;
 
 import luisf.interfaces.InputEvent;
-import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.common.ProjectData;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.core.PVector;
 
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -21,8 +21,10 @@ public class CityscapeMultiSuit extends SuitBase {
     private List<CityscapeSingleSuit> cities = new LinkedList<>();
     private List<ProjectData> projects = new LinkedList<>();
 
-    private int horizontalOffset = 0;
+    private int multiCityBorderSize = 0;        // overriden by app.properties
+    private int maxCitiesWidth = 0;
 
+    PVector initialCameraPosition = new PVector(0,0,0);
 
     // ================================================================
 
@@ -56,12 +58,19 @@ public class CityscapeMultiSuit extends SuitBase {
             CityscapeSingleSuit city = new CityscapeSingleSuit(project, parent);
             city.initialize();
             cities.add(city);
+
+            maxCitiesWidth += city.getCityWidth() + multiCityBorderSize;
         }
     }
 
     @Override
     public ProjectData getCurrentProject() {
         return null; //projects.get(currentProjectIndex);
+    }
+
+    @Override
+    public PVector getInitialCameraPosition() {
+        return initialCameraPosition;
     }
 
     // ================================================================
@@ -72,24 +81,22 @@ public class CityscapeMultiSuit extends SuitBase {
 
     @Override
     public void draw(PGraphics g) {
-
         g.beginDraw();
         g.pushMatrix();
 
         //Handy.drawAxes(g, false, 200);
 
         // initial offset to center the landscape
-        g.translate(-horizontalOffset * (samplesPerRow / 2), 0);
+        g.translate(-maxCitiesWidth / 2, 0);
 
         int cityIndex = 0;
         for (CityscapeSingleSuit city : cities) {
-
+            // draw city and iterate
             city.draw(g);
-
             cityIndex++;
 
-            // move the anchor to the next position in Y
-            g.translate(horizontalOffset, 0);
+            // move the anchor to the next position
+            g.translate(city.getCityWidth() + multiCityBorderSize, 0);
         }
 
         g.popMatrix();
@@ -125,6 +132,6 @@ public class CityscapeMultiSuit extends SuitBase {
     // Helpers
 
     private void loadProperties() {
-        horizontalOffset = props.getInt("visualizer.suit01.horizontalOffset");
+        multiCityBorderSize = props.getInt("visualizer.suit01.multiCityBorderSize");
     }
 }

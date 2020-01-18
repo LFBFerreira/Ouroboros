@@ -36,7 +36,7 @@ public class CityscapeSingleSuit extends SuitBase {
     private PShape floor;
     private int floorHeight = 4;
 
-    PVector initialCameraPosition = new PVector(0, 0, 0);
+    PVector initialCameraPosition = new PVector(0, 0, 1500);
 
     // ================================================================
 

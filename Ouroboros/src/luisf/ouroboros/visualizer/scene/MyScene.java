@@ -84,9 +84,9 @@ public class MyScene extends Scene implements InputListennerInterface {
         setRadius(4000);
         camera().setUpVector(0, 1, 0);
         setCameraPosition(cameraPosition);
-        camera().lookAt(0, 0, 0);
+        //camera().lookAt(0, 0, 0);
 
-//        showAll();
+        //showAll();
         //center();
     }
 

@@ -167,8 +167,6 @@ public class Visualizer extends PApplet {
         myScene.beginDraw();
         myScene.clearScene();
         // suit is drawn after endDraw
-        //myScene.drawTitle(suit.getTitle());
-
         myScene.endDraw();
 
         // copy scene output to main graphics buffer

@@ -6,7 +6,6 @@ import luisf.ouroboros.common.ProjectData;
 import luisf.ouroboros.properties.PropertyManager;
 import luisf.ouroboros.visualizer.suits.SuitBase;
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
@@ -23,7 +22,8 @@ public class CityscapeMultiSuit extends SuitBase {
     private List<CityscapeSingleSuit> cities = new LinkedList<>();
     private List<ProjectData> projects = new LinkedList<>();
 
-    private int multiCityBorderSize;        // overriden by app.properties
+    private int multiCityHorizontalBorderSize;        // overriden by app.properties
+    private int multiCityVerticalBorderSize;        // overriden by app.properties
     private int maxCitiesWidth = 0;
 
     private PVector initialCameraPosition = new PVector(0, 0, 3000);
@@ -34,6 +34,7 @@ public class CityscapeMultiSuit extends SuitBase {
     private float currentWorldRotation = 0;
     private float displayInclination;           // overriden by app.properties
 
+    private float defaultCityRotationSpeed = 0.01f;
 
     // ================================================================
 
@@ -68,7 +69,7 @@ public class CityscapeMultiSuit extends SuitBase {
             city.initialize();
             cities.add(city);
 
-            maxCitiesWidth += city.getCityWidth() + multiCityBorderSize;
+            maxCitiesWidth += city.getCityWidth() + multiCityHorizontalBorderSize;
         }
 
         matrixNumberRows = (int) Math.ceil(projects.size() / samplesPerRow);
@@ -116,24 +117,24 @@ public class CityscapeMultiSuit extends SuitBase {
     // matrix draw
     @Override
     public void draw(PGraphics g) {
-        updateWorldRotation();
+        updateCityRotation();
 
         g.beginDraw();
         g.pushMatrix();
 
-        Handy.drawAxes(g, false, 200);
+        //Handy.drawAxes(g, false, 200);
 
         // initial offset to center the landscape
-        g.translate(-(samplesPerRow / 2) * multiCityBorderSize, -(matrixNumberRows / 2) * multiCityBorderSize);
+        g.translate(-(samplesPerRow / 2) * multiCityHorizontalBorderSize, -(matrixNumberRows / 2) * multiCityVerticalBorderSize);
 
         int cityIndex = 0;
         for (CityscapeSingleSuit city : cities) {
             if (cityIndex % samplesPerRow == 0 && cityIndex > 0) {
-                g.translate(-(samplesPerRow) * multiCityBorderSize, multiCityBorderSize);
+                g.translate(-(samplesPerRow) * multiCityHorizontalBorderSize, multiCityVerticalBorderSize);
             }
             else
             {
-                g.translate(0, 50, 0);
+                //g.translate(0, 50, 0);
             }
 
             // draw in a tilted and rotated canvas
@@ -143,11 +144,9 @@ public class CityscapeMultiSuit extends SuitBase {
             city.draw(g);
             g.popMatrix();
 
-
-            g.translate(multiCityBorderSize, 0);
-
             // move the anchor to the next position
-            //g.translate(city.getCityWidth() + multiCityBorderSize, 0);
+            g.translate(multiCityHorizontalBorderSize, 0);
+
             cityIndex++;
         }
 
@@ -175,7 +174,15 @@ public class CityscapeMultiSuit extends SuitBase {
 
     @Override
     public void newEvent(InputEvent input) {
-
+//        log.info(Handy.f());
+        if (input.isPage("1") && input.isName("multipush1") && input.isReleased()) {
+            stopCityRotation();
+        } else if (input.isPage("1") && input.isName("multipush1") && input.isReleased()) {
+            resumeCityRotation();
+        } else if (input.isName("multifader1") && input.isGroup("2")) {
+            worldRotationSpeed = defaultCityRotationSpeed * input.getAsFloat(0, 2);
+            log.info("world speed " + worldRotationSpeed);
+        }
     }
 
 
@@ -183,12 +190,28 @@ public class CityscapeMultiSuit extends SuitBase {
 
     // Helpers
 
-    private void updateWorldRotation() {
+    private void updateCityRotation() {
         currentWorldRotation += worldRotationSpeed;
     }
 
+    private float lastCityRotationSpeed = 0;
+    private void stopCityRotation()
+    {
+        log.info("Stopping city rotation");
+        lastCityRotationSpeed = lastCityRotationSpeed;
+        worldRotationSpeed = 0;
+    }
+
+    private void resumeCityRotation()
+    {
+        log.info("Resuming city rotation");
+        worldRotationSpeed = lastCityRotationSpeed;
+    }
+
+
     private void loadProperties() {
-        multiCityBorderSize = props.getInt("visualizer.suit01.multiCityBorderSize");
+        multiCityHorizontalBorderSize = props.getInt("visualizer.suit01.multiCityHorizontalBorderSize");
+        multiCityVerticalBorderSize = props.getInt("visualizer.suit01.multiCityVerticalBorderSize");
         samplesPerRow = props.getInt("visualizer.suit01.multiCitySamplesPerRow");
         worldRotationSpeed = props.getFloat("visualizer.suit01.worldRotationSpeed");
         displayInclination = props.getFloat("visualizer.suit01.multiCityDisplayAngle");

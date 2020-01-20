@@ -55,7 +55,7 @@ public class ProjectData {
         return commitDate.format(formatter);
     }
 
-    public ZonedDateTime getZonedCommitDate() {
-        return zonedDate;
+    public LocalDateTime getAdjustedCommitDate() {
+        return zonedDate.toLocalDateTime();
     }
 }

@@ -1,7 +1,6 @@
 package luisf.ouroboros.visualizer.suits.suit01;
 
 import luisf.interfaces.InputEvent;
-import luisf.interfaces.InputListennerInterface;
 import luisf.ouroboros.common.Handy;
 import luisf.ouroboros.common.ProjectData;
 import luisf.ouroboros.properties.PropertyManager;
@@ -47,7 +46,7 @@ public class FlippingMultiSuit extends SuitBase {
     private final int textBoxWidth = 900;
     private final int textBoxHeight = 800;
     private final float smallFontMultiplier = 0.8f;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-mm-yyyy \thh:mm:ss");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy \tHH:mm:ss");
     private PVector statisticsOffset = new PVector(0, -150, -500);
 
     private final int statisticsHorizontalTiles = 8;
@@ -199,7 +198,7 @@ public class FlippingMultiSuit extends SuitBase {
     // InputListennerInterface
     @Override
     public void newEvent(InputEvent input) {
-        log.info("Input: " + input.toString());
+        //log.info("Input: " + input.toString());
 
         if (input.isPage("2") && input.isName("push01") && input.isReleased()) {
             previousCity();
@@ -263,7 +262,7 @@ public class FlippingMultiSuit extends SuitBase {
                 textAnchor.y += verticalShift;
 
                 g.textSize(fontSize);
-                g.text(Handy.f("%s", project.getZonedCommitDate().format(formatter)), textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
+                g.text(Handy.f("%s", project.getAdjustedCommitDate().format(formatter)), textAnchor.x, textAnchor.y, textBoxWidth, textBoxHeight);
                 textAnchor.y += verticalShift * 1.8f;
 
                 // class sizes

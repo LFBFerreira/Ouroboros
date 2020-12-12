@@ -66,6 +66,19 @@ public class Main {
 
     // ================================================================
 
+    //    static public void main(String[] passedArgs) {
+//        String[] appletArgs = new String[]{"--window-color=#666666",
+//                                           "--stop-color=#cccccc",
+//                                           ""--display=2",
+//                                           "--sketch-path=C:\Users\luisf\Documents\stratumseind_01",
+//                                           "${NAME}" };
+//        if (passedArgs != null) {
+//            PApplet.main(concat(appletArgs, passedArgs));
+//        } else {
+//            PApplet.main(appletArgs);
+//        }
+//    }
+
     public static void main(String[] args){
         Options argumentOptions = initializeArgumentOptions();
         Map<String, String> argumentsMapping = getArguments(args, argumentOptions);

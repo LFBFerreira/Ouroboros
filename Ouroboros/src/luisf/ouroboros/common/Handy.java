@@ -58,7 +58,6 @@ public class Handy {
     }
 
 
-
     public static String removeSubString(int startIndex, int endIndex, String content) {
         if (startIndex < 0 || endIndex > content.length()) {
             log.severe("The start or end indexes of the substring are incorrect");
@@ -69,17 +68,14 @@ public class Handy {
         return result.concat(content.substring(endIndex + 1, content.length()));
     }
 
-    private static final int axisThickness = 1;
-
     /**
      * Draw X, Y and Z representations of the axes
+     *
      * @param g
      * @param loadBuffer
      */
-    public static void drawAxes(PGraphics g, Boolean loadBuffer, int axisLength)
-    {
-        if (loadBuffer)
-        {
+    public static void drawAxes(PGraphics g, Boolean loadBuffer, int axisLength, int axisThickness) {
+        if (loadBuffer) {
             g.beginDraw();
         }
 
@@ -90,7 +86,7 @@ public class Handy {
         g.fill(180, 0, 0, 80);
         g.stroke(255, 0, 0);
         g.pushMatrix();
-        g.translate(axisLength/2, 0, 0);
+        g.translate(axisLength / 2, 0, 0);
         g.box(axisLength, axisThickness, axisThickness);
         g.popMatrix();
 
@@ -98,7 +94,7 @@ public class Handy {
         g.fill(0, 180, 0, 80);
         g.stroke(0, 255, 0);
         g.pushMatrix();
-        g.translate(0, axisLength/2, 0);
+        g.translate(0, axisLength / 2, 0);
         g.box(axisThickness, axisLength, axisThickness);
         g.popMatrix();
 
@@ -106,25 +102,22 @@ public class Handy {
         g.fill(0, 0, 180, 80);
         g.stroke(0, 0, 255);
         g.pushMatrix();
-        g.translate(0, 0, axisLength/2);
+        g.translate(0, 0, axisLength / 2);
         g.box(axisThickness, axisThickness, axisLength);
         g.popMatrix();
 
         g.popStyle();
 
-        if (loadBuffer)
-        {
+        if (loadBuffer) {
             g.endDraw();
         }
     }
 
-    public static void drawAxes(PGraphics g, Boolean prepare)
-    {
-        drawAxes(g, prepare, 80);
+    public static void drawAxes(PGraphics g, Boolean prepare) {
+        drawAxes(g, prepare, 80, 1);
     }
 
-    public static PShape box(float width, float height, float depth, PApplet parent)
-    {
+    public static PShape box(float width, float height, float depth, PApplet parent) {
         PShape s = parent.createShape(parent.BOX, 0, 0, 50, 50);
 
         s.beginShape();
@@ -205,6 +198,7 @@ public class Handy {
 
     /**
      * Reads a file to a String
+     *
      * @param file
      * @return
      */
@@ -219,10 +213,8 @@ public class Handy {
         return content;
     }
 
-    public static URL validateUrl(String urlString)
-    {
-        if(isValidURL(urlString))
-        {
+    public static URL validateUrl(String urlString) {
+        if (isValidURL(urlString)) {
             try {
                 return new URL(urlString);
             } catch (MalformedURLException e) {
@@ -235,12 +227,12 @@ public class Handy {
 
     /**
      * Validates an URL
+     *
      * @param url
      * @return
      */
     public static boolean isValidURL(String url) {
-        if (Handy.isNullOrEmpty(url))
-        {
+        if (Handy.isNullOrEmpty(url)) {
             return false;
         }
 
